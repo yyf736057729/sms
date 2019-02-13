@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsReportSyncDao">
+    
+	<sql id="jmsgSmsReportSyncColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.msgid AS "msgid",
+		a.stat AS "stat",
+		a.submit_time AS "submitTime",
+		a.done_time AS "doneTime",
+		a.srcid AS "srcid",
+		a.dest_terminal_id AS "destTerminalId",
+		a.smsc_sequence AS "smscSequence",
+		a.bizid AS "bizid",
+		a.createtime AS "createtime",
+		a.result AS "result",
+		a.taskid AS "taskid",
+		a.gateway_id AS "gatewayId"
+	</sql>
+	
+	<sql id="jmsgSmsReportSyncJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.jmsg.entity.JmsgSmsReportSync">
+		SELECT 
+			<include refid="jmsgSmsReportSyncColumns"/>
+		FROM jmsg_sms_report_sync a
+		<include refid="jmsgSmsReportSyncJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.jmsg.entity.JmsgSmsReportSync">
+		SELECT 
+			<include refid="jmsgSmsReportSyncColumns"/>
+		FROM jmsg_sms_report_sync a
+		<include refid="jmsgSmsReportSyncJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.jmsg.entity.JmsgSmsReportSync">
+		SELECT 
+			<include refid="jmsgSmsReportSyncColumns"/>
+		FROM jmsg_sms_report_sync a
+		<include refid="jmsgSmsReportSyncJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_report_sync(
+			id,
+			user_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			srcid,
+			dest_terminal_id,
+			smsc_sequence,
+			bizid,
+			createtime,
+			result,
+			taskid,
+			gateway_id
+		) VALUES (
+			#{id},
+			#{userId},
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcid},
+			#{destTerminalId},
+			#{smscSequence},
+			#{bizid},
+			#{createtime},
+			#{result},
+			#{taskid},
+			#{gatewayId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_report_sync SET 	
+			user_id = #{userId},
+			msgid = #{msgid},
+			stat = #{stat},
+			submit_time = #{submitTime},
+			done_time = #{doneTime},
+			srcid = #{srcid},
+			dest_terminal_id = #{destTerminalId},
+			smsc_sequence = #{smscSequence},
+			bizid = #{bizid},
+			createtime = #{createtime},
+			result = #{result},
+			taskid = #{taskid},
+			gateway_id = #{gatewayId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_report_sync
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

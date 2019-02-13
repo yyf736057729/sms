@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgPhoneTypeDao">
+    
+	<sql id="jmsgPhoneTypeColumns">
+		a.id AS "id",
+		a.num AS "num",
+		a.phone_type AS "phoneType",
+		a.create_by AS "createBy.id",
+		a.create_datetime AS "createDatetime"
+	</sql>
+	
+	<sql id="jmsgPhoneTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneType">
+		SELECT 
+			<include refid="jmsgPhoneTypeColumns"/>
+		FROM jmsg_phone_type a
+		<include refid="jmsgPhoneTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByNum" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneType">
+		SELECT 
+			<include refid="jmsgPhoneTypeColumns"/>
+		FROM jmsg_phone_type a
+		<include refid="jmsgPhoneTypeJoins"/>
+		WHERE a.num = #{num}
+	</select>	
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneType">
+		SELECT 
+			<include refid="jmsgPhoneTypeColumns"/>
+		FROM jmsg_phone_type a
+		<include refid="jmsgPhoneTypeJoins"/>
+		<where>
+			
+			<if test="num != null and num != ''">
+				AND a.num = #{num}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneType">
+		SELECT 
+			<include refid="jmsgPhoneTypeColumns"/>
+		FROM jmsg_phone_type a
+		<include refid="jmsgPhoneTypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_phone_type(
+			num,
+			phone_type,
+			create_by,
+			create_datetime
+		) VALUES (
+			#{num},
+			#{phoneType},
+			#{createBy.id},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_phone_type SET 	
+			num = #{num},
+			phone_type = #{phoneType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_phone_type
+		WHERE num = #{num}
+	</update>
+	
+</mapper>

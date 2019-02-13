@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsTaskDao">
+
+	<sql id="jmsgSmsTaskColumns">
+		a.id AS "id",
+		a.data_id AS "dataId",
+		a.send_count AS "sendCount",
+		a.send_datetime AS "sendDatetime",
+		a.end_datetime AS "endDatetime",
+		a.status AS "status",
+		a.count_detail AS "countDetail",
+		a.create_datetime AS "createDatetime",
+		a.create_by AS "createBy.id",
+		a.update_datetime AS "updateDatetime",
+		a.update_by AS "updateBy.id",
+		a.success_count AS "successCount",
+		a.fail_count AS "failCount",
+		a.sms_content AS "smsContent",
+		a.version,
+		a.row_number AS "rowNumber",
+		a.review_remarks AS "reviewRemarks",
+		a.review_time AS "reviewTime",
+		a.task_type AS "taskType"
+	</sql>
+
+	<sql id="jmsgSmsTaskJoins">
+		<!-- LEFT JOIN jmsg_sms_data d1 ON d1.id = a.data_id -->
+	</sql>
+
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT
+		<include refid="jmsgSmsTaskColumns"/>
+		FROM jmsg_sms_task a
+		<include refid="jmsgSmsTaskJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT
+			<include refid="jmsgSmsTaskColumns"/>,
+			u1.name AS "user.name",
+			u1.login_name AS "user.loginName",
+			so.name AS "user.company.name"
+		FROM jmsg_sms_task a
+		<include refid="jmsgSmsTaskJoins"/>
+		LEFT JOIN sys_user u1 ON u1.id = a.create_by
+		LEFT JOIN sys_office so ON u1.company_id = so.id
+		<where>
+
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="dataId != null and dataId != ''">
+				AND a.data_id = #{dataId}
+			</if>
+			<if test="sendDatetimeQ != null and sendDatetimeQ != ''">
+				AND a.send_datetime &gt;= #{sendDatetimeQ}
+			</if>
+			<if test="sendDatetimeZ != null and sendDatetimeZ != ''">
+				AND a.send_datetime &lt;= #{sendDatetimeZ}
+			</if>
+			<if test="createDatetimeQ != null and createDatetimeQ != ''">
+				AND a.create_datetime &gt;= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null and createDatetimeZ != ''">
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.create_by = #{user.id}
+			</if>
+			<if test="createUserId != null and createUserId != ''">
+				AND a.create_by = #{createUserId}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id = #{companyId}
+			</if>
+			<if test="status != null and status !=''">
+				AND a.status=#{status}
+			</if>
+			<if test="smsContent != null and smsContent !=''">
+				AND a.sms_content LIKE CONCAT('%',#{smsContent},'%')
+			</if>
+			<if test="userIdText != null and userIdText !=''">
+				AND a.create_by = #{userIdText}
+			</if>
+			<if test="sign != null and sign !=''">
+				AND a.sms_content LIKE CONCAT('%',#{sign},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.send_datetime DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT
+		<include refid="jmsgSmsTaskColumns"/>
+		FROM jmsg_sms_task a
+		<include refid="jmsgSmsTaskJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findPendingSendSms" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT 
+			id,version,row_number rowNumber
+		FROM jmsg_sms_task a
+		WHERE a.send_datetime &lt;= NOW() 
+		AND (a.status='1' or a.status='8')
+		AND a.task_type=0
+		ORDER BY a.send_datetime 
+		LIMIT 20
+	</select>
+
+	<select id="findPendingSendSmsDot" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT 
+			id,version,row_number rowNumber
+		FROM jmsg_sms_task a
+		WHERE a.send_datetime &lt;= NOW() 
+		AND (a.status='1' or a.status='8')
+		AND a.task_type>0 AND a.task_type &lt;3
+		ORDER BY a.send_datetime 
+		LIMIT 20
+	</select>
+
+	<select id="findPendingSendBatchSms" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT 
+			id,version,row_number rowNumber,send_datetime sendDatetime
+		FROM jmsg_sms_task a
+		WHERE a.send_datetime &lt;= NOW() 
+		AND (a.status='1' or a.status='8')
+		AND a.task_type>=3
+		ORDER BY a.send_datetime 
+		LIMIT 20
+	</select>
+
+	<select id="findPendingSendMms" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT 
+			id,version,row_number rowNumber
+		FROM jmsg_sms_task a
+		WHERE a.send_datetime &lt;= NOW() 
+		AND (a.status='1' or a.status='8')
+		AND a.task_type=3
+		ORDER BY a.send_datetime 
+		LIMIT 20
+	</select>
+
+	<insert id="insert">
+		INSERT INTO jmsg_sms_task(
+			id,
+			data_id,
+			send_count,
+			send_datetime,
+			end_datetime,
+			status,
+			count_detail,
+			create_datetime,
+			create_by,
+			update_datetime,
+			update_by,
+			sms_content,
+			task_type
+		) VALUES (
+			#{id},
+			#{dataId},
+			#{sendCount},
+			#{sendDatetime},
+			#{endDatetime},
+			#{status},
+			#{countDetail},
+			NOW(),
+			#{createBy.id},
+			NOW(),
+			#{createBy.id},
+			#{smsContent},
+			#{taskType}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE jmsg_sms_task SET
+			data_id = #{dataId},
+			send_count = #{sendCount},
+			send_datetime = #{sendDatetime},
+			end_datetime = #{endDatetime},
+			status = #{status},
+			count_detail = #{countDetail},
+			create_datetime = #{createDatetime},
+			update_datetime = #{updateDatetime},
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateJmsgSmsTask">
+		UPDATE jmsg_sms_task SET
+			send_count = #{sendCount},
+			status = #{status}
+		WHERE id = #{id}	
+	</update>
+
+	<update id="updateJmsgSmsTaskByDataId">
+		UPDATE jmsg_sms_task SET
+			status = #{status},
+			update_datetime=NOW()
+		WHERE data_id = #{dataId}	
+	</update>
+
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE jmsg_sms_task SET
+		status=#{status},
+		<if test="status =='3'.toString()">
+			end_datetime = NOW(),
+		</if>
+		<if test="updateBy != null and updateBy !=''">
+			update_by = #{userBy},
+		</if>
+		update_datetime=NOW()
+
+		WHERE id=#{taskId}
+	</update>
+
+	<update id="delete">
+		DELETE FROM jmsg_sms_task
+		WHERE id = #{id}
+	</update>
+
+	<select id="findSmsTaskReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT
+		a.id AS "id",
+		a.data_id AS "dataId",
+		a.send_count AS "sendCount",
+		a.send_datetime AS "sendDatetime",
+		a.end_datetime AS "endDatetime",
+		a.status AS "status",
+		a.count_detail AS "countDetail",
+		a.success_count AS "successCount",
+		a.fail_count AS "failCount"
+		FROM jmsg_sms_task a
+		<where>
+			<if test="sendDatetimeQ != null and sendDatetimeQ != ''">
+				AND a.send_datetime &gt;= #{sendDatetimeQ}
+			</if>
+			<if test="sendDatetimeZ != null and sendDatetimeZ != ''">
+				AND a.send_datetime &lt;= #{sendDatetimeZ}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateReport">
+		UPDATE jmsg_sms_task SET
+			success_count=#{successCount},
+			fail_count=#{failCount},
+			update_datetime =NOW()
+		WHERE id=#{id}	
+	</update>
+
+	<update id="updateRowNumber">
+		UPDATE jmsg_sms_task SET
+			row_number=#{rowNumber}
+		WHERE id=#{taskid}	
+	</update>
+
+	<update id="updateSendStatus" parameterType="java.util.Map">
+		UPDATE jmsg_sms_task SET
+		status=#{status},
+		<if test="status =='3'.toString()">
+			end_datetime = NOW(),
+		</if>
+		<if test="updateBy != null and updateBy !=''">
+			update_by = #{userBy},
+		</if>
+		update_datetime=NOW(),
+		version=version+1
+		<where>
+			id=#{taskid}
+			<if test="version != null and version !=''">
+				AND version=#{version}
+			</if>
+		</where>
+	</update>
+
+	<update id="reviewSmsContent">
+		UPDATE jmsg_sms_task SET
+			status=#{status},
+			update_datetime=NOW(),
+			update_by=#{user.id},
+			review_user_id=#{user.id},
+			review_time=NOW(),
+			review_remarks=#{reviewRemarks}
+		WHERE id=#{id} AND status='-1'
+	</update>
+
+	<update id="updateSmsContent">
+		UPDATE jmsg_sms_task SET
+			status=#{status},
+			update_datetime=NOW(),
+			update_by=#{user.id},
+			review_user_id=#{user.id},
+			review_time=NOW(),
+			review_remarks=#{reviewRemarks},
+			sms_content=#{smsContent},
+			send_datetime=#{sendDatetime}
+		WHERE id=#{id} AND status='-1'
+	</update>
+
+	<select id="findReviewCount" resultType="java.lang.Integer">
+		SELECT count(*) FROM jmsg_sms_task WHERE status='-1'
+	</select>
+
+	<update id="onekeyReview">
+		UPDATE jmsg_sms_task a
+		SET
+			a.status=#{status},
+			a.update_datetime=NOW(),
+			a.update_by=#{updateBy.id},
+			a.review_user_id=#{reviewUserId},
+			<if test="reviewRemarks != null and reviewRemarks !=''">
+				a.review_remarks = #{reviewRemarks},
+			</if>
+			a.review_time=NOW()
+		WHERE a.status='-1'
+		<if test="userIdText != null and userIdText !=''">
+			AND a.create_by = #{userIdText}
+		</if>
+		<if test="user != null and user.id != null and user.id !=''">
+			AND a.create_by = #{user.id}
+		</if>
+		<if test="sign != null and sign !=''">
+			AND a.sms_content LIKE CONCAT('%',#{sign},'%')
+		</if>
+		<if test="smsContent != null and smsContent !=''">
+			AND a.sms_content LIKE CONCAT('%',#{smsContent},'%')
+		</if>
+		<if test="createDatetimeQ != null and createDatetimeQ != ''">
+			AND a.create_datetime &gt;= #{createDatetimeQ}
+		</if>
+		<if test="createDatetimeZ != null and createDatetimeZ != ''">
+			AND a.create_datetime &lt;= #{createDatetimeZ}
+		</if>
+	</update>
+
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgRuleInfoDao">
+    
+	<sql id="jmsgRuleInfoColumns">
+		a.id AS "id",
+		a.rule_name AS "ruleName",
+		a.rule_content AS "ruleContent",
+		a.rule_type AS "ruleType",
+		a.ispass AS "ispass",
+		a.status AS "status",
+		a.description AS "description",
+		a.create_by AS "createBy.id",
+		a.createtime AS "createtime",
+		a.rule_code AS ruleCode
+	</sql>
+	
+	<sql id="jmsgRuleInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgRuleInfo">
+		SELECT 
+			<include refid="jmsgRuleInfoColumns"/>
+		FROM jmsg_rule_info a
+		<include refid="jmsgRuleInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgRuleInfo">
+		SELECT 
+			<include refid="jmsgRuleInfoColumns"/>
+		FROM jmsg_rule_info a
+		<include refid="jmsgRuleInfoJoins"/>
+		<where>
+			<if test="ruleCode != null and ruleCode !=''">
+				AND a.rule_code = #{ruleCode}
+			</if>
+			<if test="ruleType != null and ruleType != ''">
+				AND a.rule_type = #{ruleType}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="ruleName != null and ruleName !=''">
+				AND a.rule_name LIKE CONCAT('%',#{ruleName},'%')
+			</if>
+			<if test="ruleContent != null and ruleContent !=''">
+				AND a.rule_content LIKE CONCAT('%',#{ruleContent},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgRuleInfo">
+		SELECT 
+			<include refid="jmsgRuleInfoColumns"/>
+		FROM jmsg_rule_info a
+		<include refid="jmsgRuleInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO jmsg_rule_info(
+			rule_name,
+			rule_content,
+			rule_type,
+			ispass,
+			status,
+			description,
+			create_by,
+			createtime,
+			rule_code
+		) VALUES (
+			#{ruleName},
+			#{ruleContent},
+			#{ruleType},
+			#{ispass},
+			#{status},
+			#{description},
+			#{createBy.id},
+			now(),
+			#{ruleCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_rule_info SET 	
+			rule_name = #{ruleName},
+			rule_content = #{ruleContent},
+			rule_type = #{ruleType},
+			ispass = #{ispass},
+			status = #{status},
+			description = #{description},
+			createtime = #{createtime},
+			rule_code = #{ruleCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_rule_info
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findRuleInfoByGroup" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgRuleInfo">
+		SELECT 
+		<include refid="jmsgRuleInfoColumns"/>
+		FROM jmsg_rule_relation b 
+		LEFT JOIN jmsg_rule_info a ON b.rule_id = a.id
+		-- and a.status=0
+		WHERE b.group_id=#{groupId}
+	</select>
+	
+	<select id="initRuleInfo" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgRuleInfo">
+		SELECT id,rule_name ruleName 
+		FROM jmsg_rule_info a 
+		WHERE NOT EXISTS (SELECT 1 FROM jmsg_rule_relation b WHERE b.group_id=#{groupId} AND b.rule_type=4 AND a.id = b.rule_id) AND a.rule_type=4
+	</select>
+	
+</mapper>

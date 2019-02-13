@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.phone.dao.SmsPhoneBlacklistDao">
+    
+	<sql id="smsPhoneBlacklistColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.scope AS "scope",
+		a.create_by AS "createBy",
+		a.create_datetime AS "createDatetime"
+	</sql>
+	
+	<sql id="smsPhoneBlacklistJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.phone.entity.SmsPhoneBlacklist">
+		SELECT 
+			<include refid="smsPhoneBlacklistColumns"/>
+		FROM sms_phone_blacklist a
+		<include refid="smsPhoneBlacklistJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.phone.entity.SmsPhoneBlacklist">
+		SELECT 
+			<include refid="smsPhoneBlacklistColumns"/>
+		FROM sms_phone_blacklist a
+		<include refid="smsPhoneBlacklistJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.phone.entity.SmsPhoneBlacklist">
+		SELECT 
+			<include refid="smsPhoneBlacklistColumns"/>
+		FROM sms_phone_blacklist a
+		<include refid="smsPhoneBlacklistJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sms_phone_blacklist(
+			phone,
+			scope,
+			create_by,
+			create_datetime
+		) VALUES (
+			#{phone},
+			#{scope},
+			#{createBy},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sms_phone_blacklist SET 	
+			phone = #{phone},
+			scope = #{scope},
+			create_by = #{createBy},
+			create_datetime = NOW()
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sms_phone_blacklist
+		WHERE phone = #{phone}
+	</update>
+	
+</mapper>

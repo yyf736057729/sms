@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsSendDao">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ${tableName}(
+			id,
+			data_id,
+			task_id,
+			customer_order_id,
+			phone,
+			sms_content,
+			sms_type,
+			pay_count,
+			user_id,
+			phone_type,
+			area_code,
+			pay_type,
+			pay_status,
+			pay_time,
+			push_flag,
+			send_status,
+			channel_code,
+			sp_number,
+			send_datetime,
+			company_id,
+			submit_mode,
+			topic,
+			msgid,
+			create_datetime,
+			update_datetime,
+			report_gateway_id
+		) VALUES (
+			#{id},
+			#{dataId},
+			#{taskId},
+			#{customerOrderId},
+			#{phone},
+			#{smsContent},
+			#{smsType},
+			#{payCount},
+			#{userId},
+			#{phoneType},
+			#{areaCode},
+			#{payType},
+			#{payStatus},
+			#{payTime},
+			#{pushFlag},
+			#{sendStatus},
+			#{channelCode},
+			#{spNumber},
+			#{sendDatetime},
+			#{companyId},
+			#{submitMode},
+			#{topic},
+			#{msgid},
+			NOW(),
+			NOW(),
+			#{reportGatewayId}
+		)
+	</insert>
+</mapper>

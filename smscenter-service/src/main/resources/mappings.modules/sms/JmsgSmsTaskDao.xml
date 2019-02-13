@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsTaskDao">
+    
+	<sql id="jmsgSmsTaskColumns">
+		a.id AS "id",
+		a.data_id AS "dataId",
+		a.send_count AS "sendCount",
+		a.send_datetime AS "sendDatetime",
+		a.end_datetime AS "endDatetime",
+		a.status AS "status",
+		a.count_detail AS "countDetail",
+		a.create_datetime AS "createDatetime",
+		a.create_by AS "createBy.id",
+		a.update_datetime AS "updateDatetime",
+		a.update_by AS "updateBy.id",
+		a.success_count AS "successCount",
+		a.fail_count AS "failCount",
+		a.sms_content AS "smsContent"
+	</sql>
+	
+	<sql id="jmsgSmsTaskJoins">
+		<!-- LEFT JOIN jmsg_sms_data d1 ON d1.id = a.data_id -->
+	</sql>
+
+	<update id="updateJmsgSmsTask">
+		UPDATE jmsg_sms_task SET
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+</mapper>

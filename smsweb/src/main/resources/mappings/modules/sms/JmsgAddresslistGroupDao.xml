@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgAddresslistGroupDao">
+    
+	<sql id="jmsgAddresslistGroupColumns">
+		a.id AS "id",
+		a.parent_id AS "pid",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.name AS "name",
+		a.sort AS "sort",
+		a.remarks AS "remarks",
+		a.create_by AS "createBy.id",
+		a.company_id AS "companyId",
+		a.createtime AS "createtime",
+		a.update_by AS "updateBy.id",
+		a.updatetime AS "updatetime",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="jmsgAddresslistGroupJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgAddresslistGroup">
+		SELECT 
+			<include refid="jmsgAddresslistGroupColumns"/>
+		FROM jmsg_addresslist_group a
+		<include refid="jmsgAddresslistGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgAddresslistGroup">
+		SELECT 
+			<include refid="jmsgAddresslistGroupColumns"/>
+		FROM jmsg_addresslist_group a
+		<include refid="jmsgAddresslistGroupJoins"/>
+		<where>
+			AND a.status='1'
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="userId != null and userId !=''">
+				AND a.create_by = #{userId}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="parent != null and parent.id != null and parent.id !=''">
+				AND a.parent_id=#{parent.id}
+			</if>
+			<if test="parentIds != null and parentIds !=''">
+				AND  (a.id=#{id} or a.parent_ids LIKE CONCAT(#{parentIds},#{id},',%'))
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgAddresslistGroup">
+		SELECT 
+			<include refid="jmsgAddresslistGroupColumns"/>
+		FROM jmsg_addresslist_group a
+		<include refid="jmsgAddresslistGroupJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyColumn="id">
+		INSERT INTO jmsg_addresslist_group(
+			parent_id,
+			parent_ids,
+			name,
+			sort,
+			remarks,
+			create_by,
+			company_id,
+			createtime,
+			update_by,
+			updatetime
+		) VALUES (
+			#{parent.id},
+			#{parentIds},
+			#{name},
+			#{sort},
+			#{remarks},
+			#{createBy.id},
+			#{companyId},
+			NOW(),
+			#{updateBy.id},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_addresslist_group SET 	
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			name = #{name},
+			sort = #{sort},
+			remarks = #{remarks},
+			company_id = #{companyId},
+			createtime = #{createtime},
+			update_by = #{updateBy.id},
+			updatetime = #{updatetime},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE jmsg_addresslist_group SET
+			status='0'
+		WHERE id = #{id} OR parent_ids LIKE CONCAT('%,', #{id}, ',%')
+	</update>
+	
+</mapper>

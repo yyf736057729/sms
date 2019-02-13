@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsSubmitDao">
+
+	<resultMap id="BaseResultMap"
+		type="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSubmit">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="msgid" property="msgid" jdbcType="VARCHAR" />
+		<result column="result" property="result" jdbcType="VARCHAR" />
+		<result column="bizid" property="bizid" jdbcType="VARCHAR" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="taskid" property="taskid" jdbcType="VARCHAR" />
+		<result column="userid" property="userid" jdbcType="INTEGER" />
+		<result column="gatewayid" property="gatewayid" jdbcType="VARCHAR" />
+		<result column="reserve" property="reserve" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, msgid, result, bizid, createtime, taskid, userid,
+		gatewayid, reserve, phone
+	</sql>
+
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSubmit">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM jmsg_sms_submit
+		WHERE id = #{id}
+	</select>
+
+	<insert id="insert">
+		INSERT INTO jmsg_sms_submit
+		(msgid, result, bizid,
+		createtime, taskid, userid, gatewayid, reserve, phone)
+		VALUES
+		(#{msgid}, #{result}, #{bizid}, NOW(), #{taskid}, #{userid}, #{gatewayid},
+		#{reserve}, #{phone})
+	</insert>
+
+	<update id="update">
+		UPDATE jmsg_sms_submit SET
+		msgid = #{msgid},
+		result = #{result},
+		bizid = #{bizid},
+		createtime = #{createtime},
+		taskid = #{taskid},
+		userid = #{userid},
+		gatewayid = #{gatewayid},
+		reserve = #{reserve},
+		phone = #{phone}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findList" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from jmsg_sms_submit
+		<where>
+			<if test="bizid != null and bizid !=''">
+				AND bizid=#{bizid}
+			</if>
+			<if test="taskid != null and taskid !=''">
+				AND taskid=#{taskid}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findListV2" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ${tableName}
+		<where>
+			<if test="bizid != null and bizid !=''">
+				AND bizid=#{bizid}
+			</if>
+			<if test="taskid != null and taskid !=''">
+				AND taskid=#{taskid}
+			</if>
+		</where>
+	</select>
+
+	<select id="findErrorForReSend" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from jmsg_sms_submit
+		<where>
+		    <if test="result != null and result != ''">
+				AND result = #{result}
+			</if>
+		    <if test="createtimeQ != null and createtimeQ != ''">
+				AND createtime >= #{createtimeQ}
+			</if>
+			<if test="createtimeZ != null and createtimeZ != ''">
+				AND createtime &lt;= #{createtimeZ}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND phone = #{phone}
+			</if>
+	    </where>
+	    <choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+
+</mapper>

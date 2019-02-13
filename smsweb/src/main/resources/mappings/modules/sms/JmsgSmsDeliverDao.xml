@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsDeliverDao">
+    
+	<sql id="jmsgSmsDeliverColumns">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.src_term_id AS "srcTermId",
+		a.dest_term_id AS "destTermId",
+		a.msg_content AS "msgContent",
+		a.gateway_id AS "gatewayId",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="jmsgSmsDeliverJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliver">
+		SELECT 
+			<include refid="jmsgSmsDeliverColumns"/>
+		FROM jmsg_sms_deliver a
+		<include refid="jmsgSmsDeliverJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliver">
+		SELECT 
+			<include refid="jmsgSmsDeliverColumns"/>
+		FROM jmsg_sms_deliver a
+		<include refid="jmsgSmsDeliverJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliver">
+		SELECT 
+			<include refid="jmsgSmsDeliverColumns"/>
+		FROM jmsg_sms_deliver a
+		<include refid="jmsgSmsDeliverJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_deliver(
+			msgid,
+			src_term_id,
+			dest_term_id,
+			msg_content,
+			gateway_id,
+			createtime
+		) VALUES (
+			#{msgid},
+			#{srcTermId},
+			#{destTermId},
+			#{msgContent},
+			#{gatewayId},
+			#{createtime}
+		)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="com.siloyou.jmsg.common.message.SmsMoMessage">
+		INSERT INTO jmsg_sms_deliver(
+			uuid,
+			msgid,
+			src_term_id,
+			dest_term_id,
+			msg_content,
+			gateway_id,
+			createtime
+		) VALUES (
+			#{uuid},
+			#{msgid},
+			#{srcTermID},
+			#{destTermID},
+			#{msgContent},
+			#{gateWayID},
+			NOW()
+		)
+	</insert>
+	
+	<insert id="batchInsertPush" parameterType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliver">
+	
+		INSERT INTO jmsg_sms_deliver_push(
+			uuid,
+			msgid,
+			src_term_id,
+			dest_term_id,
+			msg_content,
+			gateway_id,
+			createtime,
+			user_id,
+			result,
+			push_flag
+		) VALUES (
+			#{moMsg.uuid},
+			#{moMsg.msgid},
+			#{moMsg.srcTermID},
+			#{moMsg.destTermID},
+			#{moMsg.msgContent},
+			#{moMsg.gateWayID},
+			NOW(),
+			#{userId},
+			#{result},
+			#{pushFlag}
+		)
+	</insert>	
+	
+	<update id="update">
+		UPDATE jmsg_sms_deliver SET 	
+			msgid = #{msgid},
+			src_term_id = #{srcTermId},
+			dest_term_id = #{destTermId},
+			msg_content = #{msgContent},
+			gateway_id = #{gatewayId},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_deliver
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

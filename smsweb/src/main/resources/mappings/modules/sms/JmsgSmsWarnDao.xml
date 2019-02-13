@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsWarnDao">
+    
+	<sql id="jmsgSmsWarnColumns">
+		a.id AS "id",
+		a.warn_type AS "warnType",
+		a.warn_content AS "warnContent",
+		a.warn_status AS "warnStatus",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="jmsgSmsWarnJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsWarn">
+		SELECT 
+			<include refid="jmsgSmsWarnColumns"/>
+		FROM jmsg_sms_warn a
+		<include refid="jmsgSmsWarnJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsWarn">
+		SELECT 
+			<include refid="jmsgSmsWarnColumns"/>
+		FROM jmsg_sms_warn a
+		<include refid="jmsgSmsWarnJoins"/>
+		<where>
+			<if test="warnType != null and warnType != ''">
+				AND a.warn_type = #{warnType}
+			</if>
+			<if test="warnStatus != null and warnStatus != ''">
+				AND a.warn_status = #{warnStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsWarn">
+		SELECT 
+			<include refid="jmsgSmsWarnColumns"/>
+		FROM jmsg_sms_warn a
+		<include refid="jmsgSmsWarnJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_warn(
+			warn_type,
+			warn_content,
+			warn_status,
+			create_time
+		) VALUES (
+			#{warnType},
+			#{warnContent},
+			#{warnStatus},
+			now()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_warn SET 	
+			warn_type = #{warnType},
+			warn_content = #{warnContent},
+			warn_status = #{warnStatus},
+			create_time = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_warn
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据ID修改告警处理状态  -->
+	<update id="updateStatusById">
+		UPDATE jmsg_sms_warn SET 	
+			warn_status = #{warnStatus}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

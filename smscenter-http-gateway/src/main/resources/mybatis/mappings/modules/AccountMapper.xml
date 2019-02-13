@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.smscenter.account.mapper.AccountMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.sanerzone.smscenter.account.entity.Account">
+		<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="app_type" property="appType" />
+		<result column="money" property="money" />
+		<result column="create_date" property="createDate" />
+		<result column="create_by" property="createBy" />
+		<result column="pay_mode" property="payMode" />
+		<result column="used_flag" property="usedFlag" />
+	</resultMap>
+	
+	<select id="selectByCustom" resultMap="BaseResultMap">
+		select * from jmsg_account
+	</select>
+	
+	<select id="findAccountList" resultType="java.util.Map">
+    	SELECT 	a.id AS id,
+    			a.name AS name,
+			   	a.company_id AS companyId,
+			   	a.login_name AS loginName,
+				a.phone AS phone,
+				a.user_type AS userType,
+				a.mmsfrom AS mmsfrom,
+				a.callback_url AS callbackUrl,
+				a.rsp_content_type AS rspContentType,
+				a.no_check AS noCheck,
+				a.apikey AS apikey,
+				a.whiteIP AS whiteIP,
+				a.up_url AS upUrl,
+				a.sign_flag AS signFlag,
+				a.user_tmpl_flag AS userTmplFlag,
+				a.sys_blackList_flag AS sysBlackListFlag,
+				a.user_blacklist_flag AS userBlacklistFlag,
+				a.interface_flag AS interfaceFlag,
+				a.content_rule AS contentRule,
+				a.balance_caution AS balanceCaution,
+				a.caution_mobile AS cautionMobile,
+				a.group_id AS groupId,
+				a.review_count AS reviewCount,
+				a.keyword AS keyword,
+				a.filter_word_flag AS filterWordFlag,
+				a.cmpp_user_type AS cmppUserType,
+				a.force_sign AS forceSign,
+				a.extnum_yd AS extnumYd, 
+				a.extnum_lt AS extnumLt,
+				a.extnum_dx AS extnumDx,
+				a.user_month_limit AS userMonthLimit,
+				a.send_limit AS sendLimit,
+				a.rule_group_id AS ruleGroupId,
+				a.pay_type AS payType,
+				a.yzm_gateway_flag AS yzmGatewayFlag,
+				a.allnum_push AS allnumPush,
+				a.substring_length AS substringLength,
+				a.yzm_send_count AS yzmSendCount,
+				a.http_speed AS httpSpeed,
+				b.pay_mode AS payMode,
+				b.app_type AS appType,
+				b.used_flag AS usedFlag
+    	FROM sys_user a,jmsg_account b 
+    	WHERE a.id = b.user_id and a.del_flag = 0
+	</select>
+
+</mapper>

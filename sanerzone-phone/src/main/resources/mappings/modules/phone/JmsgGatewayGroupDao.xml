@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.smscenter.dao.JmsgGatewayGroupDao">
+    
+	<sql id="jmsgGatewayGroupColumns">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.phone_type AS "phoneType",
+		a.province_id AS "provinceId",
+		a.gateway_id AS "gatewayId",
+		a.level AS "level",
+		u1.name AS "groupName",
+		u2.gateway_name AS "gatewayName"
+	</sql>
+	
+	<sql id="jmsgGatewayGroupJoins">
+		LEFT JOIN sys_area a4 ON a4.id = a.province_id
+		LEFT JOIN jmsg_group u1 ON u1.id=a.group_id
+		LEFT JOIN jmsg_gateway_info u2 ON u2.id=a.gateway_id
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGatewayGroup">
+		SELECT 
+			<include refid="jmsgGatewayGroupColumns"/>
+		FROM jmsg_gateway_group a
+		<include refid="jmsgGatewayGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByParam" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGatewayGroup">
+		SELECT 
+			<include refid="jmsgGatewayGroupColumns"/>
+		FROM jmsg_gateway_group a
+		<include refid="jmsgGatewayGroupJoins"/>
+		WHERE a.group_id = #{groupId} 
+			  AND a.phone_type = #{phoneType} 
+			  AND a.province_id = #{provinceId} 
+			  AND a.gateway_id = #{gatewayId}
+	</select>	
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGatewayGroup">
+		SELECT 
+			<include refid="jmsgGatewayGroupColumns"/>
+		FROM jmsg_gateway_group a
+		<include refid="jmsgGatewayGroupJoins"/>
+		<where>
+			
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.level DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findGroupList" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGatewayGroup">
+		SELECT 
+				a.group_id AS "groupId",
+				a.phone_type AS "phoneType",
+				a.province_id AS "provinceId",
+				a.gateway_id AS "gatewayId"
+		FROM jmsg_gateway_group a
+		<where>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+		</where>
+		ORDER BY a.level DESC
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGatewayGroup">
+		SELECT 
+			<include refid="jmsgGatewayGroupColumns"/>
+		FROM jmsg_gateway_group a
+		<include refid="jmsgGatewayGroupJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_gateway_group(
+			group_id,
+			phone_type,
+			province_id,
+			gateway_id,
+			level
+		) VALUES (
+			#{groupId},
+			#{phoneType},
+			#{provinceId},
+			#{gatewayId},
+			#{level}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_gateway_group SET 	
+			group_id = #{groupId},
+			phone_type = #{phoneType},
+			province_id = #{provinceId},
+			gateway_id = #{gatewayId},
+			level = #{level}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_gateway_group
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByParam">
+		DELETE FROM jmsg_gateway_group
+		WHERE group_id = #{groupId} AND
+			phone_type = #{phoneType} AND
+			province_id = #{provinceId} AND
+			gateway_id = #{gatewayId}
+	</update>
+	
+	<select id="queryGatewayNoSign" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGatewayGroup">
+		SELECT a.group_id groupId,a.phone_type phoneType ,a.province_id provinceId ,a.gateway_id gatewayId ,b.sp_number spNumber 
+		FROM jmsg_gateway_group a 
+		LEFT JOIN jmsg_gateway_info b ON a.gateway_id = b.id 
+		<where>
+			b.custom_flag='1'
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id = #{provinceId}
+			</if>
+			<if test="gatewayId != null and gatewayId !=''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+		</where>
+		ORDER BY a.level 
+	</select>
+	
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sanerzone.common.modules.phone.dao.JmsgSmsUserTmplDao">
+    <sql id="JmsgSmsUserTmplColumns">
+        a.id AS "id",
+		a.user_id AS "userId",
+		a.template_id AS "templateId",
+		a.create_time AS "createTime",
+		a.remarks AS "remarks",
+		a.join_number AS "joinNumber",
+		a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="JmsgSmsUserTmplColumns_2">
+       a.id AS "id",
+		a.user_id AS "userId",
+		a.template_id AS "templateId",
+		a.create_time AS "createTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.join_number AS "joinNumber",
+		b.template_name AS "templateName",
+		c.name AS "userName"
+    </sql>
+
+    <sql id="Base_Column_List" >
+    ID, TEMPLATE_ID, CREATE_TIME, USER_ID, DEL_FLAG, REMARKS,JOIN_NUMBER
+  </sql>
+
+
+    <select id="selectByUseridTemps"  resultType="com.sanerzone.common.modules.phone.entity.JmsgSmsUserTmpl">
+        select
+        <include refid="Base_Column_List" />
+        from jmsg_sms_user_tmpl a
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+
+            <if test="templateId != null and templateId != ''">
+                AND a.template_id = #{templateId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

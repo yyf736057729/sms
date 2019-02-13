@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.biz.dao.BizRegistryDataDao">
+    
+	<sql id="bizRegistryDataColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.verification_code AS "verificationCode",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="bizRegistryDataJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.biz.entity.BizRegistryData">
+		SELECT 
+			<include refid="bizRegistryDataColumns"/>
+		FROM biz_registry_data a
+		<include refid="bizRegistryDataJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.biz.entity.BizRegistryData">
+		SELECT 
+			<include refid="bizRegistryDataColumns"/>
+		FROM biz_registry_data a
+		<include refid="bizRegistryDataJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="createTimeQ != null">
+				AND a.create_time &gt;= #{createTimeQ}
+			</if>
+			<if test="createTimeZ != null">
+				AND a.create_time &lt;= #{createTimeZ}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY a.create_time DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.biz.entity.BizRegistryData">
+		SELECT 
+			<include refid="bizRegistryDataColumns"/>
+		FROM biz_registry_data a
+		<include refid="bizRegistryDataJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO biz_registry_data(
+			id,
+			phone,
+			verification_code,
+			create_time
+		) VALUES (
+			#{id},
+			#{phone},
+			#{verificationCode},
+		    now()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE biz_registry_data SET 	
+			phone = #{phone},
+			verification_code = #{verificationCode},
+			create_time = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM biz_registry_data
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getBizRegistryDataByphone" resultType="com.siloyou.jmsg.modules.biz.entity.BizRegistryData">
+		SELECT 
+			<include refid="bizRegistryDataColumns"/>
+		FROM biz_registry_data a
+		<include refid="bizRegistryDataJoins"/>
+		WHERE a.phone = #{phone}
+	</select>
+	
+</mapper>

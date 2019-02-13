@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsDayReportDao">
+    
+	<sql id="jmsgSmsDayReportColumns">
+		a.user_id AS "user.id",
+		a.day AS "day",
+		SUM(a.user_count) AS "userCount",
+		SUM(a.send_count) AS "sendCount",
+		SUM(a.success_count) AS "successCount",
+		SUM(a.submit_success_count) AS "submitSuccessCount",
+		SUM(a.submit_fail_count) AS "submitFailCount",
+		SUM(a.report_success_count) AS "reportSuccessCount",
+		SUM(a.fail_count) AS "failCount",
+		SUM(a.report_null_count) AS "reportNullCount",
+		SUM(a.report_fail_count) AS "reportFailCount",
+		a.back_datetime AS "backDatetime",
+		a.back_flag AS "backFlag",
+		SUM(a.user_back_count) AS "userBackCount",
+		SUM(a.back_count) AS "backCount",
+		SUM(a.push_success_count) AS "pushSuccessCount",
+		SUM(a.push_fail_count) AS "pushFailCount",
+		SUM(a.push_unkown_count) AS "pushUnkownCount",
+		a.update_datetime AS "updateDatetime",
+		u1.name AS "user.name",
+		u1.login_name AS "user.loginName",
+		u2.name AS "companyName"
+	</sql>
+	
+	<sql id="jmsgSmsDayReportJoins">
+		LEFT JOIN sys_user u1 ON u1.id = a.user_id
+		LEFT JOIN sys_office u2 ON u2.id = u1.company_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			<include refid="jmsgSmsDayReportColumns"/>
+		FROM jmsg_sms_day_report a
+		<include refid="jmsgSmsDayReportJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			<include refid="jmsgSmsDayReportColumns"/>
+		FROM jmsg_sms_day_report a
+		<if test="userCategory != null and userCategory == '1'.toString()">
+			INNER JOIN jmsg_user_gateway b ON a.user_id = b.userid
+		</if>
+		<include refid="jmsgSmsDayReportJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="userId != null and userId !=''">
+				AND a.user_id=#{userId}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id=#{companyId}
+			</if>
+			<if test="queryType == 'day'.toString()">
+				<if test="dayQ != null">
+					AND a.day >=#{dayQ}
+				</if>
+				<if test="dayZ != null">
+					AND a.day &lt;=#{dayZ}
+				</if>
+			</if>
+			<if test="queryType == 'month'.toString()">
+				<if test="dayQ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+				</if>
+				<if test="dayZ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+				</if>
+			</if>
+			<if test="backFlag != null and backFlag !=''">
+				AND a.back_flag=#{backFlag}
+			</if>
+			<if test="day != null">
+				AND a.day = #{day}
+			</if>
+		</where>
+		GROUP BY a.user_id,
+		<if test="queryType == 'day'.toString()">
+			a.day
+		</if>
+		<if test="queryType == 'month'.toString()">
+			DATE_FORMAT(a.day,'%Y-%m')
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC,SUM(a.send_count) DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListReportPhoneType" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			<include refid="jmsgSmsDayReportColumns"/>,
+			a.phone_type phoneType
+		FROM jmsg_sms_day_report a
+		<include refid="jmsgSmsDayReportJoins"/>
+		<where>
+			AND a.phone_type != '-1'
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="userId != null and userId !=''">
+				AND a.user_id=#{userId}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id=#{companyId}
+			</if>
+			<if test="queryType == 'day'.toString()">
+				<if test="dayQ != null">
+					AND a.day >=#{dayQ}
+				</if>
+				<if test="dayZ != null">
+					AND a.day &lt;=#{dayZ}
+				</if>
+			</if>
+			<if test="queryType == 'month'.toString()">
+				<if test="dayQ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+				</if>
+				<if test="dayZ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+				</if>
+			</if>
+			<if test="backFlag != null and backFlag !=''">
+				AND a.back_flag=#{backFlag}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+		</where>
+		GROUP BY a.user_id,
+		<if test="queryType == 'day'.toString()">
+			a.day
+		</if>
+		<if test="queryType == 'month'.toString()">
+			DATE_FORMAT(a.day,'%Y-%m')
+		</if>,a.phone_type
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC,SUM(a.send_count) DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findListReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			a.day AS "day",
+			u1.name AS "userName",
+			u1.login_name AS "loginName",
+			u2.name AS "companyName",
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.user_count) AS "userCount",
+			CONCAT(ROUND(SUM(a.user_count)*100/SUM(a.send_count),2),'%') cgl,
+			(CASE WHEN a.back_flag='1' THEN '已返充' ELSE '未返充' END)  AS "backFlag",
+			a.back_datetime AS "backDatetime",
+			SUM(a.user_back_count) AS "userBackCount",
+			SUM(a.back_count) AS "backCount",
+			a.update_datetime AS "updateDatetime"
+		FROM jmsg_sms_day_report a
+		<include refid="jmsgSmsDayReportJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id=#{companyId}
+			</if>
+			<if test="dayQ != null">
+				AND a.day >=#{dayQ}
+			</if>
+			<if test="dayZ != null">
+				AND a.day &lt;=#{dayZ}
+			</if>
+			<if test="backFlag != null and backFlag !=''">
+				AND a.back_flag=#{backFlag}
+			</if>
+		</where>
+		GROUP BY a.user_id,a.day
+		ORDER BY a.day DESC
+	</select>
+	
+	<select id="findMonthReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsMonthReport">
+		SELECT 
+			DATE_FORMAT(a.day,'%Y-%m') AS "day",
+			u1.name AS "userName",
+			u1.login_name AS "loginName",
+			u2.name AS "companyName",
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.user_count) AS "userCount",
+			CONCAT(ROUND(SUM(a.user_count)*100/SUM(a.send_count),2),'%') cgl,
+			u1.price AS "price"
+		FROM jmsg_sms_day_report a
+		<include refid="jmsgSmsDayReportJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id=#{companyId}
+			</if>
+			<if test="dayQ != null">
+				AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+			</if>
+			<if test="dayZ != null">
+				AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+			</if>
+		</where>
+		GROUP BY a.user_id,DATE_FORMAT(a.day,'%Y-%m')
+		ORDER BY a.day DESC
+	</select>
+	
+	<select id="findGatewayReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsGatewayReport">
+		SELECT 
+			a.day AS "day",
+			u1.name AS "userName",
+			u1.login_name AS "loginName",
+			u2.name AS "companyName",
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.user_count) AS "userCount",
+			CONCAT(ROUND(SUM(a.user_count)*100/SUM(a.send_count),2),'%') cgl,
+			SUM(a.success_count) AS "successCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount",
+			CONCAT(ROUND(SUM(a.submit_success_count)*100/SUM(a.success_count),2),'%') submitCgl,
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			CONCAT(ROUND(SUM(a.report_success_count)*100/SUM(a.success_count),2),'%') reportSuccessZb,
+			SUM(a.report_null_count) AS "reportNullCount",
+			CONCAT(ROUND(SUM(a.report_null_count)*100/SUM(a.success_count),2),'%') reportNullZb,
+			a.update_datetime AS "updateDatetime"
+		FROM jmsg_sms_day_report a
+		<include refid="jmsgSmsDayReportJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id=#{companyId}
+			</if>
+			<if test="dayQ != null">
+				a.day >= #{dayQ}
+			</if>
+			<if test="dayZ != null">
+				a.day &lt;= #{dayZ}
+			</if>
+		</where>
+		GROUP BY a.user_id,a.day
+		ORDER BY a.day DESC
+	</select>	
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			<include refid="jmsgSmsDayReportColumns"/>
+		FROM jmsg_sms_day_report a
+		<include refid="jmsgSmsDayReportJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findSendListByDay" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT  a.user_id AS "user.id",
+				a.company_id companyId,
+				a.pay_type payType,
+			   	a.send_datetime day,
+				sum(a.pay_count) sendCount,
+				sum(case when a.send_status='T0' THEN a.pay_count ELSE 0 END) successCount,
+				(SELECT CONCAT(count(1) ,'|',SUM(case when b.stat='DELIVRD' then 1 else 0 end))from jmsg_sms_report b 
+				where b.submit_time BETWEEN  CONCAT(#{queryDay},'0000') AND CONCAT(#{queryDay},'2359') and b.user_id = a.user_id) as reportResult
+		FROM jmsg_sms_send a 
+		WHERE a.send_datetime BETWEEN  #{dayQ} AND #{dayZ}
+		GROUP BY a.user_id, DATE_FORMAT(a.send_datetime,'%Y-%m-%d')
+		LIMIT ${pageNo},${pageSize}
+	</select>
+	
+	<select id="findSendListByDayNew" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT  a.user_id AS "user.id",
+				a.company_id companyId,
+				a.pay_type payType,
+			   	a.send_datetime day,
+			   	IFNULL(a.phone_type,'-1') phoneType,
+				sum(a.pay_count) sendCount,
+				sum(CASE WHEN a.send_status LIKE 'F%' THEN a.pay_count ELSE 0 END) sendFailCount,
+				sum(CASE WHEN a.send_status LIKE 'T%' THEN a.pay_count ELSE 0 END) successCount,
+				sum(CASE WHEN a.report_status LIKE 'F10%' THEN a.pay_count ELSE 0 END) submitFailCount,
+				sum(case when a.report_status='T100' then a.pay_count else 0 end) reportSuccessCount,
+				sum(case when a.report_status LIKE 'F%' then a.pay_count else 0 end) reportFailCount,
+				sum(case when a.report_status='P100' and a.send_status='T000' then a.pay_count else 0 end) reportNullCount
+		FROM ${tableName} a 
+		WHERE a.send_datetime BETWEEN  #{dayQ} AND #{dayZ}
+		GROUP BY a.user_id, DATE_FORMAT(a.send_datetime,'%Y-%m-%d'),a.phone_type
+		LIMIT ${pageNo},${pageSize}
+	</select>	
+	
+	<select id="findRechargeList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT a.user_id AS "user.id",
+			   sum(a.user_back_count) userBackCount,sum(a.back_count) backCount,a.day day
+		FROM jmsg_sms_day_report a 
+		WHERE a.day=DATE_FORMAT(#{day},'%Y-%m-%d') and back_flag='0'
+		GROUP BY a.user_id
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_day_report(
+			user_id,
+			day,
+			user_count,
+			send_count,
+			success_count,
+			submit_count,
+			fail_count,
+			submit_success_count,
+			report_count,
+			report_success_count,
+			back_datetime,
+			back_flag,
+			user_back_count,
+			back_count,
+			create_datetime,
+			update_datetime
+		) VALUES (
+			#{user.id},
+			#{day},
+			#{userCount},
+			#{sendCount},
+			#{failCount},
+			#{successCount},
+			#{submitCount},
+			#{submitSuccessCount},
+			#{reportCount},
+			#{reportSuccessCount},
+			#{backDatetime},
+			#{backFlag},
+			#{userBackCount},
+			#{backCount},
+			#{createDatetime},
+			#{updateDatetime}
+		)
+	</insert>
+	
+	<insert id="batchInsert">
+		INSERT INTO jmsg_sms_day_report(
+			id,
+			user_id,
+			day,
+			user_count,
+			send_count,
+			success_count,
+			fail_count,
+			report_success_count,
+			report_fail_count,
+			report_null_count,
+			user_back_count,
+			back_count,
+			update_datetime,
+			submit_success_count,
+			submit_fail_count,
+			phone_type,
+			gateway_id,
+			push_success_count,
+			push_fail_count,
+			push_unkown_count,
+			back_flag
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{day},
+			#{userCount},
+			#{sendCount},
+			#{successCount},
+			#{failCount},
+			#{reportSuccessCount},
+			#{reportFailCount},
+			#{reportNullCount},
+			#{userBackCount},
+			#{backCount},
+			NOW(),
+			#{submitSuccessCount},
+			#{submitFailCount},
+			#{phoneType},
+			#{gatewayId},
+			#{pushSuccessCount},
+			#{pushFailCount},
+			#{pushUnkownCount},
+			#{backFlag}
+		)ON DUPLICATE KEY UPDATE `user_id`= values(`user_id`),
+		`day`= values(`day`),
+		`user_count`= values(`user_count`),
+		`send_count`= values(`send_count`),
+		`success_count`= values(`success_count`),
+		`fail_count`= values(`fail_count`),
+		`report_success_count`= values(`report_success_count`),
+		`report_fail_count`= values(`report_fail_count`),
+		`report_null_count`= values(`report_null_count`),
+		`user_back_count`= values(`user_back_count`),
+		`update_datetime`= values(`update_datetime`),
+		`submit_success_count`= values(`submit_success_count`),
+		`report_count`= values(`report_count`),
+		`submit_fail_count`= values(`submit_fail_count`),
+		`gateway_id`= values(`gateway_id`),
+		`push_success_count`= values(`push_success_count`),
+		`push_fail_count`= values(`push_fail_count`),
+		`push_unkown_count`= values(`push_unkown_count`),
+		`back_flag`= values(`back_flag`)
+	</insert>
+
+
+	<update id="update">
+		UPDATE jmsg_sms_day_report SET 	
+			user_id = #{user.id},
+			day = #{day},
+			user_count = #{userCount},
+			send_count = #{sendCount},
+			success_count = #{successCount},
+			submit_count = #{submitCount},
+			submit_success_count = #{submitSuccessCount},
+			report_count = #{reportCount},
+			report_success_count = #{reportSuccessCount},
+			back_datetime = #{backDatetime},
+			back_flag = #{backFlag},
+			user_back_count = #{userBackCount},
+			back_count = #{backCount},
+			create_datetime = #{createDatetime},
+			update_datetime = #{updateDatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_day_report
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateBackFlag">
+		UPDATE jmsg_sms_day_report SET
+			back_flag='1',
+			back_datetime=NOW()
+		WHERE user_id=#{user.id} AND day=DATE_FORMAT(#{day},'%Y-%m-%d')	
+	</update>
+	
+	<select id="queryBackFlagCount" resultType="java.lang.Integer" parameterType="java.util.Date">
+		SELECT count(*) from jmsg_sms_day_report where back_flag='1' and day=DATE_FORMAT(#{day},'%Y-%m-%d')
+	</select>
+	
+	<select id="findListPhoneType" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+		a.phone_type phoneType,
+		sum(a.send_count) sendCount,
+		sum(a.user_count) userCount,
+		SUM(a.success_count) AS "successCount",
+		SUM(a.submit_success_count) AS "submitSuccessCount",
+		SUM(a.submit_fail_count) AS "submitFailCount",
+		SUM(a.report_success_count) AS "reportSuccessCount",
+		SUM(a.fail_count) AS "failCount",
+		SUM(a.report_null_count) AS "reportNullCount",
+		SUM(a.report_fail_count) AS "reportFailCount"
+		FROM jmsg_sms_day_report a
+		<!--
+		张辉20181122
+		day是2018-11-01 14:46:16, DATE_FORMAT(#{day},'%Y-%m-%d')是2018-11-01, 永远查不出来记录
+		即使注释掉AND a.day=DATE_FORMAT(#{day},'%Y-%m-%d'), group by之后, 页面又报错 索引越界
+		现在不清楚业务的情况下, 只好都注释掉
+		<where>
+			a.user_id=#{user.id}
+			<if test="queryType == 'day'.toString()">
+			  	AND a.day=DATE_FORMAT(#{day},'%Y-%m-%d')
+			</if>
+			<if test="queryType == 'month'.toString()">
+				AND DATE_FORMAT(a.day,'%Y-%m') = DATE_FORMAT(#{day},'%Y-%m')
+			</if>
+		</where>
+		GROUP BY a.user_id,
+		<if test="queryType == 'day'.toString()">
+			a.day
+		</if>
+		<if test="queryType == 'month'.toString()">
+			DATE_FORMAT(a.day,'%Y-%m')
+		</if>
+		,a.phone_type
+		-->
+	</select>
+	
+	<select id="findSendListByDayV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT
+				a.id AS "id",
+				a.user_id AS "user.id",
+				a.company_id companyId,
+				a.pay_type payType,
+			   	a.send_datetime day,
+			   	IFNULL(a.phone_type,'-1') phoneType,
+				sum(a.pay_count) sendCount,
+				sum(CASE WHEN a.send_status LIKE 'F%' THEN a.pay_count ELSE 0 END) sendFailCount,
+				sum(CASE WHEN a.send_status LIKE 'T%' THEN a.pay_count ELSE 0 END) successCount,
+				sum(CASE WHEN a.report_status LIKE 'F10%' THEN a.pay_count ELSE 0 END) submitFailCount,
+				sum(case when a.report_status='T100' then a.pay_count else 0 end) reportSuccessCount,
+				sum(case when a.report_status LIKE 'F%' then a.pay_count else 0 end) reportFailCount,
+				sum(case when a.report_status='P100' and a.send_status='T000' then a.pay_count else 0 end) reportNullCount
+		FROM ${tableName} a 
+		WHERE a.user_id=#{userId}
+		GROUP BY a.phone_type
+	</select>
+	
+	<select id="findDaySendListV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+		a.user_id AS "userId",
+		SUM(a.send_count) AS "sendCount"
+		FROM jmsg_sms_day_report a
+		WHERE a.day=DATE_FORMAT(#{day},'%Y-%m-%d')
+		GROUP BY a.user_id
+	</select>
+	
+	<select id="findList4Index" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			<include refid="jmsgSmsDayReportColumns"/>
+		FROM jmsg_sms_day_report a
+		<include refid="jmsgSmsDayReportJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id=#{companyId}
+			</if>
+			<if test="queryType == 'day'.toString()">
+				<if test="dayQ != null">
+					AND a.day >=DATE_FORMAT(#{dayQ},'%Y-%m-%d %T')
+				</if>
+				<if test="dayZ != null">
+					AND a.day &lt;=DATE_FORMAT(#{dayZ},'%Y-%m-%d %T')
+				</if>
+			</if>
+			<if test="queryType == 'month'.toString()">
+				<if test="dayQ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+				</if>
+				<if test="dayZ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+				</if>
+			</if>
+			<if test="backFlag != null and backFlag !=''">
+				AND a.back_flag=#{backFlag}
+			</if>
+		</where>
+		GROUP BY a.user_id,a.day
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findUserGatewayList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			a.user_id AS "user.id",
+			a.day AS "day",
+			SUM(a.user_count) AS "userCount",
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.success_count) AS "successCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount",
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.report_null_count) AS "reportNullCount",
+			SUM(a.report_fail_count) AS "reportFailCount",
+			a.back_datetime AS "backDatetime",
+			a.back_flag AS "backFlag",
+			SUM(a.user_back_count) AS "userBackCount",
+			SUM(a.back_count) AS "backCount",
+			a.update_datetime AS "updateDatetime",
+			u1.name AS "user.name",
+			a.gateway_id gatewayId,
+			u3.gateway_name gatewayName,
+			u2.name AS "companyName"
+		FROM jmsg_sms_day_report a
+		LEFT JOIN sys_user u1 ON u1.id = a.user_id
+		LEFT JOIN sys_office u2 ON u2.id = u1.company_id
+		LEFT JOIN jmsg_gateway_info u3 ON a.gateway_id = u3.id
+		<where>
+			AND a.gateway_id !='-1'
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="userId != null and userId !=''">
+				AND a.user_id=${userId}
+			</if>
+			<if test="userName != null and userName !=''">
+				AND u1.name LIKE CONCAT('%',#{userName},'%')
+			</if>
+			<if test="gatewayName != null and gatewayName !=''">
+				AND u3.gateway_name LIKE CONCAT('%',#{gatewayName},'%')
+			</if>
+			<if test="gatewayId != null and gatewayId !=''">
+				AND a.gateway_id=#{gatewayId}
+			</if>
+			<if test="queryType == 'day'.toString()">
+				<if test="dayQ != null">
+					AND a.day >=#{dayQ}
+				</if>
+				<if test="dayZ != null">
+					AND a.day &lt;=#{dayZ}
+				</if>
+			</if>
+			<if test="queryType == 'month'.toString()">
+				<if test="dayQ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+				</if>
+				<if test="dayZ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+				</if>
+			</if>
+		</where>
+		GROUP BY a.user_id,a.gateway_id,
+		<if test="queryType == 'day'.toString()">
+			a.day
+		</if>
+		<if test="queryType == 'month'.toString()">
+			DATE_FORMAT(a.day,'%Y-%m')
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC,SUM(a.send_count) DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findGatewayList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			a.day AS "day",
+			a.gateway_id gatewayId,
+			u3.gateway_name gatewayName,
+			SUM(a.user_count) AS "userCount",
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.success_count) AS "successCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount",
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.report_null_count) AS "reportNullCount",
+			SUM(a.report_fail_count) AS "reportFailCount",
+			a.update_datetime AS "updateDatetime"
+		FROM jmsg_sms_day_report a
+		LEFT JOIN jmsg_gateway_info u3 ON a.gateway_id = u3.id
+		<where>
+			AND a.gateway_id !='-1'
+			<if test="gatewayName != null and gatewayName !=''">
+				AND u3.gateway_name LIKE CONCAT('%',#{gatewayName},'%')
+			</if>
+			<if test="gatewayId != null and gatewayId !=''">
+				AND a.gateway_id=#{gatewayId}
+			</if>
+			<if test="queryType == 'day'.toString()">
+				<if test="dayQ != null">
+					AND a.day >=#{dayQ}
+				</if>
+				<if test="dayZ != null">
+					AND a.day &lt;=#{dayZ}
+				</if>
+			</if>
+			<if test="queryType == 'month'.toString()">
+				<if test="dayQ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+				</if>
+				<if test="dayZ != null">
+					AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+				</if>
+			</if>
+		</where>
+		GROUP BY a.gateway_id,
+		<if test="queryType == 'day'.toString()">
+			a.day
+		</if>
+		<if test="queryType == 'month'.toString()">
+			DATE_FORMAT(a.day,'%Y-%m')
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC,SUM(a.send_count) DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findSendListByDayV3" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT
+				a.id AS "id",
+				a.user_id AS "user.id",
+				a.company_id companyId,
+				a.pay_type payType,
+			   	a.send_datetime day,
+			   	IFNULL(a.phone_type,'-1') phoneType,
+			   	IFNULL(a.channel_code, '-1') gatewayId,
+				sum(a.pay_count) sendCount,
+				sum(CASE WHEN a.send_status LIKE 'F%' THEN a.pay_count ELSE 0 END) sendFailCount,
+				sum(CASE WHEN a.send_status LIKE 'T%' THEN a.pay_count ELSE 0 END) successCount,
+				sum(CASE WHEN a.report_status LIKE 'F10%' THEN a.pay_count ELSE 0 END) submitFailCount,
+				sum(case when a.report_status='T100' then a.pay_count else 0 end) reportSuccessCount,
+				sum(case when a.report_status LIKE 'F%' then a.pay_count else 0 end) reportFailCount,
+				sum(case when a.report_status='P100' and a.send_status='T000' then a.pay_count else 0 end) reportNullCount,
+				sum(case when (a.pay_type=0 and a.send_status like 'T%') or (a.pay_type=2 and a.send_status like 'T%' and (a.report_status like 'T%' or a.report_status like 'P%' )) then a.pay_count else 0 end) userCount,
+				sum(case when a.push_flag='1' then a.pay_count else 0 end) pushSuccessCount,
+				sum(case when a.push_flag='2' then a.pay_count else 0 end) pushFailCount,
+				sum(case when a.push_flag='9' then a.pay_count else 0 end) pushUnkownCount
+		FROM ${tableName} a 
+		WHERE a.user_id=#{userId}
+		GROUP BY a.phone_type,a.channel_code
+	</select>
+	
+	<select id="findDayReportList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			a.day AS "day",
+			SUM(a.user_count) AS "userCount",
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.success_count) AS "successCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount",
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.report_null_count) AS "reportNullCount",
+			SUM(a.report_fail_count) AS "reportFailCount",
+			a.update_datetime AS "updateDatetime"
+		FROM jmsg_sms_day_report a
+		<where>
+			<if test="dayQ != null">
+				AND a.day >=#{dayQ}
+			</if>
+			<if test="dayZ != null">
+				AND a.day &lt;=#{dayZ}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+		</where>
+		GROUP BY a.day
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC,SUM(a.user_count) DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findCreateDayReportList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT  a.user_id AS "user.id",
+				a.company_id companyId,
+				a.pay_type payType,
+			   	a.send_datetime day,
+			   	IFNULL(a.phone_type,'-1') phoneType,
+			   	IFNULL(a.channel_code, '-1') gatewayId,
+				sum(a.pay_count) sendCount,
+				sum(CASE WHEN a.send_status LIKE 'F%' THEN a.pay_count ELSE 0 END) sendFailCount,
+				sum(CASE WHEN a.send_status LIKE 'T%' THEN a.pay_count ELSE 0 END) successCount,
+				sum(CASE WHEN a.report_status LIKE 'F10%' THEN a.pay_count ELSE 0 END) submitFailCount,
+				sum(case when a.report_status='T100' then a.pay_count else 0 end) reportSuccessCount,
+				sum(case when a.report_status LIKE 'F%' then a.pay_count else 0 end) reportFailCount,
+				sum(case when a.report_status='P100' and a.send_status='T000' then a.pay_count else 0 end) reportNullCount,
+				sum(case when (a.pay_type=0 and a.send_status like 'T%') or (a.pay_type=2 and a.send_status like 'T%' and (a.report_status like 'T%' or a.report_status like 'P%' )) then a.pay_count else 0 end) userCount,
+				sum(case when a.push_flag='1' then a.pay_count else 0 end) pushSuccessCount,
+				sum(case when a.push_flag='2' then a.pay_count else 0 end) pushFailCount,
+				sum(case when a.push_flag='9' then a.pay_count else 0 end) pushUnkownCount
+		FROM ${tableName} a 
+		WHERE a.user_id=#{userId} AND a.send_datetime >=DATE_FORMAT(#{day},'%Y-%m-%d 00:00:00') AND a.send_datetime &lt;=DATE_format(#{day},'%Y-%m-%d 23:59:59')
+		GROUP BY a.phone_type,a.channel_code
+	</select>
+	
+	<select id="findSmsDayReportByDay" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.success_count) AS "successCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount",
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			SUM(a.report_null_count) AS "reportNullCount",
+			SUM(a.report_fail_count) AS "reportFailCount"
+		FROM jmsg_sms_day_report a
+		<where>
+			<if test="dayQ != null">
+				AND a.day >=  #{dayQ}
+			</if>
+			<if test="dayZ != null">
+				AND a.day &lt;= #{dayZ}	
+			</if>
+		</where>
+	</select>
+	
+	<select id="findCountByDay" resultType="com.siloyou.jmsg.modules.sms.entity.SmsUserIndex">
+		SELECT
+			DATE_FORMAT(a.day,'%c/%e') day,
+			sum(a.submit_success_count) count,
+			sum(a.report_success_count) successCount
+		FROM jmsg_sms_day_report a
+		<where>
+			<if test="dayQ != null">
+				AND a.day >=DATE_FORMAT(#{dayQ},'%Y-%m-%d')
+			</if>
+			<if test="dayZ != null">
+				AND a.day &lt;=DATE_FORMAT(#{dayZ},'%Y-%m-%d')
+			</if>
+		</where> 
+		GROUP BY a.day
+	</select>
+	
+	<select id="findCountByPhoneType" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDayReport">
+		SELECT 
+			a.phone_type phoneType,
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.success_count) AS "successCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount",
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			SUM(a.report_null_count) AS "reportNullCount",
+			SUM(a.report_fail_count) AS "reportFailCount"
+		FROM jmsg_sms_day_report a
+		<where>
+			<if test="dayQ != null">
+				AND a.day >=DATE_FORMAT(#{dayQ},'%Y-%m-%d')
+			</if>
+			<if test="dayZ != null">
+				AND a.day &lt;=DATE_FORMAT(#{dayZ},'%Y-%m-%d')
+			</if>
+		</where>
+		GROUP BY a.phone_type
+	</select>
+	
+	<select id="findCountByDayPhoneType" resultType="com.siloyou.jmsg.modules.sms.entity.SmsUserIndex">
+		SELECT 
+			DATE_FORMAT(a.day,'%c/%e') day,
+			a.phone_type phoneType,
+			SUM(a.submit_success_count) AS "count"
+		FROM jmsg_sms_day_report a
+		<where>
+			<if test="dayQ != null">
+				AND a.day >=DATE_FORMAT(#{dayQ},'%Y-%m-%d')
+			</if>
+			<if test="dayZ != null">
+				AND a.day &lt;=DATE_FORMAT(#{dayZ},'%Y-%m-%d')
+			</if>
+		</where> 
+		GROUP BY a.phone_type,a.day
+	</select>
+	
+</mapper>

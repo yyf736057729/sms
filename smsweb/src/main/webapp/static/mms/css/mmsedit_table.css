@@ -1,0 +1,97 @@
+*{ margin:0; padding:0}
+.blue{ color:#1614A6;}
+ul,li{ list-style:none}
+.title_c{  line-height:23px; padding:0 3px;}
+.box_c{ border:solid 1px #7B90AD; padding:5px;}
+.msgpad{ padding-left:5px;}
+img{ border:none}
+.tree_left{ width:230px;}
+
+
+/*==================��===================*/
+#PARENT { width:230px; height:400px; float:left;border:solid 1px #979692; padding:5px}
+
+#nav { width:218px; line-height: 20px; list-style-type: none; text-align:left; /*�������ul�˵����иߺͱ���ɫ*/ height:auto; overflow:hidden}
+/*==================һ��Ŀ¼===================*/
+#nav a { width: 218px; display: block; padding-left:20px; /*Width(һ��Ҫ)�����������Li�����*/
+}
+#nav li { border-bottom:#FFF 1px solid; /*�����һ��ױ�*/ float:left;  color:#000; font-weight: normal; }
+#nav a:link { color:#000; text-decoration:none; }
+#nav a:visited { color:#000; text-decoration:none; }
+#nav a:hover { color:#333; text-decoration:none; font-weight:bold; }
+/*==================����Ŀ¼===================*/
+#nav li ul { list-style:none; text-align:left; }
+#nav li ul li { font-weight:normal; }
+#nav li ul a { padding-left:40px; width:150px;/* padding-left����Ŀ¼�����������ƶ�����Width������������=(�ܿ��-padding-left)*/
+}
+/*�����Ƕ���Ŀ¼��t����ʽ*/
+#nav li ul a:link { color:#000; text-decoration:none; }
+#nav li ul a:visited { color:#000; text-decoration:none; }
+#nav li ul a:hover { color:#000; text-decoration:none; font-weight:normal;;/* ����onmouseover��������ɫ������ɫ*/
+}
+/*==============================*/
+#nav li:hover ul { left: auto; }
+#nav li.sfhover ul { left: auto; }
+#content { clear: left; }
+#nav ul.collapsed { display: none; }
+-->
+
+
+a:link {font-family: verdana; color: #000000; font-size: 12px; text-decoration: underline}
+a:visited { color: #000000; text-decoration: underline}
+a:active {color: #000000; text-decoration: underline}
+a:hover {color: #000000; text-decoration: underline}
+p { scrollbar-arrow-color: #330000; scrollbar-face-color: #f6f6f6; scrollbar-darkshadow-color: #ffffff; font-family: verdana; scrollbar-highlight-color: #ffffff; scrollbar-shadow-color: #cccccc; font-size: 12px; scrollbar-track-color: #f6f6f6; scrollbar-3dlight-color: #cccccc}
+body { scrollbar-arrow-color: #330000; scrollbar-face-color: #f6f6f6; scrollbar-darkshadow-color: #ffffff; font-family: verdana; scrollbar-highlight-color: #ffffff; scrollbar-shadow-color: #cccccc; font-size: 12px; scrollbar-track-color: #f6f6f6; scrollbar-3dlight-color: #cccccc}
+form { margin: 0px; font-family: verdana; font-size: 12px}
+th {  text-align: center; background-color: #eef3fb; font-family: tahoma; height: 25px; font-size: 12px; word-break: break-all; font-weight: bold}
+td {line-height: 17px; font-family: tahoma; font-size: 12px; word-break: break-all}
+hr {height: 1px; color: #cccccc}
+input { border: #cccccc 1px inset; padding:0 3px; font-family: tahoma; height: 20px; font-size: 12px;}
+.input_w {border-bottom: #cccccc 1px inset; border-left: #cccccc 1px inset; background-color: #fcf9cb; padding-left: 3px; width: 100%; padding-right: 3px; font-family: tahoma; height: 20px; font-size: 12px; border-top: #cccccc 1px inset; border-right: #cccccc 1px inset
+}
+select {border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-left: 3px; padding-right: 3px; font-family: tahoma; font-size: 12px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid}
+textarea {border-bottom: #cccccc 1px inset; border-left: #cccccc 1px inset; line-height: 17px; overflow-y: auto; width: 100%; font-family: tahoma; font-size: 12px; border-top: #cccccc 1px inset; border-right: #cccccc 1px inset}
+.bg-search { background-repeat: repeat-y}
+.bg-left {border-bottom: 0px solid; border-left: #999999 0px solid; background-color: #eef3fb; border-top: 0px solid; border-right: #cccccc 1px solid}
+.title {font-family: ����; letter-spacing: 1px; color: #37609d; font-size: 16px}
+.icotitle { width: 23px; height: 23px; border-right: white 5px solid}
+.tb-list {border-bottom: #a4b6d7 1px solid; border-left: #a4b6d7 1px solid; border-top: #a4b6d7 1px solid; border-right: #a4b6d7 1px solid}
+.td-bg {background-color: #ffffff; height: 21px}
+.td-left {text-align: left; line-height: 27px; background-color: #eef3fb; padding-left: 5px; font-family: tahoma; color: #000000; font-size: 12px}
+.td-right { text-align: left; background-color: #fafcfe; padding-left: 5px; color: #000000; font-size: 12px}
+.td-detail {text-align: left; background-color: #fafcfe; padding-left: 5px; color: #000000; font-size: 12px; font-weight: bold}
+.hr2 {height: 2px; color: #cccccc}
+.line99 {height: 3px; border-bottom: solid 1px #999; padding-top:2px;}
+.cur-hand {cursor: hand}
+.wid80 {width: 80%}
+.wid90 {width: 90%}
+.wid100 {width: 100%}
+.pad5 {padding-left: 5px}
+.noborder {border-bottom: medium none; border-left: medium none; width: 14px; border-top: medium none; border-right: medium none}
+a.abtn:link {color: #5c6ba2; text-decoration: none}
+a.abtn:visited {color: #5c6ba2; text-decoration: none}
+a.abtn:active {color: #5c6ba2; text-decoration: none}
+a.abtn:hover {color: #5c6ba2; text-decoration: none}
+.clsbuttondisabled { border-bottom: #ccffff 1px solid; text-align: center; border-left: #ffffff 1px solid; padding-left: 8px; padding-right: 8px; background-repeat: repeat-x; letter-spacing: 4px; height: 20px; color: #99cccc; font-size: 12px; vertical-align: middle; word-break: keep-all; cursor: default; border-right: #ccffff 1px solid; text-decoration: none; padding-top: 1px; behavior: url(../css2/dbutton_d.htc)}
+.clsbuttonface { border-bottom: #5c6ba2 1px solid; text-align: center; border-left: #5c6ba2 1px solid; line-height: 12px; padding-left: 8px; padding-right: 8px; background-repeat: repeat-x; font-family: tahoma; letter-spacing: 4px; height: 20px; font-size: 12px; vertical-align: middle; word-break: keep-all; border-top: #5c6ba2 1px solid; cursor: hand; border-right: #5c6ba2 1px solid; text-decoration: none; padding-top: 2px; behavior: url(../css2/dbutton.htc)}
+.clsbuttonfacedown { border-bottom: #5c6ba2 1px solid; text-align: center; border-left: #5c6ba2 1px solid; line-height: 12px; padding-left: 8px; padding-right: 8px; background-repeat: repeat-x; font-family: tahoma; letter-spacing: 4px; height: 20px; font-size: 12px; vertical-align: middle; word-break: keep-all; border-top: #5c6ba2 1px solid; cursor: hand; border-right: #5c6ba2 1px solid; text-decoration: none; padding-top: 2px; behavior: url(../css2/dbutton.htc)}
+.clsbuttonfacebt { border-bottom: #5c6ba2 1px solid; border-left: #5c6ba2 1px solid; background-repeat: repeat-x; font-family: tahoma; height: 20px; font-size: 12px; border-top: #5c6ba2 1px solid; cursor: hand; border-right: #5c6ba2 1px solid; behavior: url(../css2/dbuttonbt.htc)}
+.clsbuttonfacebtdown { border-bottom: #5c6ba2 1px solid; border-left: #5c6ba2 1px solid; background-repeat: repeat-x; font-family: tahoma; height: 20px; font-size: 12px; border-top: #5c6ba2 1px solid; cursor: hand; border-right: #5c6ba2 1px solid; behavior: url(../css2/dbuttonbt.htc)}
+.clsbuttonface a {color: #5c6ba2; behavior: url(../css2/dbutton_a.htc)}
+.clsbuttonfacedown a {color: #5c6ba2; behavior: url(../css2/dbutton_a.htc)}
+.datagrid {border-bottom: #a4b6d7 1px solid; border-left: #a4b6d7 1px solid; border-top: #a4b6d7 1px solid; border-right: #a4b6d7 1px solid}
+.divover {z-index: 2; border-bottom: #999999 1px solid; position: absolute; border-left: #999999 1px solid; background-color: #ffffcc; padding-left: 3px; width: 100%; padding-right: 3px; color: #37609d; border-top: #999999 1px solid; border-right: #999999 1px solid
+}
+.divout {z-index: 1; position: absolute; padding-left: 4px; width: 100%; padding-right: 4px; height: 18px; overflow: hidden; padding-top: 0px}
+.datagrid tr {behavior: url(../css2/datagrid_tr.htc)}
+.datagrid div {behavior: url(../css2/datagrid_div.htc)}
+.listtb {background-color: #a4b6d7}
+.dtable {border:solid 5px #fff; background:#F9F9EF;}
+.dtable tr {behavior: url(../css2/datagrid_tr.htc)}
+td.datatab {border-bottom: #e5e5f9 1px solid; border-left: #e5e5f9 1px solid; background-color: white; padding:0 8px; color: black; word-break: keep-all; border-top: #e5e5f9 1px solid; cursor: hand; border-right: #e5e5f9 1px solid}
+td.datatabselected {border-bottom: #e5e5f9 1px solid; border-left: #ffffff 1px solid; background-color: #e5e5f9; padding-left: 8px; padding-right: 8px; color: black; word-break: keep-all; border-top: #ffffff 1px solid; cursor: default; border-right: #666666 1px solid
+}
+table#idtabstitle {background-color: #e5e5f9; behavior: url(../css2/datatab_title.htc)}
+table#idtabslist {border-bottom: #e5e5f9 2px solid; border-left: #e5e5f9 2px solid; border-top: #e5e5f9 2px solid; border-right: #e5e5f9 2px solid; behavior: url(../css2/datatab_list.htc)}
+.font-w {color: red}

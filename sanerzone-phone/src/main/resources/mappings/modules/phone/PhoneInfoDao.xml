@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.phone.dao.PhoneInfoDao">
+    
+	<sql id="phoneInfoColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.phone_type AS "phoneType",
+		a.phone_prov AS "phoneProv",
+		a.phone_city AS "phoneCity",
+		a.phone_city_code AS "phoneCityCode",
+		a.zip AS "zip",
+		a.types AS "types",
+		a.area_code AS "areaCode"
+	</sql>
+	
+	<sql id="phoneInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.phone.entity.PhoneInfo">
+		SELECT 
+			<include refid="phoneInfoColumns"/>
+		FROM phone_info a
+		<include refid="phoneInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.phone.entity.PhoneInfo">
+		SELECT 
+			<include refid="phoneInfoColumns"/>
+		FROM phone_info a
+		<include refid="phoneInfoJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.phone.entity.PhoneInfo">
+		SELECT 
+			<include refid="phoneInfoColumns"/>
+		FROM phone_info a
+		<include refid="phoneInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO phone_info(
+			phone,
+			phone_type,
+			phone_prov,
+			phone_city,
+			phone_city_code,
+			zip,
+			types,
+			area_code
+		) VALUES (
+			#{phone},
+			#{phoneType},
+			#{phoneProv},
+			#{phoneCity},
+			#{phoneCityCode},
+			#{zip},
+			#{types},
+			#{areaCode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE phone_info SET 	
+			phone = #{phone},
+			phone_type = #{phoneType},
+			phone_prov = #{phoneProv},
+			phone_city = #{phoneCity},
+			phone_city_code = #{phoneCityCode},
+			zip = #{zip},
+			types = #{types},
+			area_code = #{areaCode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM phone_info
+		WHERE phone = #{phone}
+	</update>
+	
+</mapper>

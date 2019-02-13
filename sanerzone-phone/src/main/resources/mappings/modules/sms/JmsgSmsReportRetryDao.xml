@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsReportRetryDao">
+	<sql id="jmsgSmsReportRetryColumns">
+	    a.id AS "id",
+		a.gateway_id AS "gatewayId",
+		a.msgid AS "msgid",
+		a.stat AS "stat",
+		a.submit_time AS "submitTime",
+		a.done_time AS "doneTime",
+		a.src_term_id AS "srcTermId",
+		a.dest_term_id AS "destTermId",
+		a.smsc_sequence AS "smscSequence",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="jmsgSmsReportRetryJoins">
+	</sql>
+	
+	<insert id="batchInsert" parameterType="java.util.Map">
+		INSERT INTO jmsg_sms_report_retry(
+			gateway_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			src_term_id,
+			dest_term_id,
+			smsc_sequence,
+			createtime
+		) VALUES (
+			#{data.gateWayID},
+			#{data.msgid},
+			#{data.stat},
+			#{data.submitTime},
+			#{data.doneTime},
+			#{data.srcTermID},
+			#{data.destTermID},
+			#{data.smscSequence},
+			NOW()
+		)
+	</insert>	
+	
+	<insert id="batchInsertRetry" parameterType="com.sanerzone.jmsg.entity.JmsgSmsReportRetry">
+		INSERT INTO jmsg_sms_report_retry(
+			gateway_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			src_term_id,
+			dest_term_id,
+			smsc_sequence,
+			sourceFlag,
+			createtime
+		) VALUES (
+			#{gatewayId},
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcTermId},
+			#{destTermId},
+			#{smscSequence},
+			#{sourceFlag},
+			NOW()
+		)
+	</insert>
+	
+	<select id="findRTRetryList" resultType="com.sanerzone.jmsg.entity.JmsgSmsReportRetry" parameterType="java.util.Map">
+		SELECT
+			<include refid="jmsgSmsReportRetryColumns"/>
+		FROM jmsg_sms_report_retry a
+		where a.createtime >= date_sub(curdate(),interval 2 day)
+		ORDER BY a.id
+	</select>
+	
+	<delete id="delete" parameterType="com.sanerzone.jmsg.entity.JmsgSmsReportRetry">
+		DELETE FROM jmsg_sms_report_retry
+		WHERE id = #{id}
+	</delete>
+</mapper>

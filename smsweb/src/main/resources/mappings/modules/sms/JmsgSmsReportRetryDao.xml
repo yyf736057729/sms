@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsReportRetryDao">
+    
+	<sql id="jmsgSmsReportRetryColumns">
+	    a.id AS "id",
+		a.gateway_id AS "gatewayId",
+		a.msgid AS "msgid",
+		a.stat AS "stat",
+		a.submit_time AS "submitTime",
+		a.done_time AS "doneTime",
+		a.src_term_id AS "srcTermId",
+		a.dest_term_id AS "destTermId",
+		a.smsc_sequence AS "smscSequence",
+		a.sourceFlag AS "sourceFlag",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="jmsgSmsReportRetryJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportRetry">
+		SELECT 
+			<include refid="jmsgSmsReportRetryColumns"/>
+		FROM jmsg_sms_report_retry a
+		<include refid="jmsgSmsReportRetryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportRetry">
+		SELECT 
+			<include refid="jmsgSmsReportRetryColumns"/>
+		FROM jmsg_sms_report_retry a
+		<include refid="jmsgSmsReportRetryJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportRetry">
+		SELECT 
+			<include refid="jmsgSmsReportRetryColumns"/>
+		FROM jmsg_sms_report_retry a
+		<include refid="jmsgSmsReportRetryJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_report_retry(
+			gateway_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			src_term_id,
+			dest_term_id,
+			smsc_sequence,
+			createtime
+		) VALUES (
+			#{gatewayId},
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcTermId},
+			#{destTermId},
+			#{smscSequence},
+			#{createtime}
+		)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="com.siloyou.jmsg.common.message.SmsRtMessage">
+		INSERT INTO jmsg_sms_report_retry(
+			gateway_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			src_term_id,
+			dest_term_id,
+			smsc_sequence,
+			createtime
+		) VALUES (
+			#{gateWayID},
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcTermID},
+			#{destTermID},
+			#{smscSequence},
+			NOW()
+		)
+	</insert>	
+	
+	<insert id="batchInsertRetry" parameterType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportRetry">
+		INSERT INTO jmsg_sms_report_retry(
+			gateway_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			src_term_id,
+			dest_term_id,
+			smsc_sequence,
+			sourceFlag,
+			createtime
+		) VALUES (
+			#{gatewayId},
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcTermId},
+			#{destTermId},
+			#{smscSequence},
+			#{sourceFlag},
+			NOW()
+		)
+	</insert>	
+	
+	<update id="update">
+		UPDATE jmsg_sms_report_retry SET 	
+			gateway_id = #{gatewayId},
+			msgid = #{msgid},
+			stat = #{stat},
+			submit_time = #{submitTime},
+			done_time = #{doneTime},
+			src_term_id = #{srcTermId},
+			dest_term_id = #{destTermId},
+			smsc_sequence = #{smscSequence},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="batchDelete" parameterType="java.util.Map">
+		DELETE FROM jmsg_sms_report_retry
+		WHERE id = #{id}
+	</delete>
+
+	<select id="findReportRetryList" resultType="com.siloyou.jmsg.common.message.SmsRtMessage" parameterType="java.util.Map">
+		SELECT
+			a.id AS "smsMt.contentSize", 
+			a.gateway_id AS "gateWayID",
+			a.msgid AS "msgid",
+			a.stat AS "stat",
+			a.submit_time AS "submitTime",
+			a.done_time AS "doneTime",
+			a.src_term_id AS "srcTermID",
+			a.dest_term_id AS "destTermID",
+			a.smsc_sequence AS "smscSequence",
+			(SELECT b.bizid FROM jmsg_sms_submit b WHERE a.msgid=b.msgid) "smsMt.id"
+		FROM jmsg_sms_report_retry a
+		<where>
+			<if test="id != null and id !=''">
+				AND a.id >${id}
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT 1000
+	</select>
+	
+	<select id="findRTRetryList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportRetry" parameterType="java.util.Map">
+		SELECT
+			<include refid="jmsgSmsReportRetryColumns"/>
+			,(SELECT b.bizid FROM jmsg_sms_submit b WHERE a.msgid=b.msgid limit 1) "bizid"
+		FROM jmsg_sms_report_retry a
+		<where>
+			<if test="id != null and id !=''">
+				AND a.id >${id}
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT 1000
+	</select>
+</mapper>

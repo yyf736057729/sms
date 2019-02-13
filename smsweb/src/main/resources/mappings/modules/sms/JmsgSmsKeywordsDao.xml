@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsKeywordsDao">
+    
+	<sql id="jmsgSmsKeywordsColumns">
+		a.id AS "id",
+		a.keywords AS "keywords",
+		a.scope AS "scope",
+		a.create_by AS "createBy.id",
+		a.create_datetime AS "createDatetime"
+	</sql>
+	
+	<sql id="jmsgSmsKeywordsJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsKeywords">
+		SELECT 
+			<include refid="jmsgSmsKeywordsColumns"/>
+		FROM jmsg_sms_keywords a
+		<include refid="jmsgSmsKeywordsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByKeywords" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsKeywords">
+		SELECT 
+			<include refid="jmsgSmsKeywordsColumns"/>
+		FROM jmsg_sms_keywords a
+		<include refid="jmsgSmsKeywordsJoins"/>
+		WHERE a.keywords = #{keywords}
+	</select>	
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsKeywords">
+		SELECT 
+			<include refid="jmsgSmsKeywordsColumns"/>
+		FROM jmsg_sms_keywords a
+		<include refid="jmsgSmsKeywordsJoins"/>
+		<where>
+			
+			<if test="keywords != null and keywords != ''">
+				AND a.keywords = #{keywords}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsKeywords">
+		SELECT 
+			<include refid="jmsgSmsKeywordsColumns"/>
+		FROM jmsg_sms_keywords a
+		<include refid="jmsgSmsKeywordsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findJmsgSmsKeywords" resultType="java.lang.String">
+		SELECT keywords FROM jmsg_sms_keywords
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_keywords(
+			keywords,
+			scope,
+			create_by,
+			create_datetime
+		) VALUES (
+			#{keywords},
+			#{scope},
+			#{createBy.id},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_keywords SET 	
+			keywords = #{keywords},
+			scope = #{scope}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_keywords
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByKeys">
+		DELETE FROM jmsg_sms_keywords
+		WHERE keywords = #{keywords}
+	</update>
+	
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsUserPowerDao">
+    
+	<sql id="jmsgSmsUserPowerColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.phone_type AS "phoneType",
+		a.area_code AS "areaCode",
+		a.channel_code AS "channelCode",
+		a.level AS "level",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgSmsUserPowerJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserPower">
+		SELECT 
+			<include refid="jmsgSmsUserPowerColumns"/>
+		FROM jmsg_sms_user_power a
+		<include refid="jmsgSmsUserPowerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserPower">
+		SELECT 
+			<include refid="jmsgSmsUserPowerColumns"/>
+		FROM jmsg_sms_user_power a
+		<include refid="jmsgSmsUserPowerJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+			<if test="areaCode != null and areaCode != ''">
+				AND a.area_code = #{areaCode}
+			</if>
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.user_id,a.phone_type,a.area_code,a.level DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserPower">
+		SELECT 
+			<include refid="jmsgSmsUserPowerColumns"/>
+		FROM jmsg_sms_user_power a
+		<include refid="jmsgSmsUserPowerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_user_power(
+			user_id,
+			phone_type,
+			area_code,
+			channel_code,
+			level
+		) VALUES (
+			#{user.id},
+			#{phoneType},
+			#{areaCode},
+			#{channelCode},
+			#{level}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_user_power SET 	
+			user_id = #{user.id},
+			phone_type = #{phoneType},
+			area_code = #{areaCode},
+			channel_code = #{channelCode},
+			level = #{level}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_user_power
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

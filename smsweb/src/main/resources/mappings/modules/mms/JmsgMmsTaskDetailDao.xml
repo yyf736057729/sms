@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.mms.dao.JmsgMmsTaskDetailDao">
+    
+	<sql id="jmsgMmsTaskDetailColumns">
+		a.id AS "id",
+		a.task_id AS "taskId",
+		a.phone AS "phone",
+		a.send_status AS "sendStatus",
+		a.send_datetime AS "sendDatetime",
+		a.receive_datetime AS "receiveDatetime",
+		a.device_type AS "deviceType",
+		a.create_datetime AS "createDatetime",
+		a.create_by AS "createUserId"
+	</sql>
+	
+	<sql id="jmsgMmsTaskDetailJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTaskDetail">
+		SELECT 
+			<include refid="jmsgMmsTaskDetailColumns"/>
+		FROM jmsg_mms_task_detail a
+		<include refid="jmsgMmsTaskDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTaskDetail">
+		SELECT 
+			<include refid="jmsgMmsTaskDetailColumns"/>
+		FROM jmsg_mms_task_detail a
+		<include refid="jmsgMmsTaskDetailJoins"/>
+		<where>
+			<if test="createUserId != null and createUserId != ''">
+				AND a.create_by = #{createUserId}
+			</if>
+			<if test="taskId != null and taskId != ''">
+				AND a.task_id = #{taskId}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_datetime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTaskDetail">
+		SELECT 
+			<include refid="jmsgMmsTaskDetailColumns"/>
+		FROM jmsg_mms_task_detail a
+		<include refid="jmsgMmsTaskDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByTaskIdAndPhone" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTaskDetail">
+		SELECT 
+			<include refid="jmsgMmsTaskDetailColumns"/>,b.mms_id mmsId,c.pay_mode payMode
+		FROM jmsg_mms_task_detail a 
+		LEFT JOIN jmsg_mms_task b ON a.task_id = b.id
+		LEFT JOIN jmsg_account c ON a.create_by = c.user_id AND c.app_type='mms'
+		WHERE a.task_id=#{taskId} and a.phone=#{phone}
+		<if test="createUserId != null and createUserId !=''">
+			and a.create_by=#{createUserId}
+		</if>
+	</select>
+	
+	<select id="queryDownloadCount" resultType="java.lang.Integer">
+		SELECT count(1) FROM jmsg_mms_task_detail  
+		WHERE task_id=#{taskId} AND receive_datetime is not null 
+		GROUP BY task_id
+	</select>
+	
+	<select id="queryDetailSendList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTaskDetail">
+		SELECT id,phone,send_status sendStatus,receive_datetime receiveDatetime
+		FROM jmsg_mms_task_detail  
+		WHERE task_id=#{taskId}
+	</select>	
+	
+	<insert id="insert">
+		INSERT INTO jmsg_mms_task_detail(
+			task_id,
+			phone,
+			send_status,
+			send_datetime,
+			receive_datetime,
+			device_type,
+			create_datetime,
+			create_by,
+			phone_type
+		) VALUES (
+			#{taskId},
+			#{phone},
+			#{sendStatus},
+			#{sendDatetime},
+			#{receiveDatetime},
+			#{deviceType},
+			NOW(),
+			#{createUserId},
+			#{phoneType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_mms_task_detail SET 	
+			task_id = #{taskId},
+			phone = #{phone},
+			send_status = #{sendStatus},
+			send_datetime = #{sendDatetime},
+			receive_datetime = #{receiveDatetime},
+			device_type = #{deviceType},
+			create_datetime = #{createDatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_mms_task_detail
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findPhoneByTaskId" resultType="java.lang.String">
+		SELECT CONCAT(phone,' ') phone
+		FROM jmsg_mms_task_detail 
+		WHERE task_id=#{taskId}
+	</select>
+	
+	<select id="findPendingSendMmsByTaskId" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTaskDetail" parameterType="java.util.Map">
+		SELECT id,phone
+		FROM jmsg_mms_task_detail
+		WHERE task_id=#{taskId} and send_status=#{sendStatus} and id > ${id}
+		ORDER BY id
+		LIMIT ${pageSize}
+	</select>
+	
+	<select id="findPendingSendMmsByStatus" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTaskDetail">
+		SELECT a.id,a.phone,b.mms_title mmsTitle,b.mms_url mmsUrl,b.create_by createUserId,b.mms_size mmsSize
+		FROM jmsg_mms_task_detail a
+		LEFT JOIN jmsg_mms_task b ON a.task_id = b.id
+		WHERE send_status='P1'
+		LIMIT 1000
+	</select>
+	
+	<update id="updateSendStatus" parameterType="java.util.Map">
+		UPDATE jmsg_mms_task_detail SET
+			send_status=#{sendStatus},
+			<if test="msgid != null and msgid !=''">
+				msgid =#{msgid},
+			</if>
+			send_datetime=NOW()
+		WHERE id=#{id}
+	</update>
+	
+	<update id="updateSendStatusP2" parameterType="java.util.Map">
+		UPDATE jmsg_mms_task_detail SET
+			send_status='P2'
+		WHERE id >${id} AND task_id=#{taskId}	 
+	</update>
+	
+	<update id="updateReceive" parameterType="java.util.Map">
+		UPDATE jmsg_mms_task_detail SET
+			device_type=#{deviceType},
+			receive_datetime=NOW()
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="deleteByTaskId">
+		DELETE FROM jmsg_mms_task_detail
+		WHERE task_id=#{taskId}
+	</delete>
+	
+</mapper>

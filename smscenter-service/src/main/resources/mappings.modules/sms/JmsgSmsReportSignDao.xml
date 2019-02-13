@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsReportSignDao">
+    
+	<sql id="jmsgSmsReportSignColumns">
+		a.day AS "day",
+		a.user_id AS "userId",
+		a.sms_sign AS "smsSign",
+		a.send_count AS "sendCount"
+	</sql>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_report_sign(
+			day,
+			user_id,
+			sms_sign,
+			send_count
+		) VALUES (
+			DATE_FORMAT(#{day},'%Y-%m-%d'),
+			#{userId},
+			#{smsSign},
+			#{sendCount}
+		)
+	</insert>
+	
+	<insert id="insertUsedSign">
+		INSERT INTO jmsg_sms_used_sign(
+			day,
+			user_id,
+			sms_sign,
+		) VALUES (
+			DATE_FORMAT(#{day},'%Y-%m-%d'),
+			#{userId},
+			#{smsSign}
+		)
+	</insert>
+	
+</mapper>

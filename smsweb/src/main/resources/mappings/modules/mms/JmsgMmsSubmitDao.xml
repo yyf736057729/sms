@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.mms.dao.JmsgMmsSubmitDao">
+    
+	<sql id="jmsgMmsSubmitColumns">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.result AS "result",
+		a.bizid AS "bizid",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="jmsgMmsSubmitJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsSubmit">
+		SELECT 
+			<include refid="jmsgMmsSubmitColumns"/>
+		FROM jmsg_mms_submit a
+		<include refid="jmsgMmsSubmitJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsSubmit">
+		SELECT 
+			<include refid="jmsgMmsSubmitColumns"/>
+		FROM jmsg_mms_submit a
+		<include refid="jmsgMmsSubmitJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsSubmit">
+		SELECT 
+			<include refid="jmsgMmsSubmitColumns"/>
+		FROM jmsg_mms_submit a
+		<include refid="jmsgMmsSubmitJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByBizid" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsSubmit">
+		SELECT 
+			<include refid="jmsgMmsSubmitColumns"/>
+		FROM jmsg_mms_submit a
+		WHERE a.bizid=#{bizid}
+		LIMIT 1
+	</select>
+	
+	<select id="findSuccessCount" resultType="java.lang.Integer">
+		SELECT count(1) FROM jmsg_mms_submit 
+		WHERE taskid=#{taskid} AND result='0'
+		GROUP BY taskid
+	</select>
+	
+	<select id="findDetailSendList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsSubmit">
+		SELECT a.bizid,a.result
+		FROM jmsg_mms_submit a 
+		WHERE a.taskid=#{taskid}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_mms_submit(
+			msgid,
+			result,
+			bizid,
+			createtime
+		) VALUES (
+			#{msgid},
+			#{result},
+			#{bizid},
+			NOW()
+		)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.Map">
+		INSERT INTO jmsg_mms_submit(
+			msgid,
+			result,
+			bizid,
+			taskid,
+			createtime
+		) VALUES (
+			#{msgid},
+			#{result},
+			#{bizid},
+			#{taskid},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_mms_submit SET 	
+			msgid = #{msgid},
+			result = #{result},
+			bizid = #{bizid},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_mms_submit
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.smscenter.dao.JmsgRuleRelationDao">
+    
+	<sql id="jmsgRuleRelationColumns">
+		a.id AS "id",
+		a.group_id AS "groupId",
+		a.rule_type AS "ruleType",
+		a.rule_id AS "ruleId"
+	</sql>
+	
+	<sql id="jmsgRuleRelationJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgRuleRelation">
+		SELECT 
+			<include refid="jmsgRuleRelationColumns"/>
+		FROM jmsg_rule_relation a
+		<include refid="jmsgRuleRelationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgRuleRelation">
+		SELECT 
+			<include refid="jmsgRuleRelationColumns"/>
+		FROM jmsg_rule_relation a
+		<include refid="jmsgRuleRelationJoins"/>
+		<where>
+			<if test="ruleType != null and ruleType != ''">
+				AND a.rule_type = #{ruleType}
+			</if>
+			<if test="groupId != null and groupId != ''">
+				AND a.group_id = #{groupId}
+			</if>
+			<if test="ruleId != null and ruleId != ''">
+				AND a.rule_id = #{ruleId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgRuleRelation">
+		SELECT 
+			<include refid="jmsgRuleRelationColumns"/>
+		FROM jmsg_rule_relation a
+		<include refid="jmsgRuleRelationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_rule_relation(
+			group_id,
+			rule_type,
+			rule_id
+		) VALUES (
+			#{groupId},
+			#{ruleType},
+			#{ruleId}
+		)ON DUPLICATE KEY UPDATE `group_id`= values(`group_id`),
+		 `rule_type`= values(`rule_type`),
+		 `rule_id`= values(`rule_id`);
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_rule_relation SET 	
+			group_id = #{groupId},
+			rule_type = #{ruleType},
+			rule_id = #{ruleId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_rule_relation
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

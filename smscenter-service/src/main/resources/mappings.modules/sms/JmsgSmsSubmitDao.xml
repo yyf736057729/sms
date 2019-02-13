@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsSubmitDao">
+    <sql id="Base_Column_List">
+		id, msgid, result, bizid, createtime, taskid, userid,
+		gatewayid, reserve, phone
+	</sql>
+	
+	<insert id="insert">
+		INSERT INTO ${tableName}
+		(msgid, result, bizid,
+		createtime, taskid, userid, gatewayid, reserve, phone)
+		VALUES
+		(#{msgid}, #{result}, #{bizid}, NOW(), #{taskid}, #{userid}, #{gatewayid},
+		#{reserve}, #{phone})
+	</insert>
+
+	<select id="findSubmitByBizId" resultType="com.sanerzone.jmsg.entity.JmsgSmsSubmit"
+		parameterType="com.sanerzone.jmsg.entity.JmsgSmsSubmit">
+		select
+		<include refid="Base_Column_List" />
+		from ${tableName}
+		<where>
+			<if test="msgid != null and msgid !=''">
+				AND msgid=#{msgid}
+			</if>
+			<if test="gatewayid != null and gatewayid !=''">
+				AND gatewayid=#{gatewayid}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND phone=#{phone}
+			</if>
+		</where>
+		union
+		select
+		<include refid="Base_Column_List" />
+		from ${tableName1}
+		<where>
+			<if test="msgid != null and msgid !=''">
+				AND msgid=#{msgid}
+			</if>
+			<if test="gatewayid != null and gatewayid !=''">
+				AND gatewayid=#{gatewayid}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND phone=#{phone}
+			</if>
+		</where>
+		union
+		select
+		<include refid="Base_Column_List" />
+		from ${tableName2}
+		<where>
+			<if test="msgid != null and msgid !=''">
+				AND msgid=#{msgid}
+			</if>
+			<if test="gatewayid != null and gatewayid !=''">
+				AND gatewayid=#{gatewayid}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND phone=#{phone}
+			</if>
+		</where>
+	</select>
+</mapper>

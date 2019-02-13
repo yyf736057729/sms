@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsDataDao">
+    
+	<sql id="jmsgSmsDataColumns">
+		a.id AS "id",
+		a.content AS "content",
+		a.type AS "type",
+		a.user_id AS "user.id",
+		a.content_key AS "contentKey",
+		a.create_datetime AS "createDatetime",
+		a.review_status AS "reviewStatus",
+		a.review_datetime AS "reviewDatetime",
+		a.review_user_id AS "reviewUserId",
+		a.yxbz AS "yxbz",
+		a.template_flag AS "templateFlag",
+		a.review_content AS "reviewContent",
+		u4.name AS "user.name",
+		u4.login_name AS "user.loginName",
+		o1.name AS "user.company.name"
+	</sql>
+	
+	<sql id="jmsgSmsDataJoins">
+		LEFT JOIN sys_user u4 ON u4.id = a.user_id
+		LEFT JOIN sys_office o1 ON u4.company_id = o1.id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsData">
+		SELECT 
+			<include refid="jmsgSmsDataColumns"/>
+		FROM jmsg_sms_data a
+		<include refid="jmsgSmsDataJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsData">
+		SELECT 
+			<include refid="jmsgSmsDataColumns"/>,u8.name AS reviewUserName
+		FROM jmsg_sms_data a
+		<include refid="jmsgSmsDataJoins"/>
+		LEFT JOIN sys_user u8 ON u8.id = a.review_user_id
+		<where>
+		    <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content LIKE CONCAT('%',#{content},'%')
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="createDatetimeQ != null and createDatetimeQ != ''">
+				AND a.create_datetime &gt;= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null and createDatetimeZ != ''">
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="reviewStatus != null and reviewStatus !=''">
+				AND a.review_status = #{reviewStatus}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u4.company_id=#{companyId}
+			</if>
+			<if test="reviewUserName != null and reviewUserName !=''">
+				AND u8.name LIKE CONCAT('%',#{reviewUserName},'%')
+			</if>
+			<if test="reviewStatus != null and reviewStatus !=''">
+				AND a.review_status=#{reviewStatus}
+			</if>	
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_datetime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsData">
+		SELECT 
+			<include refid="jmsgSmsDataColumns"/>
+		FROM jmsg_sms_data a
+		<include refid="jmsgSmsDataJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findJmsgSmsDataByContentKey" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsData">
+		SELECT * FROM jmsg_sms_data a
+		WHERE a.yxbz='1' and a.user_id=#{user.id} and a.content_key = #{contentKey}
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO jmsg_sms_data(
+			content,
+			type,
+			user_id,
+			content_key,
+			create_datetime,
+			review_status,
+			review_datetime,
+			review_user_id,
+			yxbz,
+			template_flag
+		) VALUES (
+			#{content},
+			#{type},
+			#{user.id},
+			#{contentKey},
+			NOW(),
+			#{reviewStatus},
+			#{reviewDatetime},
+			#{reviewUserId},
+			#{yxbz},
+			#{templateFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_data SET 	
+			content = #{content},
+			type = #{type},
+			user_id = #{user.id},
+			content_key = #{contentKey},
+			create_datetime = #{createDatetime},
+			review_status = #{reviewStatus},
+			review_datetime = #{reviewDatetime},
+			review_user_id = #{reviewUserId},
+			yxbz = #{yxbz},
+			template_flag = #{templateFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_data
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateReviewStatus">
+		UPDATE jmsg_sms_data SET
+			review_status=#{reviewStatus},
+			review_content=#{reviewContent},
+			review_datetime=NOW(),
+			review_user_id=#{reviewUserId}
+		WHERE id=#{id}	
+	</update>
+	
+</mapper>

@@ -1,0 +1,10 @@
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%n-- %date{[yyyy-MM-dd] HH:mm:ss.SSS} assets-%X{traceId} [%thread]-[%file:%line]-[%level] %msg</pattern>
+		</encoder>
+	</appender>
+	<root level="INFO">
+		<appender-ref ref="stdout"/>
+	</root>
+</configuration>

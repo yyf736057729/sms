@@ -1,0 +1,211 @@
+h1,h2,h3,h4,h5,h6 {font-weight: 100}
+h1 {font-size: 30px}
+h2 {font-size: 24px}
+h3 {font-size: 16px}
+h4 {font-size: 14px}
+h5 {font-size: 12px}
+h6 {font-size: 10px}
+h3,h4,h5 {margin-top: 5px;font-weight: 600}
+a:focus {outline: none}
+ul,ol,li {list-style: none;padding: 0;margin: 0;}
+p {margin: 0;}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.clearfix{*+height:1%;}
+.mt30 {margin-top: 30px;}
+.row,.form-horizontal .form-group {margin-left: -5px;margin-right: -5px;}
+.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9
+{padding-left: 5px;padding-right: 5px;}
+body {font-family: "open sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 13px;color: #676a6c;overflow-x: hidden;}
+.wrapper-content {padding: 5px;background-color: #f5f5f5;padding-bottom: 0;}
+.form-horizontal {margin: 0;}
+.ibox {clear: both;margin-bottom: 10px;margin-top: 0;padding: 0;}
+.ibox-title {-moz-border-bottom-colors: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;background-color: #fff;border-color: #e7eaec;-webkit-border-image: none;-o-border-image: none;border-image: none;border-style: solid solid none;border-width: 4px 0 0;color: inherit;margin-bottom: 0;padding: 10px 15px 7px;min-height: 48px;}
+.ibox-title h5 {display: inline-block;font-size: 14px;margin: 0 0 7px;padding: 0;text-overflow: ellipsis;float: left;}
+.m-l-sm {margin-left: 10px;}
+.ibox-tools {display: inline-block;float: right;margin-top: 0;position: relative;padding: 0;}
+.ibox-tools a {cursor: pointer;margin-left: 5px;color: #c4c4c4;}
+.dropdown-menu {border: medium none;display: none;float: left;font-size: 12px;left: 0;list-style: none outside none;padding: 0;position: absolute;text-shadow: none;top: 100%;z-index: 1000;border-radius: 0;box-shadow: 0 0 3px rgba(86,96,117,.3);}
+.dropdown-menu>li>a {border-radius: 3px;color: inherit;line-height: 25px;margin: 4px;text-align: left;font-weight: 400;}
+.ibox-tools .dropdown-menu>li>a {padding: 4px 10px;font-size: 12px;}
+.ibox-content {background-color: #fff;color: inherit;padding: 10px 5px;border-color: #e7eaec;-webkit-border-image: none;-o-border-image: none;border-image: none;border-style: solid solid none;border-width: 1px 0;clear: both;}
+.ibox-content h1, .ibox-content h2, .ibox-content h3, .ibox-content h4, .ibox-content h5, .ibox-title h1, .ibox-title h2, .ibox-title h3, .ibox-title h4, .ibox-title h5 {margin-top: 5px;}
+.wrapper-content blockquote {margin:0 -3px 10px;padding: 10px;}
+.userdir {padding-top: 10px;}
+.userdir label,.userdir p {display: block;float: left;}
+.userdir label {text-align: right;font-weight: normal;color: #999;margin: 0 5px;line-height: 34px;}
+.userdir p {color: #333;font-weight: bold;font-size: 18px;margin-right: 5px;line-height: 32px;}
+.userdir p em {font-style: normal;color: #bbb;}
+.userdir a {padding-left: 15px;padding-right: 15px;}
+.navlink .col-xs-2 {text-align: center;}
+.navlink a {display: inline-block;border-radius: 8px;text-decoration: none;}
+.navlink a p,.navlink a em {text-decoration: none;color: #fff;font-size: 14px;padding: 10px 8px;}
+.navlink a p span {padding-right: 5px;font-size: 16px;}
+.navlink a em {display: block;float: right;line-height:22px;font-size: 16px;font-weight: bold;color: #666;}
+.navlink a.navlink1 {background-color: #E91E63;}
+.navlink a:hover.navlink1 {background-color: #fc4c88;}
+.navlink a.navlink2 {background-color: #4CAF50;}
+.navlink a:hover.navlink2 {background-color: #73dc77;}
+.navlink a.navlink3 {background-color: #2196F3;}
+.navlink a:hover.navlink3 {background-color: #5fb6fc;}
+.navlink a.navlink4 {background-color: #FF5722;}
+.navlink a:hover.navlink4 {background-color: #fd8863;}
+.navlink a.navlink5 {background-color: #26A69A;}
+.navlink a:hover.navlink5 {background-color: #4ad0c3;}
+.navlink a.navlink6 {background-color: #9CCC65;}
+.navlink a:hover.navlink6 {background-color: #b6ec78;}
+.ibox-content .user_info .form-inline label,.ibox-content .form-inline p 
+{display: inline-block;width: auto;vertical-align: middle;margin-bottom: 0;}
+.ibox-content .user_info .form-inline .form-group {display: block;margin-bottom: 3px;}
+.ibox-content .user_info .form-inline label {font-weight: normal;color: #999;}
+.ibox-content .user_info h6 {font-size: 18px;margin: 0;color: #2292c5;font-weight: 200;line-height: 32px;height: 32px;}
+.ibox-content .user_info {margin-bottom: 5px;margin-top:3px;border-bottom:1px dashed #efefef;}
+.ibox-content .user_info .col-xs-3 {padding-bottom: 10px;}
+.ibox-content .user_info img {height: 72px;}
+.ibox-content .user_info p.badge-info,.data_today .badge_success {background-color: #5cb85c;}
+.ibox-content .user_info p.badge-info,.data_today .bage_blue {background-color: #39f;}
+.ibox-content .user_info p.badge {margin-top: -4px;}
+.ibox-content .form-inline .col-xs-6:last-child p {letter-spacing: -1px;}
+.data_today .ibox-content,.newslist .ibox-content {height: 187px;}
+.ibox-tools {margin-top: -6px;}
+.ibox-tools .btn {padding-top: 3px;padding-bottom: 3px;text-shadow: none;}
+.data_today .ibox-content {padding-bottom: 0;}
+.data_today .ibox-content .row {line-height: 23px;height: 23px;}
+.data_today .success {padding-top: 8px;padding-bottom:5px;line-height:18px;margin-top: 7px;margin-bottom: 7px;border-top: 1px dashed #e7eaec;}
+.data_today .text {font-weight: 600;}
+.data_today .success .text {margin-bottom: 3px;}
+.data_today .badge-primary {background-color: #5bc0de;border-color: #46b8da;}
+.newslist .ibox-tools {margin-top: 0;}
+.newslist .ibox-tools .text-info {color: #31708f;}
+.newslist li a {color: #666;line-height: 26px;cursor: pointer;display: block;}
+.newslist li a:hover {color: #888;}
+.newslist li a span {font-size: 3px;display: block;line-height: 26px;}
+.newslist li a em {font-style: normal;color: #999;font-style: normal;}
+.newslist li a:hover span {color: #666;}
+
+.hr-line-dashed {border-top: 1px dashed #e7eaec;color: #fff;background-color: #fff;height: 1px;margin: 15px 0;}
+.modal-body h2 {text-align: center;font-weight: bold;}
+.modal-body span {text-align: center;color: #888;font-size:14px;display:block;padding-bottom: 10px;margin-bottom: 20px;border-bottom: 1px dashed #efefef;}
+.modal-body .newscon p {text-indent: 24px;margin-bottom: 10px;font-size: 14px;}
+
+
+
+.recharge_one .btn.btn-warning {width: auto;padding: 3px 15px;margin-bottom:0;background-color: #f0ad4e;border-color: #eea236;float: none;display: inline-block;}
+
+
+
+/*首页20171129*/
+.ibox-content .form-inline p em {font-style: normal;color: #ccc;}
+.ibox-content .user_role label,.ibox-content .user_role p {line-height: 45px;height: 45px;margin:3px 0;}
+.ibox-content .user_role label {margin-top: 0;}
+.ibox-content .user_cog label {margin-bottom: 0;padding: 0;line-height: 24px;height: 24px;font-weight: normal;}
+.ibox-content .user_cog input,.ibox-content .user_cog textarea {background-color: #eee;color: #999;border:1px solid #e5e6e7;border-radius: 2px;padding:3px 5px;font-size: 12px;}
+.ibox-content .user_cog textarea {height: 58px;padding-top: 6px;padding-bottom: 6px;}
+.ibox-content .user_cog .form-group {vertical-align: top;margin-bottom: 5px;}
+.ibox-content .user_cog .col-xs-5 {width: 35.5%;}
+.ibox-content .user_cog .col-xs-7 {width: 64.5%;}
+.ibox-content .user_cog p.col-xs-7 {line-height: 24px;height: 58px;color: #ccc;}
+.cadmin_con .ibox-content .userdir.user_cog {padding-top: 0;}
+.cadmin_con .ibox-content .userdir.user_cog label,.cadmin_con .ibox-content .userdir.user_cog span,.cadmin_con .ibox-content .userdir.user_cog b {height: 34px;line-height: 34px;margin:0;font-weight: normal;}
+.cadmin_con .ibox-content .userdir.user_cog b {color: #39f;font-size: 12px;font-weight: normal;}
+.cadmin_con {min-width: 840px;}
+.wrapper-content.cadmin_con  blockquote {margin:5px -10px;}
+.cadmin_con .col-xs-7.ibox-content,.cadmin_con .col-xs-5.ibox-content {height: 180px;}
+.cadmin_con .navlink {padding: 10px 0 15px;}
+.cadmin_con .navlink a.clearfix:after {display: none;}
+.navlink a.navlink1 p {position: relative;padding-right: 25px;}
+.navlink a.navlink1:first-child p span {letter-spacing: -.8px;}
+.navlink a.navlink1 p i {position: absolute;right: 0px;top: -12px;background-color: #fff;border:3px solid #E91E63;font-size: 13px;padding:4px 2px;border-radius: 50%;font-style: normal;color: #E91E63;width: 32px;}
+.navlink a.navlink1:hover p i {border-color: #fc4c88;}
+.cadmin_con .col-xs-12 img {margin-left: 10px;}
+.cadmin_con .price .table>tbody>tr>th {background-color: #f9f9f9;}
+.btn-blue, .btn-blue:focus, .btn-blue:hover, .label-blue {background-color: #5db2ff!important;border-color: #52acfe;color: #fff;}
+.cadmin_con .btn-group {margin-top: -5px;}
+.cadmin_con .ibox-content .user_info img {height: 85px;margin-bottom: 3px;}
+.cadmin_con .ibox-content .user_info {margin-bottom: 0;padding-bottom: 0;border-bottom: 0;padding-top: 0;}
+.cadmin_con .ibox-content .user_info .form-inline .form-group {margin-bottom: 0;}
+.cadmin_con .ibox-content .user_info h6 {line-height: 20px;height: 20px;}
+.cadmin_con .ibox-content .user_info .row:first-child .col-xs-3 label {line-height: 45px;}
+.cadmin_con .ibox-content.charts img {width: 98%;}
+.cadmin_con .btn-toolbar {margin-top: 10px;}
+.cadmin_con .btn-toolbar a {text-decoration: none;}
+.cadmin_con .btn-toolbar a:hover {color: #52acfe;}
+.cadmin_con .open>.dropdown-menu {right: 0;left: auto;}
+.cadmin_con .ibox-tools .dropdown-menu>li>a {background-color: transparent;}
+
+.cadmin_con .user_info .col-xs-2.userpic {margin-right: 1%;width: 12.66666667%;}
+.cadmin_con .user_info .col-xs-6.username {width: 47%;}
+.cadmin_con .user_info .col-xs-4.usercount {width: 37.33333333%;}
+
+.cadmin_con .usercount .row:first-child {margin-bottom: 7px;}
+.cadmin_con .usercount .col-xs-4 p {border-radius: 3px;box-shadow: 0 1px 1px rgba(0,0,0,.05);padding: 8px 5px;color: #fff;}
+.cadmin_con .usercount .col-xs-4 p.count_all {background-color: #62a8ea;}
+.cadmin_con .usercount .col-xs-4 p.count_sucess {background-color: #46be8a;}
+.cadmin_con .usercount .col-xs-4 p.count_fail {background-color: #fa7a7a;}
+.cadmin_con .usercount .col-xs-4 p.count_unknown {background-color: #f2a654;}
+.cadmin_con .usercount .col-xs-4 p span,.cadmin_con .usercount .col-xs-4 p em {display: block;}
+.cadmin_con .usercount .col-xs-4 p span {font-size: 12px;}
+.cadmin_con .usercount .col-xs-4 p em {text-align: center;font-size: 24px;line-height: 25px;height: 24px;font-style: normal;}
+.cadmin_con .usercount .col-xs-4 p em i {font-size: 14px;font-style: normal;font-weight: 300;padding-left: 3px;}
+.cadmin_con .ibox-title h5 i {color: #62a8ea;font-style: normal;padding-left: 35px;font-weight: 300;}
+
+.cadmin_con .pie4 .ibox-title {padding-left: 5px;padding-right: 5px;}
+.cadmin_con .pie4 .ibox-tools .btn {padding-left: 3px;padding-right: 3px;}
+
+
+/*群发短信*/
+.sendsms .ibox {margin-bottom: 5px;}
+.sendsms .ibox-content {padding: 20px 10px 10px;min-width: 840px;}
+.sms_group .btn-primary,.sms_group_modal .btn-primary {background-color: #409eff;border:1px solid #318eef;}
+.sms_group .form-horizontal .row.form-group {border-bottom: 1px dashed #efefef;padding-bottom: 10px;}
+.sms_group .sms_set .btn {padding-top: 4px;padding-bottom: 4px;margin:5px 30px 5px 0;display: inline-block;}
+.sms_group .form-horizontal .checkbox-inline,.sms_group .form-horizontal .radio-inline {padding-left: 0;padding-right: 20px;margin:0;}
+.sms_group .form-horizontal .checkbox-inline input[type=checkbox] {margin-left: -15px;}
+.sms_group .sms_dir {color: #999;line-height: 24px;height: 24px;padding-top: 10px;}
+.sms_group .sms_dir span {color: #39f;padding-left: 3px;padding-right: 3px;}
+.sms_group .sms_set input.input_file {display: inline-block;width:220px;background-color: #fff;color: #fff;position: absolute;z-index: 1;top: 5px;}
+.sms_group .sms_set input.input_file:focus {border:none;}
+.sms_group .col-sm-10 .col-xs-9 .sms_set .btn {margin-right: 5px;}
+.sms_group .form-horizontal .sms_set {position: relative;height: 40px;}
+.sms_group .form-horizontal .sms_set .btn:nth-child(2) {position: absolute;z-index: 5;}
+.sms_group .form-horizontal .send_btn2 {padding-left: 0;}
+.sms_group .sentip {color: #999;}
+.sms_group .sentip span {background-color: #1c84c6;border-color: #1c84c6;color: #FFF;border-radius: 25px;padding:1px 5px;font-size: 13px;cursor: help;}
+.sms_group .sentipbox {display:none;position:absolute;left:42px;top:0;z-index:5;width: 440px;background-color: #d9edf7;border:1px solid #bce8f1;color: #31708f;border-radius: 4px;padding:10px;text-align: left;cursor: pointer;}
+.sms_group .sentipbox p {text-align: left;}
+.sms_group .sentipbox p b,.sms_group.sms_dot .sentip b {color: #f90;font-weight: normal;}
+.sms_group .form-horizontal .btn-info {background-color:#eb9e05;border-color: #d58f04;margin-top: 8px;}
+.sms_group .send_btn {padding-left: 25%;padding-top: 2%;}
+.sms_group .btn-lg {padding-left: 8%;padding-right: 8%;letter-spacing: 3px;}
+.sms_group .form-horizontal .row.form-group:last-child {padding-bottom: 20px;margin-bottom: 0;border-bottom: none;}
+.sms_group .form-horizontal .col-xs-8 .row.form-group:last-child {border-bottom: 1px;}
+.sms_group .datebox {display: inline;position: absolute;left: 180px;top:-6px;}
+.sms_group .datebox input.layer-date {background-color: transparent;max-width: 200px;}
+.sms_group .datebox label.laydate-icon,.timeboxcon .datebox label.laydate-icon {padding: 0;border:none;margin-top: -35px;margin-left: 160px;cursor: pointer;}
+.sms_group .mobilepp {width: 240px;height: 430px;background: url(../images/mobile.jpg) no-repeat center top;margin:-10px auto 10px;padding-top: 110px;}
+.sms_group .mobilepp_box {width: 190px; margin:0 auto;text-align: left;background-color: #e6e5ea;border: 1px solid #e2e1e7;padding: 6px 10px;font-size: 12px;border-radius: 10px;
+	min-height: 30px;line-height: 18px;word-break: break-all;position: relative;} 
+.sms_group .mobilepp_box span {height: 14px;width: 24px;background: url(../images/sms_s.png) 0 0 no-repeat;position: absolute;left: -10px;bottom: -5px;}
+.sms_group .divinline {display: inline;padding-bottom: 5px;}
+.sms_group .mobilepp_p h6 {font-size: 18px;font-weight: bold;margin-top: 5px;margin-bottom: 5px;}
+.sms_group .mobilepp_p p {font-size: 12px;}
+.sms_group_modal .modal-body {height: 260px;}
+.sms_group_modal p {line-height: 30px;vertical-align: top;}
+.sms_group_modal h6 {background-color: #f3f3f3;border:1px solid #e9e9e9;font-weight: normal;padding:8px;border-radius: 4px;width: 100%;margin-top:0;line-height: 18px;font-size: 13px;}
+.sms_group_modal em {color: #39f;font-style: normal;margin-right: 3px;margin-left: 5px;line-height: 25px;height: 25px;}
+.sms_group_modal b {color: #f90;font-size: 18px;margin-left: 5px;margin-right: 5px;}
+.sms_group_modal a {font-size: 15px;margin-left: 3px;margin-right: 3px;color: #39f;font-weight: bold;}
+/*点对点短信*/
+.sms_group.sms_dot .sms_set input.input_file {width: 150px;}
+.sms_group.sms_dot .form-horizontal .sms_set .btn {position: absolute;z-index: 5;}
+.sms_group.sms_dot .btn-warning {padding-left: 10%;padding-right: 10%;letter-spacing: 2px;}
+/*Excel模板短信*/
+.sms_excel_modal .modal-body .row {border-bottom: 1px dashed #efefef;padding-bottom: 5px;margin-bottom: 10px;}
+.sms_excel_modal .modal-body .row:last-child {border-bottom: none;}
+.sms_excel_modal .modal-body .col-xs-9 > *,.sms_excel_modal .modal-body .col-xs-9 .excelbox > * {display: inline-block;}
+.sms_excel_modal .modal-body .col-xs-9 select {margin-top: 4px;}
+.sms_excel_modal .modal-body .col-xs-9 p:last-child {color: #f90;}
+.sms_excel_modal .modal-body .col-xs-9 .excelbox p:last-child {line-height: 18px;}
+.sms_excel_modal .modal-body .col-xs-9 .input_file {width:150px;line-height: 30px;height: 30px;}
+.sms_excel_modal .modal-body .col-xs-9 .excelbox .btn-warning {padding:2px 4px;font-size: 12px;color: #fff;margin-top: -2px;}
+
+

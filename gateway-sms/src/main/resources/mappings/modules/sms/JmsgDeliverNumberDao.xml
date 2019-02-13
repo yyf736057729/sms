@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgDeiverNumberDao">
+    
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgDeliverNumber">
+		SELECT 
+			a.id AS "id",
+			a.user_id AS "userId",
+			a.sp_number AS "spNumber"
+		FROM jmsg_deliver_number a
+	</select>
+	
+</mapper>

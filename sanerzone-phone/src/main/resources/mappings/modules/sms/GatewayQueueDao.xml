@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.phone.dao.GatewayQueueDao">
+	<select id="findByGatewayId" resultType="com.sanerzone.common.modules.phone.entity.GatewayQueue" >
+		select id,gateway_id as gatewayId,queue_name as queueName,business_type as businessType,
+		weight,create_time as createTime,remarks,status,del_flag
+		from jmsg_gateway_queue
+		<where>
+			<if test="gatewayId != '' and gatewayId != null">
+				and gateway_id = #{gatewayId}
+			</if>
+		</where>
+	</select>
+</mapper>

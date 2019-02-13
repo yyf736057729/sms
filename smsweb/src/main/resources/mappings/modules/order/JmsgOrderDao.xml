@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.order.dao.JmsgOrderDao">
+    
+	<sql id="jmsgOrderColumns">
+		a.id AS "id",
+		a.system_order_id AS "systemOrderId",
+		a.customer_order_id AS "customerOrderId",
+		a.order_content AS "orderContent",
+		a.app_type AS "appType",
+		a.submit_type AS "submitType",
+		a.order_status AS "orderStatus",
+		a.order_date AS "orderDate",
+		a.user_id AS "user.id",
+		a.create_datetime AS "createDatetime",
+		a.update_by AS "updateBy.id",
+		a.update_datetime AS "updateDatetime",
+		a.check_remark AS "checkRemark",
+		u9.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgOrderJoins">
+		LEFT JOIN sys_user u9 ON u9.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.order.entity.JmsgOrder">
+		SELECT 
+			<include refid="jmsgOrderColumns"/>
+		FROM jmsg_order a
+		<include refid="jmsgOrderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.order.entity.JmsgOrder">
+		SELECT 
+			<include refid="jmsgOrderColumns"/>
+		FROM jmsg_order a
+		<include refid="jmsgOrderJoins"/>
+		<where>
+			
+			<if test="systemOrderId != null and systemOrderId != ''">
+				AND a.system_order_id = #{systemOrderId}
+			</if>
+			<if test="customerOrderId != null and customerOrderId != ''">
+				AND a.customer_order_id = #{customerOrderId}
+			</if>
+			<if test="appType != null and appType != ''">
+				AND a.app_type = #{appType}
+			</if>
+			<if test="submitType != null and submitType != ''">
+				AND a.submit_type = #{submitType}
+			</if>
+			<if test="orderStatus != null and orderStatus != ''">
+				AND a.order_status = #{orderStatus}
+			</if>
+			<if test="orderDateQ != null and orderDateQ != ''">
+				AND a.order_date >= #{orderDateQ}
+			</if>
+			<if test="orderDateZ != null and orderDateZ != ''">
+				AND a.order_date &lt;= #{orderDateZ}
+			</if>	
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.order.entity.JmsgOrder">
+		SELECT 
+			<include refid="jmsgOrderColumns"/>
+		FROM jmsg_order a
+		<include refid="jmsgOrderJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_order(
+			id,
+			system_order_id,
+			customer_order_id,
+			order_content,
+			app_type,
+			submit_type,
+			order_status,
+			order_date,
+			user_id,
+			create_datetime,
+			update_by,
+			update_datetime,
+			check_remark
+		) VALUES (
+			#{id},
+			#{systemOrderId},
+			#{customerOrderId},
+			#{orderContent},
+			#{appType},
+			#{submitType},
+			#{orderStatus},
+			#{orderDate},
+			#{user.id},
+			#{createDatetime},
+			#{updateBy.id},
+			#{updateDatetime},
+			#{checkRemark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_order SET 	
+			system_order_id = #{systemOrderId},
+			customer_order_id = #{customerOrderId},
+			order_content = #{orderContent},
+			app_type = #{appType},
+			submit_type = #{submitType},
+			order_status = #{orderStatus},
+			order_date = #{orderDate},
+			user_id = #{user.id},
+			create_datetime = #{createDatetime},
+			update_by = #{updateBy.id},
+			update_datetime = #{updateDatetime},
+			check_remark = #{checkRemark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_order
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

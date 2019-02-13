@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsUserAttrDao">
+    
+	<sql id="jmsgSmsUserAttrColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.user_status AS "userStatus",
+		a.apisecret AS "apisecret",
+		a.sign_check AS "signCheck",
+		a.sms_sign AS "smsSign",
+		a.aut_ip AS "autIp",
+		a.check_count AS "checkCount",
+		a.global_blacklist AS "globalBlacklist",
+		a.global_filter AS "globalFilter",
+		a.repeat_filter AS "repeatFilter",
+		a.upside_addr AS "upsideAddr",
+		a.report_addr AS "reportAddr",
+		a.create_by AS "createBy.id",
+		a.create_datetime AS "createDatetime",
+		u1.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgSmsUserAttrJoins">
+		LEFT JOIN sys_user u1 ON u1.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserAttr">
+		SELECT 
+			<include refid="jmsgSmsUserAttrColumns"/>
+		FROM jmsg_sms_user_attr a
+		<include refid="jmsgSmsUserAttrJoins"/>
+		WHERE a.user_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserAttr">
+		SELECT 
+			<include refid="jmsgSmsUserAttrColumns"/>
+		FROM jmsg_sms_user_attr a
+		<include refid="jmsgSmsUserAttrJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="userStatus != null and userStatus != ''">
+				AND a.user_status = #{userStatus}
+			</if>
+			<if test="globalBlacklist != null and globalBlacklist != ''">
+				AND a.global_blacklist = #{globalBlacklist}
+			</if>
+			<if test="globalFilter != null and globalFilter != ''">
+				AND a.global_filter = #{globalFilter}
+			</if>
+			<if test="repeatFilter != null and repeatFilter != ''">
+				AND a.repeat_filter = #{repeatFilter}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserAttr">
+		SELECT 
+			<include refid="jmsgSmsUserAttrColumns"/>
+		FROM jmsg_sms_user_attr a
+		<include refid="jmsgSmsUserAttrJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_user_attr(
+			user_id,
+			user_status,
+			apisecret,
+			sign_check,
+			sms_sign,
+			aut_ip,
+			check_count,
+			global_blacklist,
+			global_filter,
+			repeat_filter,
+			upside_addr,
+			report_addr,
+			create_by,
+			create_datetime
+		) VALUES (
+			#{user.id},
+			#{userStatus},
+			#{apisecret},
+			#{signCheck},
+			#{smsSign},
+			#{autIp},
+			#{checkCount},
+			#{globalBlacklist},
+			#{globalFilter},
+			#{repeatFilter},
+			#{upsideAddr},
+			#{reportAddr},
+			#{createBy.id},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_user_attr SET 	
+			user_id = #{user.id},
+			user_status = #{userStatus},
+			apisecret = #{apisecret},
+			sign_check = #{signCheck},
+			sms_sign = #{smsSign},
+			aut_ip = #{autIp},
+			check_count = #{checkCount},
+			global_blacklist = #{globalBlacklist},
+			global_filter = #{globalFilter},
+			repeat_filter = #{repeatFilter},
+			upside_addr = #{upsideAddr},
+			report_addr = #{reportAddr}
+		WHERE user_id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_user_attr
+		WHERE user_id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsReportSignDao">
+    
+	<sql id="jmsgSmsReportSignColumns">
+		a.day AS "day",
+		a.user_id AS "user.id",
+		a.sms_sign AS "smsSign",
+		a.send_count AS "sendCount",
+		u2.name AS "user.name",
+		A.update_datetime AS updateDatetime
+	</sql>
+	
+	<sql id="jmsgSmsReportSignJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportSign">
+		SELECT 
+			<include refid="jmsgSmsReportSignColumns"/>
+		FROM jmsg_sms_report_sign a
+		<include refid="jmsgSmsReportSignJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportSign">
+		SELECT 
+			<include refid="jmsgSmsReportSignColumns"/>,
+			u3.name AS "company.name"
+		FROM jmsg_sms_report_sign a
+		<include refid="jmsgSmsReportSignJoins"/>
+		LEFT JOIN sys_office u3 ON u3.id = u2.company_id
+		<where>
+			<if test="company != null and company.id != null and company.id !=''">
+				u2.company_id=#{company.id}
+			</if>
+			<if test="dayQ != null and dayQ != ''">
+				AND a.day >= #{dayQ}
+			</if>
+			<if test="dayZ != null and dayZ != ''">
+				AND a.day &lt;= #{dayZ}
+			</if>			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="smsSign != null and smsSign != ''">
+				AND a.sms_sign LIKE CONCAT('%',#{smsSign},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC,a.send_count DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="usedSignList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportSign">
+		SELECT 
+			a.day AS "day",
+			a.user_id AS "user.id",
+			a.sms_sign AS "smsSign",
+			u2.name AS "user.name"
+		FROM jmsg_sms_used_sign a
+		<include refid="jmsgSmsReportSignJoins"/>
+		<where>
+			<if test="dayQ != null and dayQ != ''">
+				AND a.day >= #{dayQ}
+			</if>
+			<if test="dayZ != null and dayZ != ''">
+				AND a.day &lt;= #{dayZ}
+			</if>			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="smsSign != null and smsSign != ''">
+				AND a.sms_sign LIKE CONCAT('%',#{smsSign},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReportSign">
+		SELECT 
+			<include refid="jmsgSmsReportSignColumns"/>
+		FROM jmsg_sms_report_sign a
+		<include refid="jmsgSmsReportSignJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_report_sign(
+			day,
+			user_id,
+			sms_sign,
+			send_count
+		) VALUES (
+			#{day},
+			#{user.id},
+			#{smsSign},
+			#{sendCount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_report_sign SET 	
+			day = #{day},
+			user_id = #{user.id},
+			sms_sign = #{smsSign},
+			send_count = #{sendCount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_report_sign
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

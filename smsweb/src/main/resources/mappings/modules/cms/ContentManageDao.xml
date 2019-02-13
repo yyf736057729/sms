@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.core.modules.cms.dao.ContentManageDao">
+
+	<select id="getContentMg" resultType="com.siloyou.core.modules.cms.entity.ContentManage">
+		select id,content_manage as contentManage,status,time,count
+		from jmsg_content_manage
+		<where>
+			<if test="status != null">
+				status = #{status}
+			</if>
+		</where>
+	</select>
+</mapper>

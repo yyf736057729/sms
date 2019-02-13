@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgGatewaySignDao">
+    
+	<sql id="jmsgGatewaySignColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.gateway_id AS "gatewayId",
+		a.sign AS "sign",
+		a.sp_number AS "spNumber",
+		a.createtime AS "createTime",
+		a.note AS "note",
+		u1.gateway_name AS "gatewayName",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgGatewaySignJoins">
+		LEFT JOIN jmsg_gateway_info u1 ON u1.id = a.gateway_id
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewaySign">
+		SELECT 
+			<include refid="jmsgGatewaySignColumns"/>
+		FROM jmsg_gateway_sign a
+		<include refid="jmsgGatewaySignJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByParam" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewaySign">
+		SELECT 
+			<include refid="jmsgGatewaySignColumns"/>
+		FROM jmsg_gateway_sign a
+		<include refid="jmsgGatewaySignJoins"/>
+		WHERE a.gateway_id =#{gatewayId}
+			  AND a.sign =#{sign}
+			  AND a.user_id = #{user.id}
+		LIMIT 1	  
+	</select>	
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewaySign">
+		SELECT 
+			<include refid="jmsgGatewaySignColumns"/>
+		FROM jmsg_gateway_sign a
+		<include refid="jmsgGatewaySignJoins"/>
+		<where>
+		    <if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+			<if test="sign != null and sign != ''">
+				AND a.sign = #{sign}
+			</if>
+			<if test="spNumber != null and spNumber != ''">
+				AND a.sp_number = #{spNumber}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY a.createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getUserGatewaySingList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewaySign">
+		SELECT 
+			<include refid="jmsgGatewaySignColumns"/>
+		FROM jmsg_gateway_sign a
+		<include refid="jmsgGatewaySignJoins"/>
+		<where>
+		    <if test="user != null and user.id != null and user.id != ''">
+				AND a.gateway_id in (select gateway_id from jmsg_gateway_group where group_id = (select group_id from sys_user where id = #{user.id}))
+				and a.user_id = #{user.id}
+			</if>
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+			<if test="sign != null and sign != ''">
+				AND a.sign = #{sign}
+			</if>
+			<if test="spNumber != null and spNumber != ''">
+				AND a.sp_number = #{spNumber}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY a.createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewaySign">
+		SELECT 
+			<include refid="jmsgGatewaySignColumns"/>
+		FROM jmsg_gateway_sign a
+		<include refid="jmsgGatewaySignJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    ORDER BY a.createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_gateway_sign(
+			user_id,
+			gateway_id,
+			sign,
+			sp_number,
+			createtime,
+			note
+		) VALUES (
+			#{user.id},
+			#{gatewayId},
+			#{sign},
+			#{spNumber},
+			now(),
+			#{note}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_gateway_sign SET 	
+			gateway_id = #{gatewayId},
+			sign = #{sign},
+			sp_number = #{spNumber},
+			note = #{note}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_gateway_sign
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getUserGatewaySign" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewaySign">
+		SELECT 
+			<include refid="jmsgGatewaySignColumns"/>
+		FROM jmsg_gateway_sign a
+		<include refid="jmsgGatewaySignJoins"/>
+				where a.user_id = #{user.id}
+				AND a.gateway_id = #{gatewayId}
+				AND a.sign = #{sign}
+	</select>
+	
+</mapper>

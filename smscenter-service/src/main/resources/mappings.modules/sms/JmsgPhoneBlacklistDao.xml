@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgPhoneBlacklistDao">
+    
+	<insert id="batchInsert">
+		INSERT INTO jmsg_phone(
+			phone,
+			scope,
+			type,
+			create_by,
+			create_datetime
+		) VALUES (
+			#{phone},
+			#{scope},
+			#{type},
+			#{createBy.id},
+			NOW()
+		)
+	</insert>
+	
+</mapper>

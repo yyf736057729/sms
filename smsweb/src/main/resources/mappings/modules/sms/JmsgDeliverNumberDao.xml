@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgDeliverNumberDao">
+    
+	<sql id="jmsgDeliverNumberColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.sp_number AS "spNumber",
+		a.createtime AS "createtime",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgDeliverNumberJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgDeliverNumber">
+		SELECT 
+			<include refid="jmsgDeliverNumberColumns"/>
+		FROM jmsg_deliver_number a
+		<include refid="jmsgDeliverNumberJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgDeliverNumber">
+		SELECT 
+			<include refid="jmsgDeliverNumberColumns"/>
+		FROM jmsg_deliver_number a
+		<include refid="jmsgDeliverNumberJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="spNumber != null and spNumber != ''">
+				AND a.sp_number like CONCAT('%', #{spNumber}, '%')
+			</if>
+		</where>
+			ORDER BY a.createtime DESC
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgDeliverNumber">
+		SELECT 
+			<include refid="jmsgDeliverNumberColumns"/>
+		FROM jmsg_deliver_number a
+		<include refid="jmsgDeliverNumberJoins"/>
+		<where>
+			
+		</where>		
+		ORDER BY a.createtime DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_deliver_number(
+			user_id,
+			sp_number,
+			createtime
+		) VALUES (
+			#{user.id},
+			#{spNumber},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_deliver_number SET 	
+			user_id = #{user.id},
+			sp_number = #{spNumber},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_deliver_number
+		WHERE id = #{id}
+	</update>
+	
+	<select id="queryBySpNumber" resultType="java.lang.Integer">
+		SELECT count(1) FROM jmsg_deliver_number WHERE sp_number=#{spNumber}
+	</select>
+	
+</mapper>

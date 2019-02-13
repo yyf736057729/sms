@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.smscenter.dao.JmsgGroupDao">
+    
+	<sql id="jmsgGroupColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.description AS "description",
+		a.status AS "status",
+		a.sort AS "sort",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="jmsgGroupJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGroup">
+		SELECT 
+			<include refid="jmsgGroupColumns"/>
+		FROM jmsg_group a
+		<include refid="jmsgGroupJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByParam" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGroup">
+		SELECT 
+			<include refid="jmsgGroupColumns"/>
+		FROM jmsg_group a
+		WHERE a.name=#{name}
+	</select>	
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGroup">
+		SELECT 
+			<include refid="jmsgGroupColumns"/>
+		FROM jmsg_group a
+		<include refid="jmsgGroupJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    order by a.sort
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.smscenter.entity.JmsgGroup">
+		SELECT 
+			<include refid="jmsgGroupColumns"/>
+		FROM jmsg_group a
+		<include refid="jmsgGroupJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    order by a.sort
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO jmsg_group(
+			name,
+			description,
+			status,
+			sort,
+			createtime
+		) VALUES (
+			#{name},
+			#{description},
+			1,
+			#{sort},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_group SET 	
+			name = #{name},
+			description = #{description},
+			status = #{status},
+			sort = #{sort},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_group
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateStatus">
+		UPDATE jmsg_group SET
+			status = #{status}
+		WHERE id = #{id}	
+	</update>
+	
+</mapper>

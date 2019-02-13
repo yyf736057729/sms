@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgGatewayDayReportDao">
+    
+	<sql id="jmsgGatewayDayReportColumns">
+		a.day AS "day",
+		a.gateway_id AS "gatewayId",
+		a.send_count AS "sendCount",
+		a.fail_count AS "failCount",
+		a.report_count AS "reportCount",
+		a.report_fail_count AS "reportFailCount",
+		a.report_null_count AS "reportNullCount",
+		a.report_success_count AS "reportSuccessCount",
+		a.update_datetime AS "updateDatetime",
+		u1.gateway_name AS "gatewayName",
+		a.submit_count AS "submitCount",
+		a.submit_success_count AS "submitSuccessCount",
+		a.submit_fail_count AS "submitFailCount"
+	</sql>
+	
+	<sql id="jmsgGatewayDayReportJoins">
+		LEFT JOIN jmsg_gateway_info u1 ON u1.id = a.gateway_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT 
+			<include refid="jmsgGatewayDayReportColumns"/>
+		FROM jmsg_gateway_day_report a
+		<include refid="jmsgGatewayDayReportJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT 
+			<include refid="jmsgGatewayDayReportColumns"/>
+		FROM jmsg_gateway_day_report a
+		<include refid="jmsgGatewayDayReportJoins"/>
+		<where>
+			a.gateway_id !='-1'
+			<if test="dayQ != null and dayQ != ''">
+				AND a.day >= #{dayQ}
+			</if>
+			<if test="dayZ != null and dayZ != ''">
+				AND a.day &lt;= #{dayZ}
+			</if>
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+			<if test="gatewayName != null and gatewayName != ''">
+				AND u1.gateway_name LIKE CONCAT('%',#{gatewayName},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListByMonth" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT 
+			a.day AS "day",
+			a.gateway_id AS "gatewayId",
+			SUM(a.send_count) AS "sendCount",
+			SUM(a.fail_count) AS "failCount",
+			SUM(a.report_count) AS "reportCount",
+			SUM(a.report_fail_count) AS "reportFailCount",
+			SUM(a.report_null_count) AS "reportNullCount",
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			a.update_datetime AS "updateDatetime",
+			u1.gateway_name AS "gatewayName",
+			SUM(a.submit_count) AS "submitCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount"
+		FROM jmsg_gateway_day_report a
+		<include refid="jmsgGatewayDayReportJoins"/>
+		<where>
+			a.gateway_id !='-1'
+			<if test="dayQ != null">
+				AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+			</if>
+			<if test="dayZ != null">
+				AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+			</if>
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+			<if test="gatewayName != null and gatewayName != ''">
+				AND u1.gateway_name LIKE CONCAT('%',#{gatewayName},'%')
+			</if>
+		</where>
+		GROUP BY a.gateway_id,DATE_FORMAT(a.day,'%Y-%m')
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findListReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT 
+			a.day AS "day",
+			a.gateway_id AS "gatewayId",
+			u1.gateway_name AS "gatewayName",
+			a.submit_count AS "submitCount",
+			a.submit_success_count AS "submitSuccessCount",
+			a.submit_fail_count AS "submitFailCount",
+			CONCAT(ROUND(a.submit_success_count*100/a.submit_count,2),'%') AS submitCgl,
+			a.report_success_count AS "reportSuccessCount",
+			CONCAT(ROUND(a.report_success_count*100/a.submit_count,2),'%') AS reportSuccessZb,
+			a.report_null_count AS "reportNullCount",
+			CONCAT(ROUND(a.report_null_count*100/a.submit_count,2),'%') AS reportNullZb,
+			a.update_datetime AS "updateDatetime"
+		FROM jmsg_gateway_day_report a
+		<include refid="jmsgGatewayDayReportJoins"/>
+		<where>
+			a.gateway_id !='-1'
+			<if test="dayQ != null and dayQ != ''">
+				AND a.day >= #{dayQ}
+			</if>
+			<if test="dayZ != null and dayZ != ''">
+				AND a.day &lt;= #{dayZ}
+			</if>
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+			<if test="gatewayName != null and gatewayName != ''">
+				AND u1.gateway_name LIKE CONCAT('%',#{gatewayName},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findMonthListReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayMonthReport">
+		SELECT 
+			DATE_FORMAT(a.day,'%Y-%m') AS "day",
+			a.gateway_id AS "gatewayId",
+			u1.gateway_name AS "gatewayName",
+			SUM(a.submit_count) AS "submitCount",
+			SUM(a.submit_success_count) AS "submitSuccessCount",
+			SUM(a.submit_fail_count) AS "submitFailCount",
+			CONCAT(ROUND(SUM(a.submit_success_count)*100/SUM(a.submit_count),2),'%') AS submitCgl,
+			SUM(a.report_success_count) AS "reportSuccessCount",
+			CONCAT(ROUND(SUM(a.report_success_count)*100/SUM(a.submit_count),2),'%') AS reportSuccessZb,
+			SUM(a.report_null_count) AS "reportNullCount",
+			CONCAT(ROUND(SUM(a.report_null_count)*100/SUM(a.submit_count),2),'%') AS reportNullZb,
+			a.update_datetime AS "updateDatetime"
+		FROM jmsg_gateway_day_report a
+		<include refid="jmsgGatewayDayReportJoins"/>
+		<where>
+			a.gateway_id !='-1'
+			<if test="dayQ != null">
+				AND DATE_FORMAT(a.day,'%Y-%m') >= DATE_FORMAT(#{dayQ},'%Y-%m')
+			</if>
+			<if test="dayZ != null">
+				AND DATE_FORMAT(a.day,'%Y-%m') &lt;= DATE_FORMAT(#{dayZ},'%Y-%m')
+			</if>
+			<if test="gatewayId != null and gatewayId != ''">
+				AND a.gateway_id = #{gatewayId}
+			</if>
+			<if test="gatewayName != null and gatewayName != ''">
+				AND u1.gateway_name LIKE CONCAT('%',#{gatewayName},'%')
+			</if>
+		</where>
+		GROUP BY a.gateway_id,DATE_FORMAT(a.day,'%Y-%m')
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT 
+			<include refid="jmsgGatewayDayReportColumns"/>
+		FROM jmsg_gateway_day_report a
+		<include refid="jmsgGatewayDayReportJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findGatewaySendListByDay" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT
+				a.channel_code gatewayId,	
+			  	a.send_datetime day,
+				sum(a.pay_count) sendCount,
+				(SELECT CONCAT(count(1) ,'|',SUM(case when b.stat='DELIVRD' then 1 else 0 end))from jmsg_sms_report b 
+				where b.submit_time BETWEEN  CONCAT(#{queryDay},'0000') AND CONCAT(#{queryDay},'2359') and b.gateway_id = a.channel_code) as reportResult
+		FROM jmsg_sms_send a 
+		WHERE a.send_datetime BETWEEN  #{dayQ} AND #{dayZ} AND a.send_status='T000'
+		GROUP BY a.channel_code, DATE_FORMAT(a.send_datetime,'%Y-%m-%d')
+		LIMIT ${pageNo},${pageSize}
+	</select>
+	
+	<select id="findGatewaySendListByDayNew" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT
+				IFNULL(a.channel_code,-1) gatewayId,
+			  	a.send_datetime day,
+				sum(a.pay_count) sendCount,
+				sum(case when a.send_status LIKE 'T%' then a.pay_count else 0 end) submitCount,
+				sum(case when a.report_status LIKE 'F10%' then a.pay_count else 0 end) submitFailCount,
+				sum(case when a.send_status LIKE 'F%' then a.pay_count else 0 end) sendFailCount,
+				sum(case when a.report_status='T100' then a.pay_count else 0 end) reportSuccessCount,
+				sum(case when a.report_status LIKE 'F%' then a.pay_count else 0 end) reportFailCount,
+				sum(case when a.report_status='P100' AND a.send_status='T000' then a.pay_count else 0 end) reportNullCount
+		FROM ${tableName} a 
+		WHERE a.send_datetime BETWEEN  #{dayQ} AND #{dayZ}
+		GROUP BY a.channel_code, DATE_FORMAT(a.send_datetime,'%Y-%m-%d')
+		LIMIT ${pageNo},${pageSize}
+	</select>
+	
+	<select id="findGatewaySendListByDayV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayDayReport">
+		SELECT
+				a.channel_code gatewayId,
+			  	a.send_datetime day,
+				sum(a.pay_count) sendCount,
+				sum(case when a.send_status LIKE 'T%' then a.pay_count else 0 end) submitCount,
+				sum(case when a.report_status LIKE 'F10%' then a.pay_count else 0 end) submitFailCount,
+				sum(case when a.send_status LIKE 'F%' then a.pay_count else 0 end) sendFailCount,
+				sum(case when a.report_status='T100' then a.pay_count else 0 end) reportSuccessCount,
+				sum(case when a.report_status LIKE 'F%' then a.pay_count else 0 end) reportFailCount,
+				sum(case when a.report_status='P100' AND a.send_status='T000' then a.pay_count else 0 end) reportNullCount
+		FROM ${tableName} a 
+		WHERE a.channel_code=#{gatewayId}
+	</select>
+	
+	<insert id="batchInsert">
+			INSERT INTO jmsg_gateway_day_report(
+			day,
+			gateway_id,
+			send_count,
+			fail_count,
+			report_count,
+			report_success_count,
+			report_fail_count,
+			report_null_count,
+			update_datetime,
+			submit_count,
+			submit_success_count,
+			submit_fail_count,
+			remarks
+		) VALUES (
+			#{day},
+			#{gatewayId},
+			#{sendCount},
+			#{failCount},
+			#{reportCount},
+			#{reportSuccessCount},
+			#{reportFailCount},
+			#{reportNullCount},
+			NOW(),
+			#{submitCount},
+			#{submitSuccessCount},
+			#{submitFailCount},
+			#{remarks}
+		)ON DUPLICATE KEY UPDATE `day`= values(`day`),
+		`gateway_id`= values(`gateway_id`),
+		`send_count`= values(`send_count`),
+		`fail_count`= values(`fail_count`),
+		`report_count`= values(`report_count`),
+		`report_success_count`= values(`report_success_count`),
+		`report_fail_count`= values(`report_fail_count`),
+		`report_null_count`= values(`report_null_count`),
+		`update_datetime`= values(`update_datetime`),
+		`submit_count`= values(`submit_count`),
+		`submit_success_count`= values(`submit_success_count`),
+		`submit_fail_count`= values(`submit_fail_count`),
+		`remarks`= values(`remarks`);
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_gateway_day_report SET 	
+			day = #{day},
+			gateway_id = #{gatewayId},
+			send_count = #{sendCount},
+			report_count = #{reportCount},
+			report_success_count = #{reportSuccessCount},
+			update_datetime = #{updateDatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_gateway_day_report
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

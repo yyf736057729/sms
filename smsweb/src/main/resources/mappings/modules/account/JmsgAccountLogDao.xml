@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.account.dao.JmsgAccountLogDao">
+    
+	<sql id="jmsgAccountLogColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.change_type AS "changeType",
+		a.money AS "money",
+		a.change_date AS "changeDate",
+		a.app_type AS "appType",
+		a.order_id AS "orderId",
+		a.ext1 AS "ext1",
+		a.ext2 AS "ext2",
+		a.create_by AS "createBy.id",
+		a.remark AS "remark",
+		u2.name AS "user.name",
+		u2.login_name AS "user.loginName"
+	</sql>
+	
+	<sql id="jmsgAccountLogJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccountLog">
+		SELECT 
+			<include refid="jmsgAccountLogColumns"/>
+		FROM jmsg_account_log a
+		<include refid="jmsgAccountLogJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccountLog" parameterType="com.siloyou.jmsg.modules.account.entity.JmsgAccountLog">
+		SELECT 
+			<include refid="jmsgAccountLogColumns"/>
+		FROM jmsg_account_log a
+		<include refid="jmsgAccountLogJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="changeType != null and changeType != ''">
+				AND a.change_type like '${changeType}%'
+			</if>
+			<if test="changeDateQ != null and changeDateQ != ''">
+				AND a.change_date >= #{changeDateQ}
+			</if>
+			<if test="changeDateZ != null and changeDateZ != ''">
+				AND a.change_date &lt;= #{changeDateZ}
+			</if>
+			<if test="appType != null and appType != ''">
+				AND a.app_type = #{appType}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u2.company_id =#{companyId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.change_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAccountLogDetailList" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccountLog">
+		SELECT 
+			<include refid="jmsgAccountLogColumns"/>,so.name AS "company.name"
+		FROM jmsg_account_log a
+		<include refid="jmsgAccountLogJoins"/>
+		LEFT JOIN sys_office so ON u2.company_id = so.id
+		<where>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="user != null and user.userType !=null and user.userType !=''">
+				AND u2.user_type = #{user.userType}
+			</if>
+			<if test="changeType != null and changeType != ''">
+				AND a.change_type = #{changeType}
+			</if>
+			<if test="changeDateQ != null and changeDateQ != ''">
+				AND a.change_date >= #{changeDateQ}
+			</if>
+			<if test="changeDateZ != null and changeDateZ != ''">
+				AND a.change_date &lt;= #{changeDateZ}
+			</if>
+			<if test="appType != null and appType != ''">
+				AND a.app_type = #{appType}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u2.company_id =#{companyId}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND so.id = #{company.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.change_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccountLog">
+		SELECT 
+			<include refid="jmsgAccountLogColumns"/>
+		FROM jmsg_account_log a
+		<include refid="jmsgAccountLogJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" parameterType="com.siloyou.jmsg.modules.account.entity.JmsgAccountLog">
+		INSERT INTO jmsg_account_log(
+			user_id,
+			change_type,
+			money,
+			change_date,
+			app_type,
+			order_id,
+			ext1,
+			ext2,
+			create_by,
+			remark
+		) VALUES (
+			#{user.id},
+			#{changeType},
+			#{money},
+			NOW(),
+			#{appType},
+			#{orderId},
+			#{ext1},
+			#{ext2},
+			#{createBy.id},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_account_log SET 	
+			user_id = #{user.id},
+			change_type = #{changeType},
+			money = #{money},
+			change_date = #{changeDate},
+			app_type = #{appType},
+			order_id = #{orderId},
+			ext1 = #{ext1},
+			ext2 = #{ext2},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_account_log
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

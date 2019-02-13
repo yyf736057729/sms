@@ -1,0 +1,166 @@
+A:link {
+	FONT-SIZE: 11px; COLOR: #000000; FONT-FAMILY: verdana; TEXT-DECORATION: underline
+}
+A:visited {
+	COLOR: #000000; TEXT-DECORATION: underline
+}
+A:active {
+	COLOR: #000000; TEXT-DECORATION: underline
+}
+A:hover {
+	COLOR: #000000; TEXT-DECORATION: underline
+}
+P {
+	SCROLLBAR-FACE-COLOR: #f6f6f6; FONT-SIZE: 11px; SCROLLBAR-HIGHLIGHT-COLOR: #ffffff; SCROLLBAR-SHADOW-COLOR: #cccccc; SCROLLBAR-3DLIGHT-COLOR: #cccccc; SCROLLBAR-ARROW-COLOR: #330000; SCROLLBAR-TRACK-COLOR: #f6f6f6; FONT-FAMILY: verdana; SCROLLBAR-DARKSHADOW-COLOR: #ffffff
+}
+BODY {
+	SCROLLBAR-FACE-COLOR: #f6f6f6; FONT-SIZE: 11px; SCROLLBAR-HIGHLIGHT-COLOR: #ffffff; SCROLLBAR-SHADOW-COLOR: #cccccc; SCROLLBAR-3DLIGHT-COLOR: #cccccc; SCROLLBAR-ARROW-COLOR: #330000; SCROLLBAR-TRACK-COLOR: #f6f6f6; FONT-FAMILY: verdana; SCROLLBAR-DARKSHADOW-COLOR: #ffffff
+}
+FORM {
+	FONT-SIZE: 11px; MARGIN: 0px; FONT-FAMILY: verdana
+}
+TH {
+	FONT-WEIGHT: bold; FONT-SIZE: 11px; WORD-BREAK: break-all; FONT-FAMILY: Tahoma; HEIGHT: 25px; BACKGROUND-COLOR: #eef3fb; TEXT-ALIGN: center
+}
+TD {
+	FONT-SIZE: 11px; WORD-BREAK: break-all; LINE-HEIGHT: 17px; FONT-FAMILY: Tahoma
+}
+HR {
+	COLOR: #cccccc; HEIGHT: 1px
+}
+INPUT {
+	BORDER-RIGHT: #cccccc 1px inset; PADDING-RIGHT: 3px; BORDER-TOP: #cccccc 1px inset; PADDING-LEFT: 3px; FONT-SIZE: 12px; BORDER-LEFT: #cccccc 1px inset; BORDER-BOTTOM: #cccccc 1px inset; FONT-FAMILY: Tahoma; HEIGHT: 20px
+}
+.input_w {
+	BORDER-RIGHT: #cccccc 1px inset; PADDING-RIGHT: 3px; BORDER-TOP: #cccccc 1px inset; PADDING-LEFT: 3px; FONT-SIZE: 12px; BORDER-LEFT: #cccccc 1px inset; WIDTH: 100%; BORDER-BOTTOM: #cccccc 1px inset; FONT-FAMILY: Tahoma; HEIGHT: 20px; BACKGROUND-COLOR: #fcf9cb
+}
+SELECT {
+	BORDER-RIGHT: #cccccc 1px solid; PADDING-RIGHT: 3px; BORDER-TOP: #cccccc 1px solid; PADDING-LEFT: 3px; FONT-SIZE: 12px; BORDER-LEFT: #cccccc 1px solid; BORDER-BOTTOM: #cccccc 1px solid; FONT-FAMILY: Tahoma
+}
+TEXTAREA {
+	BORDER-RIGHT: #cccccc 1px inset; BORDER-TOP: #cccccc 1px inset; OVERFLOW-Y: auto; FONT-SIZE: 12px; BORDER-LEFT: #cccccc 1px inset; WIDTH: 100%; LINE-HEIGHT: 17px; BORDER-BOTTOM: #cccccc 1px inset; FONT-FAMILY: Tahoma
+}
+.bg-search {
+	 BACKGROUND-REPEAT: repeat-y
+}
+.bg-left {
+	BORDER-RIGHT: #cccccc 1px solid; BORDER-TOP: 0px solid; BORDER-LEFT: #999999 0px solid; BORDER-BOTTOM: 0px solid; BACKGROUND-COLOR: #eef3fb
+}
+.title {
+	FONT-SIZE: 16px; COLOR: #37609d; FONT-FAMILY: 黑体; LETTER-SPACING: 1px
+
+}
+.icotitle {
+	BORDER-RIGHT: white 5px solid; WIDTH: 23px; HEIGHT: 23px
+}
+.tb-list {
+	BORDER-RIGHT: #a4b6d7 1px solid; BORDER-TOP: #a4b6d7 1px solid; BORDER-LEFT: #a4b6d7 1px solid; BORDER-BOTTOM: #a4b6d7 1px solid
+}
+.td-bg {
+	HEIGHT: 21px; BACKGROUND-COLOR: #ffffff
+}
+.td-left {
+	PADDING-LEFT: 5px; FONT-SIZE: 11px; COLOR: #000000; LINE-HEIGHT: 17px; FONT-FAMILY: Tahoma; BACKGROUND-COLOR: #eef3fb; TEXT-ALIGN: left
+}
+.td-right {
+	PADDING-LEFT: 5px; FONT-SIZE: 12px; COLOR: #000000; BACKGROUND-COLOR: #fafcfe; TEXT-ALIGN: left
+}
+.td-detail {
+	PADDING-LEFT: 5px; FONT-WEIGHT: bold; FONT-SIZE: 12px; COLOR: #000000; BACKGROUND-COLOR: #fafcfe; TEXT-ALIGN: left
+}
+.hr2 {
+	COLOR: #cccccc; HEIGHT: 2px
+}
+.line99 {
+	HEIGHT: 1px; BACKGROUND-COLOR: #999999
+}
+.cur-hand {
+	CURSOR: hand
+}
+.wid80 {
+	WIDTH: 80%
+}
+.wid90 {
+	WIDTH: 90%
+}
+.wid100 {
+	WIDTH: 100%
+}
+.pad5 {
+	PADDING-LEFT: 5px
+}
+.noborder {
+	BORDER-RIGHT: medium none; BORDER-TOP: medium none; BORDER-LEFT: medium none; WIDTH: 14px; BORDER-BOTTOM: medium none
+}
+A.abtn:link {
+	COLOR: #5c6ba2; TEXT-DECORATION: none
+}
+A.abtn:visited {
+	COLOR: #5c6ba2; TEXT-DECORATION: none
+}
+A.abtn:active {
+	COLOR: #5c6ba2; TEXT-DECORATION: none
+}
+A.abtn:hover {
+	COLOR: #5c6ba2; TEXT-DECORATION: none
+}
+.clsButtonDisabled {
+	BORDER-RIGHT: #ccffff 1px solid; PADDING-RIGHT: 8px; PADDING-LEFT: 8px; FONT-SIZE: 12px; BEHAVIOR: url(../css2/dbutton_d.htc); VERTICAL-ALIGN: middle; BORDER-LEFT: #ffffff 1px solid; CURSOR: default; COLOR: #99cccc; WORD-BREAK: keep-all; PADDING-TOP: 1px; BORDER-BOTTOM: #ccffff 1px solid; BACKGROUND-REPEAT: repeat-x; LETTER-SPACING: 4px; HEIGHT: 20px; TEXT-ALIGN: center; TEXT-DECORATION: none
+}
+.clsButtonFace {
+	BORDER-RIGHT: #5c6ba2 1px solid; PADDING-RIGHT: 8px; BORDER-TOP: #5c6ba2 1px solid; PADDING-LEFT: 8px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(../images/buttonface.gif); BEHAVIOR: url(../css2/dbutton.htc); VERTICAL-ALIGN: middle; BORDER-LEFT: #5c6ba2 1px solid; CURSOR: hand; WORD-BREAK: keep-all; LINE-HEIGHT: 18px; PADDING-TOP: 0px; BORDER-BOTTOM: #5c6ba2 1px solid; BACKGROUND-REPEAT: repeat-x; FONT-FAMILY: Tahoma; LETTER-SPACING: 4px; HEIGHT: 22px; TEXT-ALIGN: center; TEXT-DECORATION: none
+}
+.clsButtonFaceDown {
+	BORDER-RIGHT: #5c6ba2 1px solid; PADDING-RIGHT: 8px; BORDER-TOP: #5c6ba2 1px solid; PADDING-LEFT: 8px; FONT-SIZE: 11px; BACKGROUND-IMAGE: url(../images/buttonfacedown.gif); BEHAVIOR: url(../css2/dbutton.htc); VERTICAL-ALIGN: middle; BORDER-LEFT: #5c6ba2 1px solid; CURSOR: hand; WORD-BREAK: keep-all; LINE-HEIGHT: 12px; PADDING-TOP: 2px; BORDER-BOTTOM: #5c6ba2 1px solid; BACKGROUND-REPEAT: repeat-x; FONT-FAMILY: Tahoma; LETTER-SPACING: 4px; HEIGHT: 20px; TEXT-ALIGN: center; TEXT-DECORATION: none
+}
+.clsButtonFacebt {
+	BORDER-RIGHT: #5c6ba2 1px solid; BORDER-TOP: #5c6ba2 1px solid; FONT-SIZE: 11px; BEHAVIOR: url(../css2/dbuttonbt.htc); BORDER-LEFT: #5c6ba2 1px solid; CURSOR: hand; BORDER-BOTTOM: #5c6ba2 1px solid; BACKGROUND-REPEAT: repeat-x; FONT-FAMILY: Tahoma; HEIGHT: 20px
+}
+.clsButtonFacebtDown {
+	BORDER-RIGHT: #5c6ba2 1px solid; BORDER-TOP: #5c6ba2 1px solid; FONT-SIZE: 11px;  BEHAVIOR: url(../css2/dbuttonbt.htc); BORDER-LEFT: #5c6ba2 1px solid; CURSOR: hand; BORDER-BOTTOM: #5c6ba2 1px solid; BACKGROUND-REPEAT: repeat-x; FONT-FAMILY: Tahoma; HEIGHT: 20px
+}
+.clsButtonFace A {
+	BEHAVIOR: url(../css2/dbutton_a.htc); COLOR: #5c6ba2
+}
+.clsButtonFaceDown A {
+	BEHAVIOR: url(../css2/dbutton_a.htc); COLOR: #5c6ba2
+}
+.datagrid {
+	BORDER-RIGHT: #a4b6d7 1px solid; BORDER-TOP: #a4b6d7 1px solid; BORDER-LEFT: #a4b6d7 1px solid; BORDER-BOTTOM: #a4b6d7 1px solid
+}
+.divover {
+	BORDER-RIGHT: #999999 1px solid; PADDING-RIGHT: 3px; BORDER-TOP: #999999 1px solid; PADDING-LEFT: 3px; Z-INDEX: 2; BORDER-LEFT: #999999 1px solid; WIDTH: 100%; COLOR: #37609d; BORDER-BOTTOM: #999999 1px solid; POSITION: absolute; BACKGROUND-COLOR: #ffffcc
+}
+.divout {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; Z-INDEX: 1; OVERFLOW: hidden; WIDTH: 100%; PADDING-TOP: 0px; POSITION: absolute; HEIGHT: 18px
+}
+.datagrid TR {
+	BEHAVIOR: url(../css2/datagrid_tr.htc)
+}
+.datagrid DIV {
+	BEHAVIOR: url(../css2/datagrid_div.htc)
+}
+.listtb {
+	BACKGROUND-COLOR: #a4b6d7
+}
+.dtable {
+	BORDER-TOP-WIDTH: 1px; BORDER-LEFT-WIDTH: 1px; BORDER-LEFT-COLOR: #c3bfb3; BORDER-BOTTOM-COLOR: #c3bfb3; BEHAVIOR: url(../css2/dtable.htc); BORDER-TOP-COLOR: #c3bfb3; BORDER-COLLAPSE: collapse; BORDER-RIGHT-WIDTH: 1px; BORDER-RIGHT-COLOR: #c3bfb3
+}
+.dtable TR {
+	BEHAVIOR: url(../css2/datagrid_tr.htc)
+}
+TD.datatab {
+	BORDER-RIGHT: #e5e5f9 1px solid; PADDING-RIGHT: 8px; BORDER-TOP: #e5e5f9 1px solid; PADDING-LEFT: 8px; BORDER-LEFT: #e5e5f9 1px solid; CURSOR: hand; COLOR: black; WORD-BREAK: keep-all; BORDER-BOTTOM: #e5e5f9 1px solid; BACKGROUND-COLOR: white
+}
+TD.datatabselected {
+	BORDER-RIGHT: #666666 1px solid; PADDING-RIGHT: 8px; BORDER-TOP: #ffffff 1px solid; PADDING-LEFT: 8px; BORDER-LEFT: #ffffff 1px solid; CURSOR: default; COLOR: black; WORD-BREAK: keep-all; BORDER-BOTTOM: #e5e5f9 1px solid; BACKGROUND-COLOR: #e5e5f9
+}
+TABLE#idTabsTitle {
+	BEHAVIOR: url(../css2/datatab_title.htc); BACKGROUND-COLOR: #e5e5f9
+}
+TABLE#idTabsList {
+	BORDER-RIGHT: #e5e5f9 2px solid; BORDER-TOP: #e5e5f9 2px solid; BEHAVIOR: url(../css2/datatab_list.htc); BORDER-LEFT: #e5e5f9 2px solid; BORDER-BOTTOM: #e5e5f9 2px solid
+}
+.font-w {
+	COLOR: red
+}

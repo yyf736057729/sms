@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsMmsdownDao">
+    
+	<sql id="jmsgSmsMmsdownColumns">
+		a.id AS "id",
+		a.user_agent AS "userAgent",
+		a.down_time AS "downTime",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="jmsgSmsMmsdownJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsMmsdown">
+		SELECT 
+			<include refid="jmsgSmsMmsdownColumns"/>
+		FROM ${tableName} a
+		<include refid="jmsgSmsMmsdownJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsMmsdown">
+		SELECT 
+			<include refid="jmsgSmsMmsdownColumns"/>
+		FROM jmsg_sms_mmsdown a
+		<include refid="jmsgSmsMmsdownJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsMmsdown">
+		SELECT 
+			<include refid="jmsgSmsMmsdownColumns"/>
+		FROM jmsg_sms_mmsdown a
+		<include refid="jmsgSmsMmsdownJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_mmsdown(
+			id,
+			user_agent,
+			down_time,
+			create_time
+		) VALUES (
+			#{id},
+			#{userAgent},
+			#{downTime},
+			#{createTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_mmsdown SET 	
+			user_agent = #{userAgent},
+			down_time = #{downTime},
+			create_time = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_mmsdown
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

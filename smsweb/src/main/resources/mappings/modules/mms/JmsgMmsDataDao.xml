@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.mms.dao.JmsgMmsDataDao">
+    
+	<sql id="jmsgMmsDataColumns">
+		a.id AS "id",
+		a.mms_title AS "mmsTitle",
+		a.content AS "content",
+		a.mms_code AS "mmsCode",
+		a.check_status AS "checkStatus",
+		a.create_datetime AS "createDatetime",
+		a.create_by AS "createBy.id",
+		a.update_datetime AS "updateDatetime",
+		a.update_by AS "updateBy.id",
+		u7.name AS "user.name",
+		a.use_flag AS "useFlag",
+		a.remark AS "remark",
+		a.check_content AS "checkContent",
+		a.check_datetime AS "checkDatetime",
+		u7.login_name AS "user.loginName",
+		so.name AS "user.company.name",
+		u7.callback_url AS "user.callbackUrl",
+		u7.apikey AS "user.apikey"
+		
+	</sql>
+	
+	<sql id="jmsgMmsDataJoins">
+		LEFT JOIN sys_user u7 ON u7.id = a.create_by
+		LEFT JOIN sys_office so ON u7.company_id = so.id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsData">
+		SELECT 
+			<include refid="jmsgMmsDataColumns"/>
+		FROM jmsg_mms_data a
+		<include refid="jmsgMmsDataJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsData">
+		SELECT 
+			<include refid="jmsgMmsDataColumns"/>,u8.name AS "checkUserName"
+		FROM jmsg_mms_data a
+		<include refid="jmsgMmsDataJoins"/>
+		LEFT JOIN sys_user u8 ON u8.id = a.check_user_id
+		<where>
+			
+			<if test="mmsTitle != null and mmsTitle != ''">
+				AND a.mms_title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{mmsTitle}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{mmsTitle}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{mmsTitle},'%')</if>
+			</if>
+			<if test="createDatetime != null and createDatetime != ''">
+				AND a.create_datetime = #{createDatetime}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.create_by = #{user.id}
+			</if>
+			<if test="checkStatus != null and checkStatus != ''">
+				AND a.check_status = #{checkStatus}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u7.company_id = #{companyId}
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id=#{id}
+			</if>
+			<if test="checkUserName != null and checkUserName !=''">
+				AND u8.name LIKE concat('%',#{checkUserName},'%')
+			</if>
+			<if test="checkStatus != null and checkStatus !=''">
+				AND a.check_status=#{checkStatus}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_datetime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="checkCount" resultType="java.lang.Long">
+		SELECT count(*) FROM jmsg_mms_data a WHERE a.check_status='9'
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsData">
+		SELECT 
+			<include refid="jmsgMmsDataColumns"/>
+		FROM jmsg_mms_data a
+		<include refid="jmsgMmsDataJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findCheckInfo" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsData">
+		SELECT 
+			a.check_content checkContent,a.check_datetime checkDatetime,u.name AS "user.name"
+		FROM jmsg_mms_data a
+		LEFT JOIN sys_user u ON a.check_user_id = u.id
+		WHERE a.id=#{id}
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO jmsg_mms_data(
+			mms_title,
+			content,
+			mms_code,
+			create_datetime,
+			create_by,
+			update_datetime,
+			update_by,
+			remark,
+			check_status
+		) VALUES (
+			#{mmsTitle},
+			#{content},
+			#{mmsCode},
+			NOW(),
+			#{createBy.id},
+			NOW(),
+			#{updateBy.id},
+			#{remark},
+			#{checkStatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_mms_data SET 	
+			mms_title = #{mmsTitle},
+			content = #{content},
+			remark = #{remark},
+			check_status = '9',
+			update_datetime = NOW(),
+			update_by = #{updateBy.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_mms_data
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateCheckStatus">
+		UPDATE jmsg_mms_data SET
+			check_status=#{checkStatus},
+			<if test="checkStatus == '0'.toString()">
+				check_content=#{checkContent},
+			</if>
+			check_datetime=NOW(),
+			check_user_id=#{checkUserId}
+		WHERE id=#{id}	
+	</update>
+	
+	<update id="updateUseFlag">
+		UPDATE jmsg_mms_data SET
+			use_flag=use_flag+1
+		WHERE id=#{id}	
+	</update>
+	
+</mapper>

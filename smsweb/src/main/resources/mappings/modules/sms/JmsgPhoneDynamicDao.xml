@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgPhoneDynamicDao">
+    
+	<sql id="jmsgPhoneDynamicColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.createtime AS "createtime",
+		a.type AS "type"
+	</sql>
+	
+	<sql id="jmsgPhoneDynamicJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneDynamic">
+		SELECT 
+			<include refid="jmsgPhoneDynamicColumns"/>
+		FROM jmsg_phone_dynamic a
+		<include refid="jmsgPhoneDynamicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneDynamic">
+		SELECT 
+			<include refid="jmsgPhoneDynamicColumns"/>
+		FROM jmsg_phone_dynamic a
+		<include refid="jmsgPhoneDynamicJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="createtime != null">
+				AND a.createtime >=#{createtime}
+			</if>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+		<select id="findPhoneList" resultType="java.lang.String">
+		SELECT 
+				a.phone phone
+		FROM jmsg_phone_dynamic a
+		<where>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone} 
+			</if>
+			<if test="createtime != null">
+				AND a.createtime >=#{createtime}
+			</if>
+			
+		</where>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneDynamic">
+		SELECT 
+			<include refid="jmsgPhoneDynamicColumns"/>
+		FROM jmsg_phone_dynamic a
+		<include refid="jmsgPhoneDynamicJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_phone_dynamic(
+			phone,
+			createtime,
+			type
+		) VALUES (
+			#{phone},
+			NOW(),
+			#{type}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_phone_dynamic SET 	
+			phone = #{phone},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_phone_dynamic
+		WHERE phone = #{phone}
+	</update>
+	
+</mapper>

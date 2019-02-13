@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/cache 
+        http://www.springframework.org/schema/cache/spring-cache-3.1.xsd
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+  	<context:property-placeholder ignore-unresolvable="true" location="classpath:system.properties" />
+  	
+  	<bean name="gateWayMessage" class="com.siloyou.jmsg.gateway.ums.message.UmsGateWayMessage" init-method="initGateWayMessage"></bean>
+  	
+  	<bean name="umsMOListener" class="com.siloyou.jmsg.gateway.ums.handler.listener.UmsMOListener" >
+  		<property name="gateWayMessage" ref="gateWayMessage"></property>
+  	</bean>
+  	
+  	<bean name="gatewayFactory" class="com.siloyou.jmsg.gateway.ums.UmsGatewayFactory" init-method="initGateway"  destroy-method="closeAll">
+  		<property name="gatewayService" ref="jmsgGatewayInfoService"></property>
+  		<property name="moListener" ref="umsMOListener"></property>
+  		<property name="messageFactory" ref="messageFactory"></property>
+  	</bean>
+  	
+  	<bean name="gateWayMTListener" class="com.siloyou.jmsg.gateway.ums.handler.listener.GateWayMTListener" >
+  		<property name="gatewayFactory" ref="gatewayFactory"></property>
+  		<property name="gateWayMessage" ref="gateWayMessage"></property>
+  	</bean>
+  	<bean name="mQStartup" class="com.siloyou.jmsg.gateway.ums.MQStartup"  init-method="init">
+  		<property name="gateWayMTListener" ref="gateWayMTListener"></property>
+  	</bean>
+  	
+  	
+	<bean name="messageFactory" class="com.siloyou.jmsg.gateway.ums.handler.MessageFactory" >
+	    <property name="gateWayMessage" ref="gateWayMessage"></property>
+		<property name="cmppMsgFactory" ref="cmppMsgFactory"></property>
+		<property name="cmpp30MsgFactory" ref="cmpp30MsgFactory"></property>
+		<property name="sgipMsgFactory" ref="sgipMsgFactory"></property>
+		<property name="smgpMsgFactory" ref="smgpMsgFactory"></property>
+		<property name="smgp3MsgFactory" ref="smgp3MsgFactory"></property>
+		<property name="gatewayFactory" ref="gatewayFactory"></property>
+		<property name="fmt_cmpp" value="${fmt_cmpp}"></property>
+		<property name="fmt_cmpp30" value="${fmt_cmpp30}"></property>
+		<property name="fmt_sgip" value="${fmt_sgip}"></property>
+		<property name="fmt_smgp" value="${fmt_smgp}"></property>
+		<property name="fmt_smgp3" value="${fmt_smgp3}"></property>
+	</bean>
+
+	<bean name="cmppMsgFactory" class="net.zoneland.gateway.message.factory.CMPPMsgFactory">
+		<property name="registered_Delivery" value="${cmpp.registered_Delivery}"></property>
+		<property name="service_Id" value="${cmpp.service_Id}"></property>
+		<property name="fee_UserType" value="${cmpp.fee_UserType}"></property>
+		<property name="fee_Terminal_Id" value="${cmpp.fee_Terminal_Id}"></property>
+		<property name="tp_Pid" value="${cmpp.tp_Pid}"></property>
+		<property name="fee_Type" value="${cmpp.fee_Type}"></property>
+		<property name="fee_Code" value="${cmpp.fee_Code}"></property>
+		<property name="msg_Src" value="${cmpp.msg_Src}"></property>
+		<property name="reserve" value="${cmpp.reserve}"></property>
+	</bean>
+
+	<bean name="cmpp30MsgFactory" class="net.zoneland.gateway.message.factory.CMPP30MsgFactory">
+		<property name="registered_Delivery" value="${cmpp30.registered_Delivery}"></property>
+		<property name="service_Id" value="${cmpp30.service_Id}"></property>
+		<property name="fee_UserType" value="${cmpp30.fee_UserType}"></property>
+		<property name="fee_Terminal_Id" value="${cmpp30.fee_Terminal_Id}"></property>
+		<property name="tp_Pid" value="${cmpp30.tp_Pid}"></property>
+		<property name="fee_Type" value="${cmpp30.fee_Type}"></property>
+		<property name="fee_Code" value="${cmpp30.fee_Code}"></property>
+		<property name="msg_Src" value="${cmpp30.msg_Src}"></property>
+		<property name="dest_Terminal_Type" value="${cmpp30.dest_Terminal_Type}"></property>
+	
+		<property name="linkID" value="${cmpp30.linkID}"></property>
+		<property name="priority" value="${cmpp30.priority}"></property>
+	</bean>
+
+	<bean name="sgipMsgFactory" class="net.zoneland.gateway.message.factory.SGIPMsgFactory">
+		<property name="chargeNumber" value="${sgip.chargeNumber}"></property>
+		<property name="corpId" value="${sgip.corpId}"></property>
+		<property name="serviceType" value="${sgip.serviceType}"></property>
+		<property name="feeType" value="${sgip.feeType}"></property>
+		<property name="feeValue" value="${sgip.feeValue}"></property>
+		<property name="givenValue" value="${sgip.givenValue}"></property>
+		<property name="agentFlag" value="${sgip.agentFlag}"></property>
+		<property name="morelatetoMTFlag" value="${sgip.morelatetoMTFlag}"></property>
+		<property name="reportFlag" value="${sgip.reportFlag}"></property>
+		<property name="tp_pid" value="${sgip.tp_pid}"></property>
+		<property name="messageType" value="${sgip.messageType}"></property>
+		<property name="reserve" value="${sgip.reserve}"></property>
+	</bean>
+
+	<bean name="smgpMsgFactory" class="net.zoneland.gateway.message.factory.SMGPMsgFactory">
+		<property name="msgType" value="${smgp.msgType}"></property>
+		<property name="needReport" value="${smgp.needReport}"></property>
+		<property name="serviceId" value="${smgp.serviceId}"></property>
+		<property name="feeType" value="${smgp.feeType}"></property>
+		<property name="feeCode" value="${smgp.feeCode}"></property>
+		<property name="fixedFee" value="${smgp.fixedFee}"></property>
+		<property name="chargeTermId" value="${smgp.chargeTermId}"></property>
+		<property name="reserve" value="${smgp.reserve}"></property>
+
+	</bean>
+
+	<bean name="smgp3MsgFactory" class="net.zoneland.gateway.message.factory.SMGP3MsgFactory">
+		<property name="msgType" value="${smgp3.msgType}"></property>
+		<property name="needReport" value="${smgp3.needReport}"></property>
+		<property name="serviceId" value="${smgp3.serviceId}"></property>
+		<property name="feeType" value="${smgp3.feeType}"></property>
+		<property name="feeCode" value="${smgp3.feeCode}"></property>
+		<property name="fixedFee" value="${smgp3.fixedFee}"></property>
+		<property name="chargeTermId" value="${smgp3.chargeTermId}"></property>
+		<property name="reserve" value="${smgp3.reserve}"></property>
+		<property name="tp_pid" value="${smgp3.tp_pid}"></property>
+		<property name="linkId" value="${smgp3.linkId}"></property>
+		<property name="msgSrc" value="${smgp3.msgSrc}"></property>
+		<property name="chargeUserType" value="${smgp3.chargeUserType}"></property>
+		<property name="chargeTermType" value="${smgp3.chargeTermType}"></property>
+		<property name="chargeTermPseudo" value="${smgp3.chargeTermPseudo}"></property>
+		<property name="destTermType" value="${smgp3.destTermType}"></property>
+		<property name="destTermPseudo" value="${smgp3.destTermPseudo}"></property>
+		<property name="submitMsgType" value="${smgp3.submitMsgType}"></property>
+		<property name="spDealResult" value="${smgp3.spDealResult}"></property>
+		<property name="mserviceId" value="${smgp3.mserviceId}"></property>
+	</bean>
+
+</beans>

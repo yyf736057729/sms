@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgPhoneWhitelistDao">
+    
+	<sql id="jmsgPhoneBlacklistColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.scope AS "scope",
+		a.create_by AS "createBy.id",
+		a.create_datetime AS "createDatetime",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="jmsgPhoneBlacklistJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneBlacklist">
+		SELECT 
+			<include refid="jmsgPhoneBlacklistColumns"/>
+		FROM jmsg_phone_whitelist a
+		<include refid="jmsgPhoneBlacklistJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByPhone" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneBlacklist">
+		SELECT 
+			<include refid="jmsgPhoneBlacklistColumns"/>
+		FROM jmsg_phone_whitelist a
+		<include refid="jmsgPhoneBlacklistJoins"/>
+		WHERE a.phone = #{phone}
+	</select>	
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneBlacklist">
+		SELECT 
+			<include refid="jmsgPhoneBlacklistColumns"/>
+		FROM jmsg_phone_whitelist a
+		<include refid="jmsgPhoneBlacklistJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneBlacklist">
+		SELECT 
+			<include refid="jmsgPhoneBlacklistColumns"/>
+		FROM jmsg_phone_whitelist a
+		<include refid="jmsgPhoneBlacklistJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	 
+	 
+	 <select id="findAllPhone" resultType="java.lang.String">
+		SELECT 
+			phone	
+		FROM jmsg_phone_whitelist
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_phone_whitelist(
+			phone,
+			scope,
+			create_by,
+			create_datetime,
+			remarks
+		) VALUES (
+			#{phone},
+			#{scope},
+			#{createBy.id},
+			NOW(),
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_phone_whitelist SET 	
+			phone = #{phone},
+			scope = #{scope},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_phone_whitelist
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteByPhone">
+		DELETE FROM jmsg_phone_whitelist
+		WHERE phone = #{phone}
+	</delete>
+	
+</mapper>

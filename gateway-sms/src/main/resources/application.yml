@@ -1,0 +1,84 @@
+# Application settings
+app:
+  config: gateway-cmpp-srv.xml
+  gatewayid:
+  gatewayip:
+  gatewayport: 7890
+  smsnamesvr: 101.37.117.13:9876
+  appcodes: 8900
+
+# Server settings
+server:
+    port: 8900
+#    address: 127.0.0.1
+    #address: 10.25.65.41
+    #address: 114.55.137.104
+    tomcat.accessLogEnabled: false
+    tomcat.protocolHeader: x-forwarded-proto
+    tomcat.remoteIpHeader: x-forwarded-for
+    tomcat.basedir: 
+    tomcat.backgroundProcessorDelay: 30 # secs
+    tomcat.max-threads: 500
+    tomcat.uri-encoding:  UTF-8
+    tomcat.compression: 2048 # is compression enabled (off, on, or an integer content length limit)
+    tomcat.compressable-mime-types: text/html,text/xml,text/plain,text/javascript,application/json,application/xml
+
+# DATASOURCE
+jdbc:
+    dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+    
+    #url: jdbc:mysql://rm-bp113ggx2qu8ejw65.mysql.rds.aliyuncs.com:3306/sms_xy_center?useUnicode=true&characterEncoding=utf-8
+    #databaseName: sms_xy_center
+    #serverName: rm-bp113ggx2qu8ejw65.mysql.rds.aliyuncs.com
+    #username: xydev
+    #password: nFW95OV20S
+    
+    #url: jdbc:mysql://rm-bp113ggx2qu8ejw65.mysql.rds.aliyuncs.com:3306/sms_center?useUnicode=true&characterEncoding=utf-8
+    #databaseName: sms_center
+    #serverName: rm-bp113ggx2qu8ejw65.mysql.rds.aliyuncs.com
+    #username: jmsg
+    #password: olAopNarNb8Fdmhu
+
+    #url: jdbc:mysql://192.168.1.180:3306/sms_center?useUnicode=true&characterEncoding=utf-8
+    #databaseName: sms_center
+    #serverName: 192.168.1.180
+    #username: root
+    #password: tingfv@mysql
+
+    url: jdbc:mysql://rm-bp1qfxi70480zpt7xoo.mysql.rds.aliyuncs.com:3306/sms_center_dev?useUnicode=true&characterEncoding=utf-8
+    databaseName: sms_center_dev
+    serverName: rm-bp1qfxi70480zpt7xoo.mysql.rds.aliyuncs.com
+    username: suntao
+    password: Fansheng2018
+
+    #url: jdbc:mysql://10.30.200.158:3306/sms_center?useUnicode=true&characterEncoding=utf-8
+    #databaseName: sms_center
+    #serverName: 10.30.200.158
+    #username: jmsg
+    #password: olAopNarNb8Fdmhu
+    
+    cachePrepStmts: true
+    prepStmtsSize: 250
+    prepStmtsCacheSqlLimit: 2048
+    userServerPrepStmts: true
+
+# SPRING PROFILES
+spring:       
+    # HTTP ENCODING
+    http:
+        encoding.charset: UTF-8
+        encoding.enable: true
+        encoding.force: true
+
+# MyBatis
+mybatis: 
+    typeAliasesPackage: com.siloyou.jmsg.modules.sms.entity
+    mapperLocations: classpath:mappings/modules/sms/*.xml
+    configLocation: classpath:mybatis-config.xml
+
+# LOGGING
+logging:
+    level:
+       com.ibatis: DEBUG
+
+       

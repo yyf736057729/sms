@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgGatewayMonitorDao">
+    
+	<sql id="jmsgGatewayMonitorColumns">
+		a.id AS "id",
+		a.gateway_id AS "gatewayId",
+		a.time_fail_count AS "timeFailCount",
+		a.continuous_fail_count AS "continuousFailCount",
+		a.status AS "status",
+		a.gateway_status AS "gatewayStatus",
+		a.create_time AS "createTime"
+	</sql>
+	
+	<sql id="jmsgGatewayMonitorJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayMonitor">
+		SELECT 
+			<include refid="jmsgGatewayMonitorColumns"/>
+		FROM jmsg_gateway_monitor a
+		<include refid="jmsgGatewayMonitorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayMonitor">
+		SELECT 
+			<include refid="jmsgGatewayMonitorColumns"/>
+		FROM jmsg_gateway_monitor a
+		<include refid="jmsgGatewayMonitorJoins"/>
+		<where>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayMonitor">
+		SELECT 
+			<include refid="jmsgGatewayMonitorColumns"/>
+		FROM jmsg_gateway_monitor a
+		<include refid="jmsgGatewayMonitorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_gateway_monitor(
+			gateway_id,
+			time_fail_count,
+			continuous_fail_count,
+			status,
+			gateway_status,
+			create_time
+		) VALUES (
+			#{gatewayId},
+			#{timeFailCount},
+			#{continuousFailCount},
+			#{status},
+			#{gatewayStatus},
+			now()
+		)ON DUPLICATE KEY UPDATE `gateway_id`= values(`gateway_id`),
+		`time_fail_count`= values(`time_fail_count`),
+		`time_fail_count`= values(`time_fail_count`),
+		`continuous_fail_count`= values(`continuous_fail_count`),
+		`status`= values(`status`),
+		`gateway_status`= values(`gateway_status`),
+		`create_time`= values(`create_time`);
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_gateway_monitor SET 	
+			status = #{status},
+			gateway_status = #{gatewayStatus},
+			create_time = #{createTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_gateway_monitor
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 获取5分钟内submit的监测结果 -->
+	<select id="countGateWay" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayMonitor" parameterType="java.util.Map">
+		select ss.gatewayid gatewayId, 
+		sum( if(ss.result = '0', 0, 1 )) timeFailCount, 
+		0 continuousFailCount,
+		gi.status, 
+		gi.gateway_state gatewayStatus
+		from ${tableName} ss left join jmsg_gateway_info gi on ss.gatewayid = gi.id
+		where ss.createtime between date_sub(now(), interval 5 MINUTE) and now()
+		group by ss.gatewayid
+	</select>
+	<select id="countGateWaySend" resultType="map" parameterType="java.util.Map">
+		SELECT
+			IFNULL(a.channel_code,-1) gatewayId,
+			count(1) sendCount,
+			sum(case when a.send_status LIKE 'T%' then 1 else 0 end) submitCount,
+			sum(case when a.report_status LIKE 'F10%' then 1 else 0 end) submitFailCount,
+			sum(case when a.send_status LIKE 'F%' then 1 else 0 end) sendFailCount,
+			sum(case when a.report_status='T100' then 1 else 0 end) reportSuccessCount,
+			sum(case when a.report_status LIKE 'F%' then 1 else 0 end) reportFailCount,
+			sum(case when a.report_status='P100' AND a.send_status='T000' then 1 else 0 end) reportNullCount
+		FROM ${tableName} a 
+		WHERE a.create_datetime BETWEEN  Date_sub(SYSDATE(),INTERVAL 30 MINUTE) AND Date_sub(SYSDATE(),INTERVAL 10 MINUTE)
+		GROUP BY a.channel_code
+	</select>
+	
+	
+</mapper>

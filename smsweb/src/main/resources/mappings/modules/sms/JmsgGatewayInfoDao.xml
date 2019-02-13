@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgGatewayInfoDao">
+    
+	<sql id="jmsgGatewayInfoColumns">
+		a.id AS "id",
+		a.gateway_name AS "gatewayName",
+		a.gateway_state AS "gatewayState",
+		a.type AS "type",
+		a.sp_number AS "spNumber",
+		a.host AS "host",
+		a.port AS "port",
+		a.local_host AS "localHost",
+		a.local_port AS "localPort",
+		a.source_addr AS "sourceAddr",
+		a.shared_secret AS "sharedSecret",
+		a.version AS "version",
+		a.read_timeout AS "readTimeout",
+		a.reconnect_interval AS "reconnectInterval",
+		a.transaction_timeout AS "transactionTimeout",
+		a.heartbeat_interval AS "heartbeatInterval",
+		a.heartbeat_noresponseout AS "heartbeatNoresponseout",
+		a.debug AS "debug",
+		a.corp_id AS "corpId",
+		a.status AS "status",
+		a.create_time AS "createTime",
+		a.modifie_time AS "modifieTime",
+		a.is_out_prov AS "isOutProv",
+		a.ext_class AS "extClass",
+		a.ext_param AS "extParam",
+		a.app_host AS "appHost",
+		a.app_code AS "appCode",
+		a.report_get_flag AS "reportGetFlag",
+		a.gateway_sign AS "gatewaySign",
+		a.support_long_msg AS "supportLongMsg",
+		a.read_limit AS "readLimit",
+		a.write_limit AS "writeLimit",
+		a.batch_size AS "batchSize",
+		a.remark AS "remark", 
+		a.custom_flag AS "customFlag",
+		a.fee_user_type AS "feeUserType",
+		a.fee_code AS "feeCode",
+		a.fee_type AS "feeType",
+		a.fee_terminal_id AS "feeTerminalId",
+		a.fee_terminal_type AS "feeTerminalType",
+		a.gw_corp_id AS "gwCorpId",
+		a.gw_service_id AS "gwServiceId",
+		a.phone_type AS "phoneType",
+		a.gw_service_id AS "serviceId"
+
+	</sql>
+	
+	<sql id="jmsgGatewayInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayInfo">
+		SELECT 
+			<include refid="jmsgGatewayInfoColumns"/>
+		FROM jmsg_gateway_info a
+		<include refid="jmsgGatewayInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayInfo">
+		SELECT 
+			<include refid="jmsgGatewayInfoColumns"/>
+		FROM jmsg_gateway_info a
+		<include refid="jmsgGatewayInfoJoins"/>
+		<where>
+			
+			<if test="gatewayName != null and gatewayName != ''">
+				AND a.gateway_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{gatewayName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{gatewayName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{gatewayName},'%')</if>
+			</if>
+			<if test="gatewayState != null and gatewayState != ''">
+				AND a.gateway_state = #{gatewayState}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="createTimeQ != null and createTimeQ != ''">
+				AND a.create_time >= #{createTimeQ}
+			</if>			
+			<if test="createTimeZ != null and createTimeZ != ''">
+				AND a.create_time &lt;= #{createTimeZ}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayInfo">
+		SELECT 
+			<include refid="jmsgGatewayInfoColumns"/>
+		FROM jmsg_gateway_info a
+		<include refid="jmsgGatewayInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_gateway_info(
+			id,
+			gateway_name,
+			gateway_state,
+			type,
+			sp_number,
+			host,
+			port,
+			local_host,
+			local_port,
+			source_addr,
+			shared_secret,
+			version,
+			read_timeout,
+			reconnect_interval,
+			transaction_timeout,
+			heartbeat_interval,
+			heartbeat_noresponseout,
+			debug,
+			corp_id,
+			status,
+			create_time,
+			modifie_time,
+			is_out_prov,
+			ext_class,
+			ext_param,
+			app_host,
+			app_code,
+			report_get_flag,
+			gateway_sign,
+			support_long_msg,
+			read_limit,
+			write_limit,
+			batch_size,
+			remark, 
+			custom_flag,
+			fee_user_type,
+			fee_code,
+			fee_type,
+			fee_terminal_id,
+			fee_terminal_type,
+			gw_corp_id,
+			gw_service_id,
+			phone_type
+		) VALUES (
+			#{id},
+			#{gatewayName},
+			#{gatewayState},
+			#{type},
+			#{spNumber},
+			#{host},
+			#{port},
+			#{localHost},
+			#{localPort},
+			#{sourceAddr},
+			#{sharedSecret},
+			#{version},
+			#{readTimeout},
+			#{reconnectInterval},
+			#{transactionTimeout},
+			#{heartbeatInterval},
+			#{heartbeatNoresponseout},
+			#{debug},
+			#{corpId},
+			#{status},
+			NOW(),
+			NOW(),
+			#{isOutProv},
+			#{extClass},
+			#{extParam},
+			#{appHost},
+			#{appCode},
+			#{reportGetFlag},
+			#{gatewaySign},
+			#{supportLongMsg},
+			#{readLimit},
+			#{writeLimit},
+			#{batchSize},
+			#{remark}, 
+			#{customFlag},
+			#{feeUserType},
+			#{feeCode},
+			#{feeType},
+			#{feeTerminalId},
+			#{feeTerminalType},
+			#{gwCorpId},
+			#{gwServiceId},
+			#{phoneType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_gateway_info SET 	
+			gateway_name = #{gatewayName},
+			gateway_state = #{gatewayState},
+			type = #{type},
+			sp_number = #{spNumber},
+			host = #{host},
+			port = #{port},
+			local_host = #{localHost},
+			local_port = #{localPort},
+			source_addr = #{sourceAddr},
+			shared_secret = #{sharedSecret},
+			version = #{version},
+			read_timeout = #{readTimeout},
+			reconnect_interval = #{reconnectInterval},
+			transaction_timeout = #{transactionTimeout},
+			heartbeat_interval = #{heartbeatInterval},
+			heartbeat_noresponseout = #{heartbeatNoresponseout},
+			debug = #{debug},
+			corp_id = #{corpId},
+			status = #{status},
+			create_time = #{createTime},
+			modifie_time = #{modifieTime},
+			is_out_prov = #{isOutProv},
+			ext_class = #{extClass},
+			ext_param = #{extParam},
+			app_host = #{appHost},
+			app_code = #{appCode},
+			report_get_flag = #{reportGetFlag},
+			gateway_sign = #{gatewaySign},
+			support_long_msg = #{supportLongMsg},
+			read_limit = #{readLimit},
+			write_limit = #{writeLimit},
+			batch_size = #{batchSize},
+			custom_flag=#{customFlag},
+			fee_user_type = #{feeUserType},
+			fee_code = #{feeCode},
+			fee_type = #{feeType},
+			fee_terminal_id = #{feeTerminalId},
+			fee_terminal_type = #{feeTerminalType},
+			gw_corp_id = #{gwCorpId},
+			gw_service_id = #{gwServiceId},
+			phone_type = #{phoneType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_gateway_info
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findLabelValue" resultType="com.siloyou.core.modules.sys.entity.Dict">
+		SELECT a.id value, a.gateway_name label FROM jmsg_gateway_info a
+	</select>
+	
+	<select id="findLabelValueByType" resultType="com.siloyou.core.modules.sys.entity.Dict">
+		SELECT a.id value, a.gateway_name label FROM jmsg_gateway_info a
+		<where>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+	</select>
+	
+	
+	<resultMap id="BaseResultMap" type="com.siloyou.jmsg.modules.sms.entity.JmsgGatewayInfo" >
+    <id column="ID" property="id" jdbcType="CHAR" />
+    <result column="GATEWAY_NAME" property="gatewayName" jdbcType="VARCHAR" />
+    <result column="GATEWAY_STATE" property="gatewayState" jdbcType="CHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="SP_NUMBER" property="spNumber" jdbcType="VARCHAR" />
+    <result column="HOST" property="host" jdbcType="VARCHAR" />
+    <result column="PORT" property="port" jdbcType="INTEGER" />
+    <result column="LOCAL_HOST" property="localHost" jdbcType="VARCHAR" />
+    <result column="LOCAL_PORT" property="localPort" jdbcType="INTEGER" />
+    <result column="SOURCE_ADDR" property="sourceAddr" jdbcType="VARCHAR" />
+    <result column="SHARED_SECRET" property="sharedSecret" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="VARCHAR" />
+    <result column="READ_TIMEOUT" property="readTimeout" jdbcType="INTEGER" />
+    <result column="RECONNECT_INTERVAL" property="reconnectInterval" jdbcType="INTEGER" />
+    <result column="TRANSACTION_TIMEOUT" property="transactionTimeout" jdbcType="INTEGER" />
+    <result column="HEARTBEAT_INTERVAL" property="heartbeatInterval" jdbcType="INTEGER" />
+    <result column="HEARTBEAT_NORESPONSEOUT" property="heartbeatNoresponseout" jdbcType="INTEGER" />
+    <result column="DEBUG" property="debug" jdbcType="INTEGER" />
+    <result column="CORP_ID" property="corpId" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="CREATE_TIME" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="MODIFIE_TIME" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="IS_OUT_PROV" property="isOutProv" jdbcType="VARCHAR" />
+		<result column="FEE_USER_TYPE" property="feeUserType" jdbcType="VARCHAR" />
+		<result column="FEE_CODE" property="feeCode" jdbcType="VARCHAR" />
+		<result column="FEE_TYPE" property="feeType" jdbcType="VARCHAR" />
+		<result column="FEE_TERMINAL_ID" property="feeTerminalId" jdbcType="VARCHAR" />
+		<result column="FEE_TERMINAL_TYPE" property="feeTerminalType" jdbcType="VARCHAR" />
+		<result column="GW_CORP_ID" property="gwCorpId" jdbcType="VARCHAR" />
+		<result column="GW_SERVICE_ID" property="gwServiceId" jdbcType="VARCHAR" />
+		<result column="PHONE_TYPE" property="phoneType" jdbcType="VARCHAR" />
+		<result column="SERVICE_ID" property="serviceId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GATEWAY_NAME, GATEWAY_STATE, TYPE, SP_NUMBER, HOST, PORT, LOCAL_HOST, LOCAL_PORT,
+    SOURCE_ADDR, SHARED_SECRET, VERSION, READ_TIMEOUT, RECONNECT_INTERVAL, TRANSACTION_TIMEOUT,
+    HEARTBEAT_INTERVAL, HEARTBEAT_NORESPONSEOUT, DEBUG, CORP_ID, STATUS, CREATE_TIME,
+    MODIFIE_TIME, IS_OUT_PROV,FEE_USER_TYPE,FEE_CODE,FEE_TYPE,FEE_TERMINAL_ID,FEE_TERMINAL_TYPE,GW_CORP_ID,GW_SERVICE_ID,
+    PHONE_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from JMSG_GATEWAY_INFO
+    where ID = #{id,jdbcType=CHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from JMSG_GATEWAY_INFO
+    where ID = #{id,jdbcType=CHAR}
+  </delete>
+  
+  <update id="updateStatusByPrimaryKey" parameterType="java.util.Map">
+    update JMSG_GATEWAY_INFO
+    set STATUS=#{status,jdbcType=CHAR}
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+
+   <update id="updateGatewayState" parameterType="java.util.Map">
+    update JMSG_GATEWAY_INFO
+    set GATEWAY_STATE=#{gatewayState,jdbcType=CHAR}
+    where ID = #{id,jdbcType=CHAR}
+  </update>
+
+<!-- 也分查询获得所有网关信息 -->
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.util.Map">
+     SELECT <include refid="Base_Column_List" />  from JMSG_GATEWAY_INFO
+			 order by MODIFIE_TIME desc
+		 limit #{start} , 10
+  </select>
+
+  <select id="loadValidAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+     from JMSG_GATEWAY_INFO where status='1'
+  </select>
+
+ <!-- 获得网关个数 -->
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(ID)
+    from JMSG_GATEWAY_INFO
+  </select>
+
+
+ <!-- 获得所有网关信息 -->
+  <select id="findAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from JMSG_GATEWAY_INFO
+  </select>
+
+   <select id="findWithType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from JMSG_GATEWAY_INFO where TYPE = #{type,jdbcType=VARCHAR} and status='1'
+  </select>
+
+  <select id="findAllByType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from JMSG_GATEWAY_INFO where TYPE = #{type,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findOneValid" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from JMSG_GATEWAY_INFO where  status='1' limit 1 
+  </select>
+
+    <select id="findWithParam" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from JMSG_GATEWAY_INFO where TYPE = #{type,jdbcType=VARCHAR} and IS_OUT_PROV = #{isOutProv,jdbcType=VARCHAR} and status='1'
+  </select>
+	
+</mapper>

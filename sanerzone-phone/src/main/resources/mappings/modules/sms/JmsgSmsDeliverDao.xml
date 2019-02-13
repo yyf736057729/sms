@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsDeliverDao">
+    
+	<insert id="batchInsert" parameterType="com.siloyou.jmsg.common.message.SmsMoMessage">
+		INSERT INTO jmsg_sms_deliver(
+			uuid,
+			msgid,
+			src_term_id,
+			dest_term_id,
+			msg_content,
+			gateway_id,
+			createtime
+		) VALUES (
+			#{uuid},
+			#{msgid},
+			#{srcTermID},
+			#{destTermID},
+			#{msgContent},
+			#{gateWayID},
+			NOW()
+		)
+	</insert>
+	
+	<insert id="batchInsertPush" parameterType="com.sanerzone.jmsg.entity.JmsgSmsDeliver">
+	
+		INSERT INTO jmsg_sms_deliver_push(
+			uuid,
+			msgid,
+			src_term_id,
+			dest_term_id,
+			msg_content,
+			gateway_id,
+			createtime,
+			user_id,
+			result,
+			push_flag
+		) VALUES (
+			#{moMsg.uuid},
+			#{moMsg.msgid},
+			#{moMsg.srcTermID},
+			#{moMsg.destTermID},
+			#{moMsg.msgContent},
+			#{moMsg.gateWayID},
+			NOW(),
+			#{userId},
+			#{result},
+			#{pushFlag}
+		)
+	</insert>
+</mapper>

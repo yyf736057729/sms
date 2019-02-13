@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgCustomTaskDao">
+    
+	<sql id="jmsgCustomTaskColumns">
+		a.id AS "id",
+		a.task_name AS "taskName",
+		a.type AS "type",
+		a.param_json AS "paramJson",
+		a.execute_class AS "executeClass",
+		a.execute_result AS "executeResult",
+		a.status AS "status",
+		a.execute_start_time AS "executeStartTime",
+		a.execute_end_time AS "executeEndTime",
+		a.create_time AS "createTime",
+		a.create_by AS "createBy.id",
+		a.version AS "version",
+		u1.name AS "createBy.name",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="jmsgCustomTaskJoins">
+		LEFT JOIN sys_user u1 ON u1.id = a.create_by
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgCustomTask">
+		SELECT 
+			<include refid="jmsgCustomTaskColumns"/>
+		FROM jmsg_custom_task a
+		<include refid="jmsgCustomTaskJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgCustomTask">
+		SELECT 
+			<include refid="jmsgCustomTaskColumns"/>
+		FROM jmsg_custom_task a
+		<include refid="jmsgCustomTaskJoins"/>
+		<where>
+			
+			<if test="taskName != null and taskName != ''">
+				AND a.task_name LIKE CONCAT('%',#{taskName},'%')
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="executeResult != null and executeResult != ''">
+				AND a.execute_result LIKE CONCAT('%',#{executeResult},'%')
+			</if>
+			<if test="status != null and status !=''">
+				AND a.status=#{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgCustomTask">
+		SELECT 
+			<include refid="jmsgCustomTaskColumns"/>
+		FROM jmsg_custom_task a
+		<include refid="jmsgCustomTaskJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO jmsg_custom_task(
+			task_name,
+			type,
+			param_json,
+			execute_class,
+			execute_result,
+			status,
+			execute_start_time,
+			execute_end_time,
+			create_time,
+			create_by,
+			version,
+			remarks
+		) VALUES (
+			#{taskName},
+			#{type},
+			#{paramJson},
+			#{executeClass},
+			#{executeResult},
+			#{status},
+			#{executeStartTime},
+			#{executeEndTime},
+			now(),
+			#{createBy.id},
+			#{version},
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_custom_task SET 	
+			task_name = #{taskName},
+			type = #{type},
+			param_json = #{paramJson},
+			execute_class = #{executeClass},
+			execute_result = #{executeResult},
+			status = #{status},
+			execute_start_time = #{executeStartTime},
+			execute_end_time = #{executeEndTime},
+			create_time = #{createTime},
+			version = #{version},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_custom_task
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateParam">
+		UPDATE jmsg_custom_task SET
+		<if test="status == '2'.toString()">
+			execute_start_time = NOW(),	
+		</if>
+		<if test="status == '3'.toString()">
+			execute_end_time = NOW(),
+			execute_result = #{executeResult},
+		</if>			
+			status=#{status}
+		WHERE id=#{id}	
+	</update>	
+	
+</mapper>

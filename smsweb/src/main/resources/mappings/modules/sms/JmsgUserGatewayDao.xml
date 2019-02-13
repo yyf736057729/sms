@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgUserGatewayDao">
+    
+	<sql id="jmsgUserGatewayColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.groupid AS "groupid",
+		a.username AS "username",
+		a.password AS "password",
+		a.spnumber AS "spnumber",
+		a.version AS "version",
+		a.max_channels AS "maxChannels",
+		a.retry_wait_time AS "retryWaitTime",
+		a.max_retry_cnt AS "maxRetryCnt",
+		a.resend_failmsg AS "resendFailmsg",
+		a.read_limit AS "readLimit",
+		a.write_limit AS "writeLimit",
+		a.createtime AS "createtime",
+		a.serviceid AS "serviceId",
+		a.status AS "status",
+		a.allowip AS "allowIP",
+		a.app_host AS "appHost",
+		a.app_code AS "appCode",
+		a.allnum_push AS allnumPush,
+		a.substring_length AS substringLength,
+		u2.name AS "user.name",
+		u2.id AS "user.id",
+		u2.cmpp_user_type AS "user.cmppUserType"
+	</sql>
+	
+	<sql id="jmsgUserGatewayJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.userid
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserGateway">
+		SELECT 
+			<include refid="jmsgUserGatewayColumns"/>
+		FROM jmsg_user_gateway a
+		<include refid="jmsgUserGatewayJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getUserGatewayByUsername" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserGateway">
+		SELECT 
+			<include refid="jmsgUserGatewayColumns"/>
+		FROM jmsg_user_gateway a
+		<include refid="jmsgUserGatewayJoins"/>
+		WHERE a.username = #{username}
+	</select>	
+	
+	<select id="getUserGatewayByUserid" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserGateway">
+		SELECT 
+			<include refid="jmsgUserGatewayColumns"/>
+		FROM jmsg_user_gateway a
+		<include refid="jmsgUserGatewayJoins"/>
+		WHERE a.userid = #{userid}
+	</select>
+	
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserGateway">
+		SELECT 
+			<include refid="jmsgUserGatewayColumns"/>
+		FROM jmsg_user_gateway a
+		<include refid="jmsgUserGatewayJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.userid = #{user.id}
+			</if>
+			<if test="userid != null and userid !=''">
+				AND a.userid =#{userid}
+			</if>
+			<if test="fromType != null and fromType !=''">
+				AND u2.cmpp_user_type=#{fromType}
+			</if>
+			<if test="username != null and username != ''">
+				AND a.username LIKE 
+					<if test="dbName == 'oracle'">'%'||#{username}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{username}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{username},'%')</if>
+			</if>
+			<if test="createtimeQ != null and createtimeQ != ''">
+				AND a.createtime >= #{createtimeQ}
+			</if>			
+			<if test="createtimeZ != null and createtimeZ != ''">
+				AND a.createtime &lt;= #{createtimeZ}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserGateway">
+		SELECT 
+			<include refid="jmsgUserGatewayColumns"/>
+		FROM jmsg_user_gateway a
+		<include refid="jmsgUserGatewayJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_user_gateway(
+			userid,
+			groupid,
+			username,
+			password,
+			spnumber,
+			version,
+			max_channels,
+			retry_wait_time,
+			max_retry_cnt,
+			resend_failmsg,
+			read_limit,
+			write_limit,
+			createtime,
+			serviceid,
+			app_host,
+			app_code,
+			allowip,
+			allnum_push,
+			substring_length
+		) VALUES (
+			#{user.id},
+			#{groupid},
+			#{username},
+			#{password},
+			#{spnumber},
+			#{version},
+			#{maxChannels},
+			#{retryWaitTime},
+			#{maxRetryCnt},
+			#{resendFailmsg},
+			#{readLimit},
+			#{writeLimit},
+			NOW(),
+			#{serviceId},
+			#{appHost},
+			#{appCode},
+			#{allowIP},
+			#{allnumPush},
+			#{substringLength}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_user_gateway SET 	
+			userid = #{user.id},
+			groupid = #{groupid},
+			username = #{username},
+			password = #{password},
+			spnumber = #{spnumber},
+			version = #{version},
+			max_channels = #{maxChannels},
+			retry_wait_time = #{retryWaitTime},
+			max_retry_cnt = #{maxRetryCnt},
+			resend_failmsg = #{resendFailmsg},
+			read_limit = #{readLimit},
+			write_limit = #{writeLimit},
+			createtime = NOW(),
+			serviceid = #{serviceId},
+			app_host = #{appHost},
+			app_code = #{appCode},
+			allowip = #{allowIP},
+			allnum_push=#{allnumPush},
+			substring_length=#{substringLength}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_user_gateway
+		WHERE id = #{id}
+	</update>
+	
+	<select id="loadValidAll" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserGateway">
+	    select
+	    <include refid="jmsgUserGatewayColumns"/>
+	     from jmsg_user_gateway where status='1'
+  	</select>
+  	
+  	<update id="updateStateById" parameterType="java.util.Map">
+	    update jmsg_user_gateway
+	    set status=#{status}
+	    where ID = #{id}
+	</update>
+</mapper>

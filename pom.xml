@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.sanerzone.smscenter</groupId>
+	<artifactId>smscenter</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>smscenter-parent</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<modules>
+		<!--项目说明-->
+		<!--common-support:  公共支持类-->
+		<!--smsweb:  		 WEB应用-->
+		<!--sanerzone-phone: 短信缓存-->
+		<!--smscenter-api:		dubbo接口-->
+		<!--smscenter-service:  短信业务程序（分发、入库等）-->
+		<!--smscenter-http-gateway: Http接口-->
+		<!--gateway-sms:			短信网关-->
+
+		<!-- cmpp -->
+		<module>cmpp-core</module>
+		<!-- 通用模块 -->
+		<module>common-support</module>
+		<!-- 短信业务API -->
+		<module>smscenter-api</module>
+		<!-- 短信网关 -->
+		<module>gateway-sms</module>
+		<!-- 手机管理 -->
+		<module>sanerzone-phone</module>
+
+		<!-- 短信HTTP网关 -->
+		<module>smscenter-http-gateway</module>
+		
+		<!-- 短信后端服务 -->
+		<module>smscenter-service</module>
+
+		<!-- WEB模块 -->
+		<module>smsweb</module>
+
+
+
+	</modules>
+
+</project>

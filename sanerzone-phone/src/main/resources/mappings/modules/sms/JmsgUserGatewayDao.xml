@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.smscenter.dao.JmsgUserGatewayDao">
+	<resultMap id="JmsgUserGatewayMap"
+		type="com.sanerzone.common.modules.smscenter.entity.JmsgUserGateway">
+		<id column="id" property="id" jdbcType="CHAR" />
+		<result column="userid" property="userid" jdbcType="VARCHAR" />
+		<result column="groupid" property="groupid" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="spnumber" property="spnumber" jdbcType="VARCHAR" />
+		<result column="version" property="version" jdbcType="VARCHAR" />
+		<result column="max_channels" property="maxChannels" jdbcType="VARCHAR" />
+		<result column="retry_wait_time" property="retryWaitTime" jdbcType="VARCHAR" />
+		<result column="max_retry_cnt" property="maxRetryCnt" jdbcType="VARCHAR" />
+		<result column="resend_failmsg" property="resendFailmsg" jdbcType="VARCHAR" />
+		<result column="read_limit" property="readLimit" jdbcType="VARCHAR" />
+		<result column="write_limit" property="writeLimit" jdbcType="VARCHAR" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="app_host" property="appHost" jdbcType="VARCHAR" />
+		<result column="app_code" property="appCode" jdbcType="VARCHAR" />
+		<result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="serviceid" property="serviceId" jdbcType="VARCHAR" />
+		<result column="allowip" property="allowIP" jdbcType="VARCHAR" />
+		<result column="allnum_push" property="allnumPush" jdbcType="VARCHAR" />
+		<result column="substring_length" property="substringLength" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_JmsgUserGatewayMap">
+		id, userid, groupid, username, password, spnumber, version,
+		max_channels as "maxChannels",
+		retry_wait_time as "retryWaitTime",
+		max_retry_cnt as "maxRetryCnt",
+		resend_failmsg as "resendFailmsg",
+		read_limit as "readLimit",
+		write_limit as "writeLimit", createtime,
+		app_host AS "appHost", app_code AS "appCode", 
+		del_flag as "delFlag", status,
+		serviceid AS "serviceId", allowip AS "allowIP",
+		allnum_push AS "allnumPush", substring_length AS "substringLength"
+	</sql>
+
+	<update id="update">
+		update jmsg_user_gateway SET
+		userid = #{userid},
+		groupid = #{groupid},
+		username = #{username},
+		password = #{password},
+		spnumber = #{spnumber},
+		version = #{version},
+		max_channels = #{maxChannels},
+		retry_wait_time = #{retryWaitTime},
+		max_retry_cnt = #{maxRetryCnt},
+		resend_failmsg = #{resendFailmsg},
+		read_limit = #{readLimit},
+		write_limit = #{writeLimit},
+		createtime = #{createtime},
+		app_host = #{appHost},
+		app_code = #{appCode},
+		del_flag = #{delFlag},
+		serviceid = #{serviceId},
+		allowip = #{allowIP},
+		status = #{status}
+		WHERE id = #{id}
+	</update>
+
+
+	<!-- 根据ID获得用户网关信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="JmsgUserGatewayMap">
+		select
+		<include refid="Base_JmsgUserGatewayMap" />
+		from jmsg_user_gateway
+		where id = #{id,jdbcType=CHAR}
+	</select>
+
+	<!-- 获得所有用户网关信息 -->
+	<select id="findAll" resultMap="JmsgUserGatewayMap">
+		select
+		<include refid="Base_JmsgUserGatewayMap" />
+		from jmsg_user_gateway
+	</select>
+	
+	<select id="loadValidAll" resultMap="JmsgUserGatewayMap">
+	    select
+	    <include refid="Base_JmsgUserGatewayMap" />
+	     from jmsg_user_gateway where status='1'
+  	</select>
+  	
+  	<update id="updateStateById" parameterType="java.util.Map">
+	    update jmsg_user_gateway
+	    set status=#{status}
+	    where id = #{id}
+	</update>	
+	
+  	<select id="getUserGatewayByUserid" resultMap="JmsgUserGatewayMap" resultType="string">
+		SELECT 
+			<include refid="Base_JmsgUserGatewayMap"/>
+		FROM jmsg_user_gateway a
+		WHERE a.userid = #{id}
+	</select>	
+</mapper>

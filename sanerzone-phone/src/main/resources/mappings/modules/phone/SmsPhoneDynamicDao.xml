@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.phone.dao.SmsPhoneDynamicDao">
+    
+	<sql id="smsPhoneDynamicColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.phone AS "phone",
+		a.type AS "type",
+		a.create_by AS "createBy",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="smsPhoneDynamicJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.phone.entity.SmsPhoneDynamic">
+		SELECT 
+			<include refid="smsPhoneDynamicColumns"/>
+		FROM sms_phone_dynamic a
+		<include refid="smsPhoneDynamicJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.phone.entity.SmsPhoneDynamic">
+		SELECT 
+			<include refid="smsPhoneDynamicColumns"/>
+		FROM sms_phone_dynamic a
+		<include refid="smsPhoneDynamicJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.phone.entity.SmsPhoneDynamic">
+		SELECT 
+			<include refid="smsPhoneDynamicColumns"/>
+		FROM sms_phone_dynamic a
+		<include refid="smsPhoneDynamicJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sms_phone_dynamic(
+			userid,
+			phone,
+			type,
+			create_by,
+			createtime
+		) VALUES (
+			#{userid},
+			#{phone},
+			#{type},
+			#{createBy},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sms_phone_dynamic SET 	
+			userid = #{userid},
+			phone = #{phone},
+			type = #{type},
+			createtime = NOW()
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sms_phone_dynamic
+		WHERE phone = #{phone}
+	</update>
+	
+</mapper>

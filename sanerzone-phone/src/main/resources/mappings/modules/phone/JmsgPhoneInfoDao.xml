@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.phone.dao.JmsgPhoneInfoDao">
+    
+	<sql id="jmsgPhoneInfoColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.phone_type AS "phoneType",
+		a.phone_prov AS "phoneProv",
+		a.phone_city AS "phoneCity",
+		a.phone_city_code AS "phoneCityCode",
+		a.zip AS "zip",
+		a.types AS "types"
+	</sql>
+	
+	<sql id="jmsgPhoneInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.phone.entity.JmsgPhoneInfo">
+		SELECT 
+			<include refid="jmsgPhoneInfoColumns"/>
+		FROM jmsg_phone_info a
+		<include refid="jmsgPhoneInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.phone.entity.JmsgPhoneInfo">
+		SELECT 
+			<include refid="jmsgPhoneInfoColumns"/>
+		FROM jmsg_phone_info a
+		<include refid="jmsgPhoneInfoJoins"/>
+		<where>
+			<if test="phoneCityCode != null and phoneCityCode != ''">
+				AND a.phone_city_code = #{phoneCityCode}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.phone
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.phone.entity.JmsgPhoneInfo">
+		SELECT 
+			a.phone AS "phone",
+			a.phone_type AS "phoneType",
+			a.phone_city_code AS "phoneCityCode"
+		FROM jmsg_phone_info a
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_phone_info(
+			phone,
+			phone_type,
+			phone_prov,
+			phone_city,
+			phone_city_code,
+			zip,
+			types
+		) VALUES (
+			#{phone},
+			#{phoneType},
+			#{phoneProv},
+			#{phoneCity},
+			#{phoneCityCode},
+			#{zip},
+			#{types}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_phone_info SET 	
+			phone = #{phone},
+			phone_type = #{phoneType},
+			phone_prov = #{phoneProv},
+			phone_city = #{phoneCity},
+			phone_city_code = #{phoneCityCode},
+			zip = #{zip},
+			types = #{types}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_phone_info
+		WHERE phone = #{phone}
+	</update>
+	
+	<select id="findCityList" resultType="com.sanerzone.common.modules.phone.entity.JmsgPhoneInfo">
+		SELECT 
+		<include refid="jmsgPhoneInfoColumns"/>
+		FROM jmsg_phone_info a group by phone_city_code
+	</select>
+</mapper>

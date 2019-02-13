@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsSendDao">
+    <select id="findListByTaskId" resultType="com.sanerzone.jmsg.entity.JmsgSmsSend" parameterType="java.util.Map">
+		SELECT
+			a.id AS "id",
+			a.task_id AS "taskId",
+			a.customer_order_id AS "customerOrderId",
+			a.phone AS "phone",
+			a.sms_content AS "smsContent",
+			a.user_id AS "userId",
+			a.pay_type AS "payType",
+			a.push_flag AS "pushFlag",
+			a.channel_code AS "channelCode",
+			a.topic AS "topic",
+			a.sp_number AS "spNumber",
+			a.report_gateway_id AS "reportGatewayId"
+		FROM jmsg_sms_send a
+		<where>
+			a.send_status='P000'
+			<if test="taskId != null and taskId != ''">
+				AND a.task_id = #{taskId}
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id > #{id}
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT 1000
+	</select>
+	
+    <select id="findPushListByTaskId" resultType="com.sanerzone.jmsg.entity.JmsgSmsSend" parameterType="java.util.Map">
+		SELECT 
+			a.user_id AS "userId",id,send_datetime sendDatetime,phone,send_status sendStatus,task_id taskId,
+			a.report_gateway_id AS "reportGatewayId"
+		FROM jmsg_sms_send a
+		<where>
+			a.send_status LIKE 'F%'
+			AND a.push_flag='9'
+			<if test="taskId != null and taskId != ''">
+				AND a.task_id = #{taskId}
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT ${pageNo},${pageSize}
+	</select>
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ${tableName}(
+			id,
+			data_id,
+			task_id,
+			customer_order_id,
+			phone,
+			sms_content,
+			sms_type,
+			pay_count,
+			user_id,
+			phone_type,
+			area_code,
+			pay_type,
+			pay_status,
+			pay_time,
+			push_flag,
+			send_status,
+			channel_code,
+			sp_number,
+			send_datetime,
+			company_id,
+			submit_mode,
+			topic,
+			msgid,
+			create_datetime,
+			update_datetime,
+			report_gateway_id
+		) VALUES (
+			#{id},
+			#{dataId},
+			#{taskId},
+			#{customerOrderId},
+			#{phone},
+			#{smsContent},
+			#{smsType},
+			#{payCount},
+			#{userId},
+			#{phoneType},
+			#{areaCode},
+			#{payType},
+			#{payStatus},
+			#{payTime},
+			#{pushFlag},
+			#{sendStatus},
+			#{channelCode},
+			#{spNumber},
+			#{sendDatetime},
+			#{companyId},
+			#{submitMode},
+			#{topic},
+			#{msgid},
+			NOW(),
+			NOW(),
+			#{reportGatewayId}
+		)
+	</insert>
+	
+    <insert id="batchInsertPush" parameterType="java.util.HashMap">
+		INSERT INTO ${tableName}(
+			bizid,
+			taskid,
+			result,
+			createtime
+		) VALUES (
+			#{bizid},
+			#{taskid},
+			#{result},
+			NOW()
+		)
+	</insert>
+	
+    <update id="batchUpdateReprotStatus" parameterType="java.util.Map">
+		UPDATE ${tableName} SET report_status=(CASE WHEN report_status='T100' THEN 'T100' ELSE #{reportStatus} END) WHERE id=#{id}
+	</update>
+	
+	<select id="findUser" resultType="java.lang.String" parameterType="com.siloyou.jmsg.common.message.SmsMoMessage">
+		SELECT a.user_id id
+		from jmsg_sms_send a 
+		LEFT JOIN sys_user u1 ON a.user_id = u1.id
+		WHERE a.phone=#{destTermID} AND a.channel_code=#{gateWayID} 
+		ORDER BY a.id DESC LIMIT 1
+	</select>
+	
+	<select id="findUserV2" resultType="java.lang.String" parameterType="java.util.Map">
+		SELECT a.user_id id
+		from ${tableName} a 
+		LEFT JOIN sys_user u1 ON a.user_id = u1.id
+		WHERE a.phone=#{data.destTermID} 
+		AND a.channel_code=#{data.gateWayID} 
+		ORDER BY a.id DESC LIMIT 1
+	</select>
+	
+	<update id="updatePushFlag" parameterType="java.util.Map">
+		UPDATE ${tableName} SET
+			push_flag=#{pushFlag}
+		WHERE id=#{id}	
+	</update>
+
+	<select id="findByPhone" parameterType="java.util.Map" resultType="com.sanerzone.jmsg.entity.JmsgSmsSend">
+			select
+			id AS "id",
+			task_id AS "taskId",
+			customer_order_id AS "customerOrderId",
+			phone AS "phone",
+			sms_content AS "smsContent",
+			user_id AS "userId",
+			pay_type AS "payType",
+			push_flag AS "pushFlag",
+			channel_code AS "channelCode",
+			topic AS "topic",
+			sp_number AS "spNumber",
+			report_gateway_id AS "reportGatewayId"
+			from ${tableName} where send_status REGEXP '[T]+.*'
+			AND phone=#{data.destTermID}
+			ORDER BY id DESC
+		 	LIMIT 0,1
+	</select>
+
+	<!-- 更新网关状态 -->
+	<update id="updateSendRecord" parameterType="java.util.Map">
+		UPDATE ${tableName} SET
+			submit_time = #{submitTime},
+			report_status = '0'
+		WHERE id = #{id}
+	</update>
+</mapper>

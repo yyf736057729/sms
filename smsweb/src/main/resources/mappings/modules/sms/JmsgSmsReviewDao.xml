@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsReviewDao">
+    
+	<sql id="jmsgSmsReviewColumns">
+		a.id AS "id",
+		a.task_id AS "taskId",
+		a.customer_order_id AS "customerOrderId",
+		a.user_id AS "user.id",
+		a.sms_content AS "smsContent",
+		a.review_status AS "reviewStatus",
+		a.review_content AS "reviewContent",
+		a.review_datetime AS "reviewDatetime",
+		a.create_datetime AS "createDatetime",
+		u4.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgSmsReviewJoins">
+		LEFT JOIN sys_user u4 ON u4.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReview">
+		SELECT 
+			<include refid="jmsgSmsReviewColumns"/>
+		FROM jmsg_sms_review a
+		<include refid="jmsgSmsReviewJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getByTaskId" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReview">
+		SELECT 
+			<include refid="jmsgSmsReviewColumns"/>
+		FROM jmsg_sms_review a
+		<include refid="jmsgSmsReviewJoins"/>
+		WHERE a.task_id = #{taskId}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReview">
+		SELECT 
+			<include refid="jmsgSmsReviewColumns"/>
+		FROM jmsg_sms_review a
+		<include refid="jmsgSmsReviewJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="smsContent != null and smsContent != ''">
+				AND a.sms_content = #{smsContent}
+			</if>
+			<if test="createDatetime != null and createDatetime != ''">
+				AND a.create_datetime &gt;= #{createDatetime}
+			</if>
+			<if test="createDatetime != null and createDatetime != ''">
+				AND a.create_datetime &lt;= #{createDatetime}
+			</if>	
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReview">
+		SELECT 
+			<include refid="jmsgSmsReviewColumns"/>
+		FROM jmsg_sms_review a
+		<include refid="jmsgSmsReviewJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_review(
+			id,
+			task_id,
+			customer_order_id,
+			user_id,
+			sms_content,
+			review_status,
+			review_content,
+			review_datetime,
+			create_datetime
+		) VALUES (
+			#{id},
+			#{taskId},
+			#{customerOrderId},
+			#{user.id},
+			#{smsContent},
+			#{reviewStatus},
+			#{reviewContent},
+			#{reviewDatetime},
+			#{createDatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_review SET 	
+			task_id = #{taskId},
+			customer_order_id = #{customerOrderId},
+			user_id = #{user.id},
+			sms_content = #{smsContent},
+			review_status = #{reviewStatus},
+			review_content = #{reviewContent},
+			review_datetime = #{reviewDatetime},
+			create_datetime = #{createDatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_review
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

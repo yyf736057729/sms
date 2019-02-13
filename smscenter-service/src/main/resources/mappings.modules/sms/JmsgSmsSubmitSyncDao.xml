@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsSubmitSyncDao">
+    
+	<sql id="jmsgSmsSubmitSyncColumns">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.result AS "result",
+		a.bizid AS "bizid",
+		a.createtime AS "createtime",
+		a.taskid AS "taskid",
+		a.userid AS "userid",
+		a.gatewayid AS "gatewayid",
+		a.reserve AS "reserve",
+		a.phone AS "phone"
+	</sql>
+	
+	<sql id="jmsgSmsSubmitSyncJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.jmsg.entity.JmsgSmsSubmitSync">
+		SELECT 
+			<include refid="jmsgSmsSubmitSyncColumns"/>
+		FROM jmsg_sms_submit_sync a
+		<include refid="jmsgSmsSubmitSyncJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.jmsg.entity.JmsgSmsSubmitSync">
+		SELECT 
+			<include refid="jmsgSmsSubmitSyncColumns"/>
+		FROM jmsg_sms_submit_sync a
+		<include refid="jmsgSmsSubmitSyncJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="bizid != null and bizid != ''">
+				AND a.bizid = #{bizid}
+			</if>
+			<if test="taskid != null and taskid != ''">
+				AND a.taskid = #{taskid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.jmsg.entity.JmsgSmsSubmitSync">
+		SELECT 
+			<include refid="jmsgSmsSubmitSyncColumns"/>
+		FROM jmsg_sms_submit_sync a
+		<include refid="jmsgSmsSubmitSyncJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_submit_sync(
+			id,
+			msgid,
+			result,
+			bizid,
+			createtime,
+			taskid,
+			userid,
+			gatewayid,
+			reserve,
+			phone
+		) VALUES (
+			#{id},
+			#{msgid},
+			#{result},
+			#{bizid},
+			#{createtime},
+			#{taskid},
+			#{userid},
+			#{gatewayid},
+			#{reserve},
+			#{phone}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_submit_sync SET 	
+			msgid = #{msgid},
+			result = #{result},
+			bizid = #{bizid},
+			createtime = #{createtime},
+			taskid = #{taskid},
+			userid = #{userid},
+			gatewayid = #{gatewayid},
+			reserve = #{reserve},
+			phone = #{phone}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_submit_sync
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

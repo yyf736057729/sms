@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.account.dao.JmsgAccountDao">
+    
+	<sql id="jmsgAccountColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.app_type AS "appType",
+		a.money AS "money",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		u1.name AS "user.name",
+		u1.login_name AS "user.loginName",
+		u2.name AS "user.company.name",
+		u1.user_type AS "user.userType",
+		u1.balance_caution AS "user.balanceCaution",
+		u1.caution_mobile AS "user.cautionMobile",
+		u1.email AS "user.email",
+		u1.phone AS "user.phone",
+		u1.mobile AS "user.mobile",
+		u1.qq AS "user.qq",
+		u1.company_name AS "user.companyName",
+		u1.contact_name AS "user.contactName",
+		a.used_flag AS "usedFlag",
+		a.pay_mode AS "payMode"
+	</sql>
+	
+	<sql id="jmsgAccountJoins">
+		LEFT JOIN sys_user u1 ON u1.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		SELECT 
+			<include refid="jmsgAccountColumns"/>
+		FROM jmsg_account a,sys_user u1
+		LEFT JOIN sys_office u2 ON u1.company_id = u2.id
+		WHERE a.id = #{id} AND a.user_id = u1.id
+	</select>
+	
+	<select id="getByUser" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		SELECT a.used_flag AS "usedFlag",
+			   a.pay_mode AS "payMode",
+			   a.app_type AS "appType"
+		FROM jmsg_account a
+		WHERE a.user_id=#{user.id} and app_type=#{appType}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		SELECT 
+			 <include refid="jmsgAccountColumns"/> 
+		FROM jmsg_account a,sys_user u1
+		LEFT JOIN sys_office u2 ON u1.company_id = u2.id
+		LEFT JOIN jmsg_group u3 ON u1.group_id = u3.id
+		<!--<include refid="jmsgAccountJoins"/>-->
+		<where>
+			AND a.user_id = u1.id
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="userId != null and userId !=''">
+				AND a.user_id =#{userId}
+			</if>
+			<if test="appType != null and appType != ''">
+				AND a.app_type = #{appType}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u1.company_id=#{companyId}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u1.company_id=#{company.id}
+			</if>
+			<if test="user != null and user.loginName !=null and user.loginName !=''">
+				AND u1.login_name like CONCAT('%', #{user.loginName}, '%')
+			</if>
+			<if test="user != null and user.name != null and user.name != ''">
+				AND u1.name like CONCAT('%', #{user.name}, '%')
+			</if>
+			<if test="user != null and user.signFlag !=null">
+				AND u1.sign_flag=#{user.signFlag}
+			</if>
+			<if test="user != null and user.userTmplFlag !=null">
+				AND u1.user_tmpl_flag=#{user.userTmplFlag}
+			</if>
+			<if test="user != null and user.sysBlacklistFlag != null">
+				AND u1.sys_blacklist_flag=#{user.sysBlacklistFlag}
+			</if>
+			<if test="user != null and user.userBlacklistFlag != null">
+				AND u1.user_blacklist_flag=#{user.userBlacklistFlag}
+			</if>
+			<if test="user != null and user.groupId != null and user.groupId !=''">
+				AND u1.group_id=#{user.groupId}
+			</if>
+			<if test="remarks != null and remarks !=''">
+				AND u3.description like CONCAT('%',#{remarks},'%')
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.used_flag desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		SELECT 
+			<include refid="jmsgAccountColumns"/>
+		FROM jmsg_account a
+		<include refid="jmsgAccountJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findUserMoeny" resultType="java.lang.Long" parameterType="java.util.Map">
+		SELECT money FROM jmsg_account a WHERE user_id=#{userId} and app_type=#{appType}
+	</select>
+	
+	<select id="getByAgency" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		SELECT
+			a.id AS "id",
+			b.id AS "user.id",
+	    	b.login_name AS "user.loginName",
+	    	b.password AS "user.password",
+			b.name AS "user.name",
+			b.email AS "user.email",
+			b.phone AS "user.phone",
+			b.mobile AS "user.mobile",
+			b.qq AS "user.qq",
+			b.company_name AS "user.companyName",
+			b.contact_name AS "user.contactName",
+			b.remarks AS "user.remarks",
+			a.pay_mode AS "payMode",
+			b.mmsfrom AS "user.mmsfrom",
+			b.company_id AS "company.id",
+			b.callback_url AS "user.callbackUrl",
+			b.no_check AS "user.noCheck",
+			b.apikey AS "user.apikey",
+			b.whiteIP AS "user.whiteIP",
+			b.up_url AS "user.upUrl",
+			b.group_id AS "user.groupId",
+			b.keyword AS "user.keyword",
+			b.sign_flag AS "user.signFlag",
+			b.user_tmpl_flag AS userTmplFlag,
+			b.cmpp_user_type AS "user.cmppUserType",
+			b.force_sign AS "user.forceSign",
+			b.extnum_yd AS "user.extnumYd",
+			b.extnum_lt AS "user.extnumLt",
+			b.extnum_dx AS "user.extnumDx",
+			b.user_month_limit AS "user.userMonthLimit",
+			b.send_limit AS "user.sendLimit",
+			b.balance_caution AS "user.balanceCaution",
+			b.review_count AS "user.reviewCount",
+			b.rule_group_id AS "user.ruleGroupId",
+			b.pay_type AS "user.payType",
+			b.yzm_gateway_flag AS "user.yzmGatewayFlag",
+			b.allnum_push AS "user.allnumPush",
+			b.substring_length AS "user.substringLength",
+			b.yzm_send_count AS "user.yzmSendCount",
+			b.used_sign as "usedSign",
+			b.marketing_control AS marketingControl,
+			b.send_tag as sendTag,
+			b.content_mg_id1 AS contentMgIdOne,
+			b.content_mg_id2 AS contentMgIdTwo
+		FROM jmsg_account a,sys_user b
+		WHERE a.user_id = b.id and b.del_flag='0'
+			  and a.id=#{id}
+	</select>
+	
+	<select id="queryAccountList" resultType="com.siloyou.core.modules.sys.entity.Dict" parameterType="java.util.Map">
+		SELECT a.user_id value,CONCAT(b.name,'  ',b.login_name) label 
+		FROM jmsg_account a,sys_user b 
+		WHERE a.user_id = b.id
+			<!--
+			AND b.del_flag='0'
+			AND a.app_type=#{appType}
+			AND a.used_flag='1'
+			AND a.user_id !=#{userId}
+			<if test="companyId !=null and companyId !=''">
+				AND b.company_id=#{companyId}
+			</if>
+			<if test="userType !=null and userType !=''">
+			  	AND b.user_type=#{userType}
+			</if>
+			-->
+	</select>
+	
+	<select id="findUserPayMode" resultType="java.lang.String">
+		SELECT pay_mode FROM jmsg_account WHERE user_id=#{userId} AND app_type=#{appType}
+	</select>
+	
+	<select id="findUsedFlag" resultType="java.lang.String">
+		SELECT used_flag FROM jmsg_account WHERE user_id=#{userId} AND app_type=#{appType}
+	</select>	
+	
+	
+	
+	<insert id="insert">
+		INSERT INTO jmsg_account(
+			user_id,
+			app_type,
+			money,
+			create_date,
+			create_by,
+			used_flag,
+			pay_mode
+		) VALUES (
+			#{user.id},
+			#{appType},
+			#{money},
+			NOW(),
+			#{createBy.id},
+			#{usedFlag},
+			#{payMode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_account SET 	
+			user_id = #{user.id},
+			app_type = #{appType},
+			money = #{money}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_account
+		WHERE id = #{id}
+	</update>
+	
+	<update id="consumeMoney" parameterType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		UPDATE jmsg_account
+			set money = money-#{money}
+		WHERE user_id = #{user.id} and app_type=#{appType}
+	</update>
+	
+	<update id="rechargeMoney" parameterType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		UPDATE jmsg_account
+			set money = money+#{money}
+		WHERE user_id = #{user.id} and app_type=#{appType}
+	</update>
+	
+	<delete id="agencyDelete">
+		UPDATE jmsg_account SET 
+			used_flag = #{usedFlag}
+		WHERE id=#{id}	
+	</delete>
+	
+	<delete id="updatePayMode" parameterType="java.util.Map">
+		UPDATE jmsg_account SET
+			pay_mode=#{payMode}
+		WHERE user_id=#{userId} and app_type=#{appType}
+	</delete>
+	
+	<!-- 获取余额提现的用户列表 -->
+	<select id="getBalanceCautionUsers" resultType="com.siloyou.jmsg.modules.account.entity.JmsgAccount">
+		SELECT 
+			 <include refid="jmsgAccountColumns"/> 
+		FROM jmsg_account a,sys_user u1
+		LEFT JOIN sys_office u2 ON u1.company_id = u2.id
+		where a.user_id = u1.id and u1.balance_caution > 0 and u1.balance_caution >= a.money
+	</select>
+	
+	<select id="getMapByUser" resultType="java.util.Map">
+    	SELECT 	a.id AS id,
+			   	a.company_id AS companyId,
+			   	a.login_name AS loginName,
+				a.phone AS phone,
+				a.name AS name,
+				a.user_type AS userType,
+				a.mmsfrom AS mmsfrom,
+				a.callback_url AS callbackUrl,
+				a.rsp_content_type AS rspContentType,
+				a.no_check AS noCheck,
+				a.apikey AS apikey,
+				a.whiteIP AS whiteIP,
+				a.up_url AS upUrl,
+				a.sign_flag AS signFlag,
+				a.user_tmpl_flag AS userTmplFlag,
+				a.sys_blacklist_flag AS sysBlacklistFlag,
+				a.user_blacklist_flag AS userBlacklistFlag,
+				a.interface_flag AS interfaceFlag,
+				a.content_rule AS contentRule,
+				a.balance_caution AS balanceCaution,
+				a.caution_mobile AS cautionMobile,
+				a.group_id AS groupId,
+				a.review_count AS reviewCount,
+				a.keyword AS keyword,
+				a.filter_word_flag AS filterWordFlag,
+				a.cmpp_user_type AS cmppUserType,
+				a.force_sign AS forceSign,
+				a.extnum_yd AS extnumYd, 
+				a.extnum_lt AS extnumLt,
+				a.extnum_dx AS extnumDx,
+				a.user_month_limit AS userMonthLimit,
+				a.send_limit AS sendLimit,
+				a.rule_group_id AS ruleGroupId,
+				a.pay_type AS payType,
+				a.yzm_gateway_flag AS yzmGatewayFlag,
+				a.allnum_push AS allnumPush,
+				a.substring_length AS substringLength,
+				a.yzm_send_count AS yzmSendCount,
+				a.marketing_control AS marketingControl,
+				a.http_speed AS httpSpeed,
+				b.pay_mode AS payMode,
+				b.app_type AS appType,
+				a.used_sign as usedSign,
+				b.used_flag AS usedFlag,
+				a.send_tag as sendTag,
+				a.first_sign AS firstSign,
+				a.market_blacklist_flag AS marketBlacklistFlag,
+				a.yzm_blacklist_flag AS yzmBlacklistFlag
+    	FROM sys_user a,jmsg_account b 
+    	WHERE a.id = b.user_id and a.id=#{userId} and b.app_type=#{appType}
+    </select>
+	
+</mapper>

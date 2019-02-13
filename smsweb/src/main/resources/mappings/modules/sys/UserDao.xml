@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.core.modules.sys.dao.UserDao">
+	
+	<!-- <resultMap id="userResult" type="User">
+		<id property="id" column="id" />
+		<result property="company.id" column="company.id" />
+		<result property="office.id" column="office.id" />
+		<result property="loginName" column="login_name" />
+		<result property="password" column="password" />
+		<result property="no" column="no" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="phone" column="phone" />
+		<result property="mobile" column="mobile" />
+		<result property="userType" column="user_type" />
+		<result property="loginIp" column="login_ip" />
+		<result property="loginDate" column="login_date" />
+		<result property="remarks" column="remarks" />
+		<result property="loginFlag" column="loginFlag" />
+		<result property="photo" column="photo" />
+		<result property="createBy.id" column="createBy.id" />
+		<result property="createDate" column="create_date" />
+		<result property="updateBy.id" column="updateBy.id" />
+		<result property="updateDate" column="update_date" />
+		<result property="company.name" column="company.name" />
+		<result property="company.parentId" column="company.parentId" />
+		<result property="company.parentIds" column="company.parentIds" />
+		<result property="company.area.id" column="company.area.id" />
+		<result property="company.area.name" column="company.area.name" />
+		<result property="company.area.parentId" column="company.area.parentId" />
+		<result property="company.area.parentIds" column="company.area.parentIds" />
+		<result property="company.primaryPerson.id" column="company.primaryPerson.id" />
+		<result property="company.primaryPerson.name" column="company.primaryPerson.name" />
+		<result property="company.deputyPerson.id" column="company.deputyPerson.id" />
+		<result property="company.deputyPerson.name" column="company.deputyPerson.name" />
+		<result property="office.name" column="office.name" />
+		<result property="office.parentId" column="office.parentId" />
+		<result property="office.parentIds" column="office.parentIds" />
+		<result property="office.area.id" column="office.area.id" />
+		<result property="office.area.name" column="office.area.name" />
+		<result property="office.area.parentId" column="office.area.parentId" />
+		<result property="office.area.parentIds" column="office.area.parentIds" />
+		<result property="office.primaryPerson.id" column="office.primaryPerson.id" />
+		<result property="office.primaryPerson.name" column="office.primaryPerson.name" />
+		<result property="office.deputyPerson.id" column="office.deputyPerson.id" />
+		<result property="office.deputyPerson.name" column="office.deputyPerson.name" />
+		<collection property="roleList" ofType="Role">
+			<id property="id" column="roleList.id" />
+			<result property="office.id" column="roleList.office.id" />
+			<result property="name" column="roleList.name" />
+			<result property="enname" column="roleList.enname" />
+			<result property="roleType" column="roleList.roleType" />
+			<result property="dataScope" column="roleList.dataScope" />
+			<collection property="officeList" ofType="Office">
+				<id property="id" column="roleList.officeList.id" />
+			</collection>
+		</collection>
+	</resultMap> -->
+	
+    <sql id="userColumns">
+    	a.id,
+    	a.mmsfrom,
+    	a.callback_url AS "callbackUrl",
+    	a.no_check AS "noCheck",
+    	a.apikey,
+    	a.whiteIP,
+    	a.company_id AS "company.id",
+    	a.office_id AS "office.id",
+    	a.login_name,
+    	a.password,
+    	a.no,
+		a.name,
+		a.email,
+		a.phone,
+		a.mobile,
+		a.qq,
+		a.company_name AS "companyName",
+		a.user_type,
+		a.login_ip,
+		a.login_date,
+		a.remarks,
+		a.login_flag,
+		a.photo,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag,
+		a.up_url AS "upUrl",
+		a.rsp_content_type AS "rspContentType",
+		a.sign_flag AS "signFlag",
+		a.user_tmpl_flag AS userTmplFlag,
+		a.filter_word_flag AS "filterWordFlag",
+		a.price,
+		a.sys_blacklist_flag AS "sysBlacklistFlag",
+		a.user_blacklist_flag AS "userBlacklistFlag",
+		a.market_blacklist_flag AS "marketBlacklistFlag",
+		a.yzm_blacklist_flag AS "yzmBlacklistFlag",
+		a.interface_flag AS "interfaceFlag",
+		a.content_rule AS "contentRule",
+		a.balance_caution AS "balanceCaution",
+		a.caution_mobile AS "cautionMobile",
+		a.contact_name AS "contactName",
+		a.keyword AS "keyword",
+		a.group_id AS "groupId",
+		a.review_count AS reviewCount,
+		a.cmpp_user_type AS "cmppUserType",
+		a.force_sign AS "forceSign",
+		a.extnum_yd AS "extnumYd",
+		a.extnum_lt AS "extnumLt",
+		a.extnum_dx AS "extnumDx",
+		a.user_month_limit AS "userMonthLimit",
+		a.send_limit AS sendLimit,
+		a.rule_group_id AS ruleGroupId,
+		a.pay_type AS payType,
+		a.yzm_gateway_flag AS yzmGatewayFlag,
+		a.allnum_push AS allnumPush,
+		a.substring_length AS substringLength,
+		a.yzm_send_count AS yzmSendCount,
+		a.marketing_control AS marketingControl,
+		a.used_sign as usedSign,
+		a.http_speed AS httpSpeed,
+		a.send_tag as sendTag,
+		a.first_sign AS firstSign,
+		a.content_mg_id1 as contentMgIdOne,
+		a.content_mg_id2 as contentMgIdTwo,
+    	c.name AS "company.name",
+    	c.parent_id AS "company.parent.id",
+    	c.parent_ids AS "company.parentIds"
+
+		<!--,
+    	 ca.id AS "company.area.id",
+    	ca.name AS "company.area.name",
+    	ca.parent_id AS "company.area.parent.id",
+    	ca.parent_ids AS "company.area.parentIds",
+    	o.name AS "office.name",
+    	o.parent_id AS "office.parent.id",
+    	o.parent_ids AS "office.parentIds",
+    	oa.id AS "office.area.id",
+    	oa.name AS "office.area.name",
+    	oa.parent_id AS "office.area.parent.id",
+    	oa.parent_ids AS "office.area.parentIds",
+    	cu.id AS "company.primaryPerson.id",
+    	cu.name AS "company.primaryPerson.name",
+    	cu2.id AS "company.deputyPerson.id",
+    	cu2.name AS "company.deputyPerson.name",
+    	ou.id AS "office.primaryPerson.id",
+    	ou.name AS "office.primaryPerson.name",
+    	ou2.id AS "office.deputyPerson.id",
+    	ou2.name AS "office.deputyPerson.name" --><!-- ,
+        r.id AS "roleList.id",
+        r.office_id AS "roleList.office.id",
+        r.name AS "roleList.name",
+        r.enname AS "roleList.enname",
+        r.role_type AS "roleList.roleType",
+        r.data_scope AS "roleList.dataScope" -->
+    </sql>
+    
+    <sql id="userJoins">
+		JOIN sys_office c ON c.id = a.company_id
+		<!-- JOIN sys_area ca ON ca.id = c.area_id
+		JOIN sys_office o ON o.id = a.office_id
+		JOIN sys_area oa ON oa.id = o.area_id
+		LEFT JOIN sys_user cu ON cu.id = c.primary_person
+		LEFT JOIN sys_user cu2 ON cu2.id = c.deputy_person
+		LEFT JOIN sys_user ou ON ou.id = o.primary_person
+		LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person --><!-- 
+		LEFT JOIN sys_user_role ur ON ur.user_id = a.id
+        LEFT JOIN sys_role r ON r.id = ur.role_id -->
+    </sql>
+	
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="User">
+		SELECT
+			<include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+			,(select pay_mode from jmsg_account ja where ja.user_id = a.id) payMode
+		FROM sys_user a
+		<include refid="userJoins"/><!-- 
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- 根据登录名查询用户 -->
+	<select id="getByLoginName" resultType="User" parameterType="User">
+		SELECT
+			<include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+		FROM sys_user a
+		<include refid="userJoins"/><!-- 
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 分页查询用户信息 -->
+	<select id="findList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		<if test="role != null and role.id != null and role.id != ''">
+			JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
+		</if>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="company != null and company.id != null and company.id != ''">
+			AND (c.id = #{company.id} OR c.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%,'||#{company.id}||',%')</if>
+					<if test="dbName == 'mysql'">CONCAT('%,', #{company.id}, ',%'))</if>
+		</if>
+		<if test="office != null and office.id != null and office.id != ''">
+			AND (o.id = #{office.id} OR o.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%,'||#{office.id}||',%')</if>
+					<if test="dbName == 'mysql'">CONCAT('%,', #{office.id}, ',%'))</if>
+		</if>
+		<!-- 如果不是超级管理员，则不显示超级管理员用户 -->
+		<if test="!currentUser.admin">
+			AND a.id != '1'
+		</if>
+		<if test="loginName != null and loginName != ''">
+			AND a.login_name like 
+					<if test="dbName == 'oracle'">'%'||#{loginName}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{loginName}, '%')</if>
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name like 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
+		</if>
+		<!-- 数据范围过滤 -->
+		${sqlMap.dsf}
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY c.code,<!--  o.code, --> a.name
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 根据OfficeId获取用户（树查询用户时用） -->
+	<select id="findUserByOfficeId" resultType="User" useCache="true">
+		SELECT
+			a.id, a.name, a.login_name
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.company_id = #{company.id}
+		ORDER BY a.name
+	</select>
+	
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		ORDER BY c.code, o.code, a.name
+	</select>
+
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+			COUNT(1)
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+
+	<!-- 插入用户 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO sys_user(
+			company_id,
+			office_id,
+			login_name,
+			password,
+			no,
+			name,
+			email,
+			phone,
+			mobile,
+			qq,
+			company_name,
+			user_type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			login_flag,
+			photo,
+			del_flag,
+			mmsfrom,
+			callback_url,
+			rsp_content_type,
+			no_check,
+			apikey,
+			whiteIP,
+			up_url,
+			sign_flag,
+			user_tmpl_flag,
+			filter_word_flag,
+			price,
+			sys_blacklist_flag,
+			user_blacklist_flag,
+			interface_flag,
+			content_rule,
+			balance_caution,
+			caution_mobile,
+			contact_name,
+			group_id,
+			review_count,
+			keyword,
+			cmpp_user_type,
+			force_sign,
+			extnum_yd,
+			extnum_lt,
+			extnum_dx,
+			user_month_limit,
+			send_limit,
+			rule_group_id,
+			pay_type,
+			yzm_gateway_flag,
+			allnum_push,
+			substring_length,
+			yzm_send_count,
+			marketing_control,
+			used_sign,
+			http_speed,
+			send_tag,
+			first_sign,
+			market_blacklist_flag,
+			yzm_blacklist_flag,
+			content_mg_id1,
+			content_mg_id2
+		) VALUES (
+			#{company.id},
+			#{office.id},
+			#{loginName},
+			#{password},
+			#{no},
+			#{name},
+			#{email},
+			#{phone},
+			#{mobile},
+			#{qq},
+			#{companyName},
+			#{userType},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{loginFlag},
+			#{photo},
+			#{delFlag},
+			#{mmsfrom},
+			#{callbackUrl},
+			#{rspContentType},
+			#{noCheck},
+			#{apikey},
+			#{whiteIP},
+			#{upUrl},
+			#{signFlag},
+			#{userTmplFlag},
+			#{filterWordFlag},
+			#{price},
+			#{sysBlacklistFlag},
+			#{userBlacklistFlag},
+			#{interfaceFlag},
+			#{contentRule},
+			#{balanceCaution},
+			#{cautionMobile},
+			#{contactName},
+			#{groupId},
+			#{reviewCount},
+			#{keyword},
+			#{cmppUserType},
+			#{forceSign},
+			#{extnumYd},
+			#{extnumLt},
+			#{extnumDx},
+			#{userMonthLimit},
+			#{sendLimit},
+			#{ruleGroupId},
+			#{payType},
+			#{yzmGatewayFlag},
+			#{allnumPush},
+			#{substringLength},
+			#{yzmSendCount},
+			#{marketingControl},
+			#{usedSign},
+			#{httpSpeed},
+			#{sendTag},
+			#{firstSign},
+			#{marketBlacklistFlag},
+			#{yzmBlacklistFlag},
+			<if test="contentMgIdOne != null and contentMgIdOne !=''">
+				#{contentMgIdOne},
+			</if>
+			<if test="contentMgIdOne == null or contentMgIdOne ==''">
+				'0',
+			</if>
+			<if test="contentMgIdTwo != null and contentMgIdTwo !=''">
+				#{contentMgIdTwo}
+			</if>
+			<if test="contentMgIdTwo == null or contentMgIdTwo ==''">
+				'0'
+			</if>
+		)
+	</insert>
+
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE sys_user SET 
+			company_id = #{company.id}, 
+			office_id = #{office.id}, 
+			login_name = #{loginName},
+			<if test="password != null and password !=''">
+			password = #{password}, 
+			</if>
+			no = #{no}, 
+			name = #{name}, 
+			email = #{email}, 
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			qq = #{qq}, 
+			company_name = #{companyName},
+			caution_mobile = #{cautionMobile}, 
+			contact_name = #{contactName},  
+			<if test="userType != null and userType !=''">
+			user_type = #{userType}, 
+			</if>
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			login_flag = #{loginFlag},
+			mmsfrom = #{mmsfrom},
+			photo = #{photo},
+			callback_url=#{callbackUrl},
+			rsp_content_type=#{rspContentType},
+			no_check=#{noCheck},
+			apikey=#{apikey},
+			up_url=#{upUrl},
+			sign_flag=#{signFlag},
+			user_tmpl_flag=#{userTmplFlag},
+			filter_word_flag=#{filterWordFlag},
+			price=#{price},
+			sys_blacklist_flag=#{sysBlacklistFlag},
+			user_blacklist_flag=#{userBlacklistFlag},
+			interface_flag=#{interfaceFlag},
+			content_rule=#{contentRule},
+			balance_caution=#{balanceCaution},
+			whiteIP=#{whiteIP},
+			group_id=#{groupId},
+			review_count=#{reviewCount},
+			keyword=#{keyword},
+			cmpp_user_type=#{cmppUserType},
+			force_sign=#{forceSign},
+			extnum_yd=#{extnumYd},
+			extnum_lt=#{extnumLt},
+			extnum_dx=#{extnumDx},
+			user_month_limit=#{userMonthLimit},
+			send_limit=#{sendLimit},
+			rule_group_id=#{ruleGroupId},
+			pay_type=#{payType},
+			yzm_gateway_flag=#{yzmGatewayFlag},
+			allnum_push=#{allnumPush},
+			substring_length=#{substringLength},
+			yzm_send_count=#{yzmSendCount},
+			marketing_control=#{marketingControl},
+			used_sign=#{usedSign},
+			content_mg_id1=#{contentMgIdOne},
+			content_mg_id2=#{contentMgIdTwo},
+			<if test="sendTag != null and sendTag !=''">
+			send_tag = #{sendTag}, 
+			</if>
+			<if test="firstSign != null and firstSign !=''">
+			first_sign = #{firstSign},
+			</if>
+			http_speed=#{httpSpeed},
+			market_blacklist_flag=#{marketBlacklistFlag},
+			yzm_blacklist_flag=#{yzmBlacklistFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 删除用户和角色关联表数据 -->
+	<delete id="deleteUserRole">
+		DELETE FROM sys_user_role WHERE user_id = #{id}
+	</delete>
+	
+	<!-- 插入用户和角色关联表数据 -->
+	<insert id="insertUserRole">
+		INSERT INTO sys_user_role(user_id, role_id)
+		<foreach collection="roleList" item="role" separator=" union all ">
+			SELECT #{id}, #{role.id} FROM dual
+		</foreach>
+	</insert>
+
+	<!-- 插入用户和角色关联表数据fix -->
+	<insert id="insertUserRoleFix">
+		INSERT INTO sys_user_role(user_id, role_id)
+		values (#{id},#{roleId})
+	</insert>
+	
+	<!-- 更新用户信息  -->
+	<update id="updateUserInfo">
+		UPDATE sys_user SET 
+			email = #{email}, 
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			qq = #{qq}, 
+			company_name = #{companyName}, 
+			contact_name = #{contactName},  
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			photo = #{photo}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新用户密码 -->
+	<update id="updatePasswordById">
+		UPDATE sys_user SET 
+			password = #{password} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新登录信息，如登录IP、登录时间 -->
+	<update id="updateLoginInfo">
+		UPDATE sys_user SET 
+			login_ip = #{loginIp}, 
+			login_Date = #{loginDate} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		UPDATE sys_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByAgency">
+		UPDATE sys_user SET 
+			del_flag = #{delFlag},
+			update_date =NOW(),
+			update_by = #{createBy.id}
+		WHERE id = #{id}
+	</update>	
+	
+	<select id="findAppTypeByUserId" resultType="com.siloyou.core.modules.sys.entity.Dict">
+		SELECT b.label,a.app_type value 
+		FROM jmsg_account a 
+		LEFT JOIN sys_dict b ON b.type="app_type" and a.app_type = b.value
+		WHERE user_id=#{userId}
+	</select>
+	
+	<select id="getAgency" resultType="User" parameterType="java.lang.String">
+		SELECT a.id,b.pay_mode payMode
+		FROM sys_user a
+		LEFT JOIN jmsg_account b on a.id=b.user_id and b.app_type='sms'
+		where
+			user_type='3'
+			AND a.company_id =#{companyId}
+			LIMIT 1
+	</select>
+	
+	<select id="getAgencyByUserId" resultType="User" parameterType="java.lang.String">
+		SELECT a.id,b.pay_mode payMode
+		FROM sys_user a
+		LEFT JOIN jmsg_account b on a.id=b.user_id and b.app_type='sms'
+		where a.user_type='3' AND a.company_id =(SELECT company_id from sys_user where id=#{id}) LIMIT 1
+	</select>
+	
+	<!-- 批量更新用户通道组信息  -->
+	<update id="batchUpdateUserGroup">
+		UPDATE sys_user SET 
+			group_id=#{groupId}
+		WHERE company_id =#{companyId}
+	</update>
+	
+	<!-- 修改用户通道组信息  -->
+	<update id="updateUserGroupById">
+		UPDATE sys_user SET 
+			group_id=#{groupId}
+		WHERE id = #{id}
+	</update>
+</mapper>

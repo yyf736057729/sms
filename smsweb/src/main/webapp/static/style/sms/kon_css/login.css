@@ -1,0 +1,182 @@
+@charset "utf-8";
+/* CSS Document */
+html,body{height:100%;}
+body, dl, dd, h1, h2, h3, h4, h5, h6, p, form,a{margin:0; text-decoration:none;}   
+ol,ul{margin:0; padding:0;list-style:none}
+img{border:0;}
+*,input,.btn {font-family:"Microsoft YaHei";}
+button {border: none;}
+.ml15 {margin-left:15px;}
+.fl {float: left;}
+.fr {float: right;}		
+.clearfix:after {       
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    font-size:0;}
+.clearfix {*zoom:1;}
+.text-left {text-align: left;}
+
+
+body{font:normal normal normal 12px/1.5 "Microsoft YaHei"; color:#333;background-color: #eaeaea;text-align: center;min-width: 1024px;}
+.wd1008 {width: 1008px;margin:0 auto;}
+.login_top {padding-top: 10px;padding-bottom: 8px;background-color: #fff;}
+.login_top dt {width: 600px;text-align:left;}
+.login_top dt img {width: auto;height: 60px;}
+.login_top dd {width: 408px;text-align: right;}
+.login_top dd img {width: auto;height: 60px;}
+.login_top dd.fr p {line-height: 40px;height: 40px;margin-top: 20px}
+.login_top dd.fr p a,.login_top dd.fr p b {font-size: 14px;text-decoration: none;font-weight: normal;color: #444;}
+.login_top dd.fr p a:hover {color: #666;}
+
+.login_banner {background:#0056b5 url("../kon_images/banner_bg.jpg") center; height: 365px;}
+.login_banner .login_banner_ad img {height: 350px;width: auto;margin: 10px auto;}
+.login_banner .login_banner_ad {width: 588px;}
+.login_box {text-align: center;width: 350px;height: 315px;margin: 25px auto;border-radius: 3px;background: #fff;box-shadow: 0 0 5px #000;}
+.login_box_title {background-color: #f3f3f3;border-bottom: 1px solid #f0f0f0;line-height: 45px;height: 45px;border-top-left-radius: 3px;
+	border-top-right-radius: 3px;margin-bottom: 20px;}
+.login_box_title {font-size: 16px;font-weight: bold;line-height: 45px;height: 45px;padding:0 15px;}
+.login_box_title .login_box_title_phone span {font-size: 16px;}
+
+/*账号登录*/
+.login_box_con_user form,.login_box_con_phone form {width: 302px;height: 185px; margin: 0 auto;position: relative;}
+.login_box_con_user form .input-group,.login_box_con_phone form .input-group{border: 1px solid #ccc;border-radius: 3px;}
+.login_box_con_user form .input-group .input-group-addon,.login_box_con_phone form .input-group .input-group-addon
+ {background: transparent;border: none;height: 38px;padding: 6px 8px;width: 24px;}
+.login_box_con_user form .input-group .input-group-addon b,.login_box_con_phone form .input-group .input-group-addon b {font-size: 16px;text-align: center;}
+.login_box_con_user form .input-group .form-control,.login_box_con_phone form .input-group .form-control 
+{background: transparent;border: none;border-radius: 0;box-shadow: none;padding-top: 10px;font-size: 14px;padding-left: 0;}
+.login_box_con_user form .login_yzm,.login_box_con_phone form .login_yzm {border:none;}
+.login_box_con_user form .login_yzm .pull-left,.login_box_con_phone form .login_yzm .pull-left {margin-bottom: 0;width: 185px;}
+.login_box_con_user form .login_yzm .pull-left .form-control,.login_box_con_phone form .login_yzm .pull-left .form-control {width: 110px;}
+.login_box_con_user form .pull-right,.login_box_con_phone form .pull-right {display: inline-block;border: none;margin-bottom: 0;}
+.login_box_con_user form .pull-right img,.login_box_con_phone form .pull-right img {width: 100px;height:40px;vertical-align: top;margin-right: 3px;}
+.login_box_con_user form .pull-right a,.login_box_con_phone form .pull-right a 
+{font-size: 13px;text-decoration: none;line-height: 40px;height: 40px;text-align: center;padding: 0;width: 146px;}
+.login_box_con_user form .login_reme a {line-height: 18px;height: 18px;}
+.login_box_con_user form .login_reme .pull-left {border: none;text-align: left;}
+.login_box_con_user form .login_reme .pull-left input {margin: 0;}
+.login_box_con_user form .login_reme .pull-right {margin-top: 0;}
+.login_box_con_user form .login_pp,.login_box_con_phone form .login_pp {line-height: 20px;height: 22px;text-align: left;color: #888;}
+.login_box_con_user form .login_btn a,.login_box_con_phone form .login_btn a {display: block;padding-top: 10px;padding-bottom: 10px;font-size: 16px;}
+
+.btn-login,.btn-login:focus {background-color:#4d90fd;border-color:#3680bf;border-radius: 3px;color: #fff;}
+.btn-login:hover,.btn-login:active,.btn-login.active {background-color:#4e9dff;border-color:#357ebd;color: #fff;}
+
+/*手机登录*/
+.login_box_con_user form .login_id,.login_box_con_phone form .login_phone,.login_box_con_user form .login_pwd,
+.login_box_con_user form .login_yzm,.login_box_con_phone form .login_yzm,.login_box_con_phone form .login_mess,
+.login_box_con_user form .login_reme {position: relative;left: 0;width: 100%; height: 40px;}
+.login_box_con_user form .login_id,.login_box_con_phone form .login_phone {top:0;}
+.login_box_con_user form .login_pwd {top: 12px;}
+.login_box_con_user form .login_yzm {top: 24px;}
+.login_box_con_user form .login_reme {top: 32px;height: 18px;}
+.login_box_con_phone form .login_yzm {top: 18px;}
+.login_box_con_phone form .login_mess {top: 36px;}
+.login_box .login_pp {color: #c30;font-size: 12px;}
+.login_box .login_btn {width: 300px;margin: 0 auto;}
+.login_box .login_btn a {display: block;line-height: 1.8;}
+.btn-mess,.btn-mess:focus {background-color:#f7f7f7;border-color:#ddd;border-radius: 3px;color: #666;width: 140px;padding-top: 10px;padding-bottom: 10px;}
+.btn-mess:hover,.btn-mess:active,.btn-mess.active {background-color:#eee;border-color:#dadada;}
+
+.login_dir {padding: 15px;border-top:1px solid #fff;border-bottom:1px solid #fff;background: #efefef url(../kon_images/paper.gif) repeat;}
+.login_dir li {border-right: 1px solid #bfbfbf;box-shadow: 1px 0 0 #fff;width: 232px;float: left;margin: 0 5px;}
+.login_dir li:last-child {border-right:none;box-shadow: none;}
+.login_dir li div.fl {text-align: center;padding-left: 0;width: 68px;float: left;}
+.login_dir li div.fl img {margin-top: 8px;width: 64px;height: 64px;}
+.login_dir li div.fr {padding-left: 5px;padding-top: 5px;padding-right: 0;width: 160px;float: left;}
+.login_dir li div.fr h4 {font-size: 18px; font-weight: 700; line-height: 24px;height: 24px;text-shadow: 1px 1px #fff;}
+.login_dir li div.fr p {line-height: 20px;margin-top: 5px;text-shadow: 1px 1px #fff;font-size: 12px;}
+
+.login_copy p {line-height: 40px;height: 40px;}
+.login_copy p img {display: inline-block; width: 14px;height: 28px;margin-left:8px;margin-right:2px;vertical-align: top;padding-top: 14px;}
+.login_copy p b {font-weight: 400;}
+.login_copy p a {color: #666; cursor: pointer;display:inline-block;margin-left:20px;margin-right: 3px;}
+.login_copy p a:hover {color: #888;text-decoration: none;}
+.login_copy p a:first-child {margin-left:3px;margin-right: 3px;}
+.login_copy p a:last-child {margin:0 3px;}
+
+
+/*找回密码*/
+.pwdbody {background: #fff;}
+.pwdbody .login_top {background: #fdfdfd;border-bottom: 1px solid #eee;}
+
+.pwd_title {background: #fafafa;border-top:1px solid #f1f1f1;border-bottom: 1px solid #f2f1f0;box-shadow: 0 3px 1px #fafafa;}
+.pwd_title p {padding-left: 50px;font-size: 16px;line-height: 42px;height: 42px;font-weight: bold;}
+.pwd_title p span {padding-left: 335px;color: #666;font-size: 12px;font-weight: normal;}
+.pwd_title div.fr {padding-top: 12px;}
+.pwd_title div.fr em {background: #fcfcfc;border:1px solid #d5d5d5;border-radius: 3px;padding: 3px 8px;color: #337ab7;font-style: normal;}
+.pwd_title div.fr em b {font-weight: 400;}
+
+.pwdbody .pwd_nav {padding-top: 30px;border-top:1px solid #f2f1f0;}
+.pwdbody .pwd_nav ul {background: #f7f7f7 url(../kon_images/pwd_navul.png) no-repeat;width: 723px;height: 34px;margin-left:50px;}
+.pwdbody .pwd_nav li {width: 33.33%;text-indent: 67px;line-height: 34px;height: 34px;font-size: 14px;}
+.pwd_nav li.onli1 {background: #ddebff url(../kon_images/pwd_navli1.png) no-repeat;}
+.pwd_nav li.onli2 {background: #ddebff url(../kon_images/pwd_navli2.png) no-repeat;margin-left: -10px;text-indent: 78px;}
+.pwd_nav li.onli3 {background: #ddebff url(../kon_images/pwd_navli3.png) no-repeat;margin-left: -25px;text-indent: 78px;width: 266px;}
+
+.pwd_con {min-height: 400px;padding-top: 50px;}
+.pwd_con form {margin-left:50px;}
+.pwd_con form div {margin-bottom:20px;}
+.pwd_con form div.pull-left {margin-bottom:0;}
+.pwd_con form div.pull-left img {width: 96px;height: 36px;margin:4px 10px;}
+.pwd_con form div p {margin-bottom: 10px;}
+.pwd_con form input.form-control {padding-top: 10px;padding-bottom: 10px;height: 42px;border-radius: 3px;display: inline-block;margin-right: 15px;}
+.pwd_con form input.pwd_user {width: 350px;}
+.pwd_con form .input-group input.pwd_yzm {width: 190px;border-radius: 3px;margin:0;}
+.pwd_con form .input-group img.pwd_yzm_pic {height: 42px;width: 105px;margin: 0 10px;}
+.pwd_con form .btn-login {width: 350px;padding-top: 10px;padding-bottom: 10px;}
+.pwd_con form .input-group input.btn-mess {padding-top: 10px;padding-bottom: 10px;}
+.pwd_con form label {color: #2e7fdb;}
+.pwd3_con form div p {margin-bottom: 5px;}
+.pwd3_con label {display:inline-block;width:78px;text-align: right;font-size: 13px;margin: 0;}
+.pwd3_con form .passWord-wrapper {margin-bottom: 5px;}
+.pwd3_con p {margin-bottom: 5px;}
+.pwd3_con .pwd_strong p {margin-bottom: 0;}
+.pwd3_con .pwd_strong p span {display: inline-block;font-weight: normal;font-style: normal;padding:0;margin:0;width:106px;height:20px;background: #f9f9f9;
+	font-size: 13px;color:#888;text-align: center;line-height: 20px;}
+.pwd3_con .pwd_strong p span.hover,.pwd3_con .pwd_strong p.active span:nth-child(2),.pwd3_con .pwd_strong p.active1 span {background: #c00;color: #fff;}
+.pwd3_con .unmInfo,.pwd3_con .psdInfo,.pwd3_con .psd1Info {display: inline-block;font-size: 12px;color:#888;}
+.pwd3_con .btn-wrapper {margin-top: 15px;}
+
+
+.pwd4_con {padding-top: 100px;width: 800px;}
+.pwd4_con p {line-height: 32px;height: 32px;font-size: 18px;}
+.pwd4_con p span {color: #390;font-size: 24px;}
+.pwd4_con p i {font-style: normal;color: #3680bf;padding: 0 5px;}
+.pwd4_con a {margin-top: 30px;}
+.pwd4_con a.btn-login,.pwd4_con a.btn-login:focus {padding: 9px 45px;}
+
+
+.pwd_con form .btn-login-ok {width: 190px;}
+.pwd_con form .btn-login-back {width: 145px;background: #fff;border:1px solid #4d90fd;color: #4d90fd;}
+.pwd_con form .btn-login-back,.pwd_con form .btn-login-back:focus {background-color:#fff;border-color:#4d90fd;color: #4d90fd;}
+.pwd_con form .btn-login-back:hover,.btn-mess:active,.pwd_con form .btn-login-back.active {background-color:#f9f9f9;border-color:#83b1fd;}
+
+.login_tip {color: #c30;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

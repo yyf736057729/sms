@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.mms.dao.JmsgMmsReportDao">
+    
+	<sql id="jmsgMmsReportColumns">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.stat AS "stat",
+		a.submit_time AS "submitTime",
+		a.done_time AS "doneTime",
+		a.srcid AS "srcid",
+		a.dest_terminal_id AS "destTerminalId",
+		a.smsc_sequence AS "smscSequence",
+		a.bizid AS "bizid",
+		a.createtime AS "createtime"
+	</sql>
+	
+	<sql id="jmsgMmsReportJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsReport">
+		SELECT 
+			<include refid="jmsgMmsReportColumns"/>
+		FROM jmsg_mms_report a
+		<include refid="jmsgMmsReportJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsReport">
+		SELECT 
+			<include refid="jmsgMmsReportColumns"/>
+		FROM jmsg_mms_report a
+		<include refid="jmsgMmsReportJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsReport">
+		SELECT 
+			<include refid="jmsgMmsReportColumns"/>
+		FROM jmsg_mms_report a
+		<include refid="jmsgMmsReportJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findByBizid" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsReport">
+		SELECT 
+			<include refid="jmsgMmsReportColumns"/>
+		FROM jmsg_mms_report a
+		<include refid="jmsgMmsReportJoins"/>
+		WHERE a.bizid=#{bizid}
+		LIMIT 1
+	</select>
+	
+	<select id="findByMsgid" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsReport">
+		SELECT 
+			<include refid="jmsgMmsReportColumns"/>
+		FROM jmsg_mms_report a
+		<include refid="jmsgMmsReportJoins"/>
+		WHERE a.msgid=#{msgid}
+		LIMIT 1
+	</select>
+	
+	<select id="findSuccessCount" resultType="java.lang.Integer">
+		SELECT count(1) FROM jmsg_mms_report a 
+		WHERE taskid=#{taskid} AND stat='DELIVRD'
+		GROUP BY taskid 
+	</select>
+	
+	<select id="findDetailSendList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsReport">
+		SELECT bizid,stat 
+		FROM jmsg_mms_report a 
+		WHERE taskid=#{taskid} 
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_mms_report(
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			srcid,
+			dest_terminal_id,
+			smsc_sequence,
+			bizid,
+			createtime
+		) VALUES (
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcid},
+			#{destTerminalId},
+			#{smscSequence},
+			#{bizid},
+			NOW()
+		)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.Map">
+		INSERT INTO jmsg_mms_report(
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			srcid,
+			dest_terminal_id,
+			smsc_sequence,
+			bizid, 
+			taskid,
+			createtime
+		) VALUES (
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcid},
+			#{destTerminalId},
+			#{smscSequence},
+			#{bizid},
+			#{taskid},
+			NOW()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_mms_report SET 	
+			msgid = #{msgid},
+			stat = #{stat},
+			submit_time = #{submitTime},
+			done_time = #{doneTime},
+			srcid = #{srcid},
+			dest_terminal_id = #{destTerminalId},
+			smsc_sequence = #{smscSequence},
+			bizid = #{bizid},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_mms_report
+		WHERE id = #{id}
+	</update>
+	
+	
+	<insert id="insertRetrySyncMmsReport" parameterType="java.util.Map">
+		INSERT INTO jmsg_mms_report_retry( msgid, stat, submit_time, done_time, srcid, dest_terminal_id, smsc_sequence, createtime ) 
+		VALUES ( #{msgid}, #{stat}, #{submitTime}, #{doneTime}, #{srcid}, #{destTerminalId}, #{smscSequence}, NOW() )
+	</insert>
+	
+</mapper>

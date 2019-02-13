@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sanerzone.common.modules.phone.dao.JmsgSmsGatewayTmplDao">
+    <sql id="jmsgSmsGatewayTmplColumns">
+        a.id AS "id",
+		a.gateway_id AS "gatewayId",
+		a.join_number AS "joinNumber",
+		a.template_id AS "templateId",
+		a.template_name AS "templateName",
+		a.template_content AS "templateContent",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.create_time AS "createTime"
+    </sql>
+
+    <sql id="jmsgSmsGatewayTmplColumns_2">
+        a.id AS "id",
+		a.gateway_id AS "gatewayId",
+		a.join_number AS "joinNumber",
+		a.template_id AS "templateId",
+		a.template_name AS "templateName",
+		a.template_content AS "templateContent",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.create_time AS "createTime",
+		b.gateway_name AS "gatewayName"
+    </sql>
+
+
+
+
+    <select id="get" resultType="com.sanerzone.common.modules.phone.entity.JmsgSmsGatewayTmpl">
+        SELECT
+        <include refid="jmsgSmsGatewayTmplColumns"/>
+        FROM jmsg_sms_gateway_tmpl a
+        <where>
+            <if test="templateId != null and templateId != '' ">
+                a.template_id = #{templateId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO jmsg_sms_gateway_tmpl(
+			id,
+			gateway_id,
+			join_number,
+			template_id,
+			template_name,
+			template_content,
+			remarks,
+			del_flag,
+			create_time
+		) VALUES (
+			#{id},
+			#{gatewayId},
+			#{joinNumber},
+			#{templateId},
+			#{templateName},
+			#{templateContent},
+			#{remarks},
+			0,
+			NOW()
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE jmsg_sms_gateway_tmpl SET
+        <if test="gatewayId != null and gatewayId != ''">
+            gateway_id = #{gatewayId},
+        </if>
+        <if test="joinNumber != null and joinNumber != ''">
+            join_number = #{joinNumber},
+        </if>
+        <if test="templateId != null and templateId != ''">
+            template_id = #{templateId},
+        </if>
+        <if test="templateName != null and templateName != ''">
+            template_name = #{templateName},
+        </if>
+        <if test="template_content != null and template_content != ''">
+            template_content = #{template_content},
+        </if>
+        <if test="remarks != null and remarks != ''">
+            remarks = #{remarks}
+        </if>
+
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM jmsg_sms_gateway_tmpl
+		WHERE id = #{id}
+	</update>
+
+    <sql id="Base_Column_List" >
+    ID, GATEWAY_ID, JOIN_NUMBER, TEMPLATE_ID, TEMPLATE_NAME, REMARKS, CREATE_TIME,DEL_FLAG,TEMPLATE_CONTENT
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="com.sanerzone.common.modules.phone.entity.JmsgSmsGatewayTmpl">
+        select
+        <include refid="Base_Column_List" />
+        from jmsg_sms_gateway_tmpl
+        where ID = #{id,jdbcType=CHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from jmsg_sms_gateway_tmpl
+    where ID = #{id,jdbcType=CHAR}
+  </delete>
+
+    <!--假删除-->
+    <update id="updateDelFlagByPrimaryKey">
+        UPDATE jmsg_sms_gateway_tmpl SET
+			status = 1
+		WHERE id = #{id}
+    </update>
+
+
+    <select id="findList" resultType="com.sanerzone.common.modules.phone.entity.JmsgSmsGatewayTmpl">
+        SELECT
+        <include refid="jmsgSmsGatewayTmplColumns_2"/>
+        FROM jmsg_sms_gateway_tmpl a
+        LEFT JOIN jmsg_gateway_info b on a.gateway_id=b.id
+        <where>
+
+            a.del_flag = 0
+
+            <if test="templateId != null and templateId != ''">
+                AND a.template_id = #{templateId}
+            </if>
+
+            <if test="dateTimeQ != null and dateTimeQ != ''">
+                AND a.create_time &gt;= #{dateTimeQ}
+            </if>
+
+            <if test="dateTimeZ != null and dateTimeZ != ''">
+                AND a.create_time &lt;= #{dateTimeZ}
+            </if>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="searchByGatewayName" resultType="com.sanerzone.common.modules.phone.entity.JmsgSmsGatewayTmpl">
+        SELECT a.id AS "gatewayId" FROM jmsg_gateway_info a
+        <where>
+            a.gateway_name =#{gatewayName}
+        </where>
+    </select>
+
+    <!--<select id="searchLikeByGateway" resultType="java.lang.Integer">-->
+        <!--SELECT count(*) FROM jmsg_sms_gateway_tmpl a-->
+        <!--<where>-->
+            <!--a.gateway_id = #{gatewayId} and-->
+            <!--a.business_type = #{businessType}-->
+        <!--</where>-->
+
+    <!--</select>-->
+
+</mapper>

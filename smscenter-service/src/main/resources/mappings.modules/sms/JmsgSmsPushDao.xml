@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsPushDao">
+    <insert id="batchInsert" parameterType="java.util.HashMap">
+		INSERT INTO ${tableName}(
+			bizid,
+			taskid,
+			result,
+			createtime,
+			user_id,
+			push_type,
+			pushtime
+		) VALUES (
+			#{smsPrMessage.bizid},
+			#{smsPrMessage.taskid},
+			#{smsPrMessage.result},
+			NOW(),
+			#{smsPrMessage.userid},
+			'cmpp',
+			FROM_UNIXTIME(${pushtime}/1000,'%Y-%m-%d %h:%i:%s')
+		)
+	</insert>
+</mapper>

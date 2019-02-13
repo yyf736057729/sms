@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsReportDao">
+    
+	<sql id="jmsgSmsReportColumns">
+		a.id AS "id",
+		a.userid AS "user.id",
+		a.msgid AS "msgid",
+		a.stat AS "stat",
+		a.submit_time AS "submitTime",
+		a.done_time AS "doneTime",
+		-- a.srcid AS "srcid",
+		-- a.dest_terminal_id AS "destTerminalId",
+		-- a.smsc_sequence AS "smscSequence",
+		a.bizid AS "bizid",
+		a.createtime AS "createtime",
+		-- a.result AS "result",
+		a.taskid AS "taskid",
+		a.gateway_id AS "gatewayId",
+		u2.name AS "user.name"
+	</sql>
+
+	<sql id="jmsgSmsReportFindByBizid">
+		a.id AS "id",
+		a.msgid AS "msgid",
+		a.stat AS "stat",
+		a.submit_time AS "submitTime",
+		a.done_time AS "doneTime",
+		a.srcid AS "srcid",
+		a.dest_terminal_id AS "destTerminalId",
+		a.smsc_sequence AS "smscSequence",
+		a.bizid AS "bizid",
+		a.createtime AS "createtime",
+		a.result AS "result",
+		a.taskid AS "taskid",
+		a.gateway_id AS "gatewayId",
+		a.submit_time AS "submitTimeDate"
+	</sql>
+	
+	<sql id="jmsgSmsReportJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.userid
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReport">
+		SELECT 
+			<include refid="jmsgSmsReportColumns"/>
+		FROM sms_report a
+		<include refid="jmsgSmsReportJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReport">
+		SELECT 
+			<include refid="jmsgSmsReportColumns"/>
+		FROM sms_report a
+		<include refid="jmsgSmsReportJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.userid=#{user.id}
+			</if>
+			<if test="stat != null and stat !=''">
+				AND a.stat=#{stat}
+			</if>
+			<if test="destTerminalId != null and destTerminalId !=''">
+				-- AND a.dest_terminal_id=#{destTerminalId}
+			</if>
+			<if test="bizid != null and bizid !=''">
+				AND a.bizid=#{bizid}
+			</if>
+			<if test="taskid != null and taskid !=''">
+				AND a.taskid=#{taskid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReport">
+		SELECT 
+			<include refid="jmsgSmsReportColumns"/>
+		FROM ${tableName} a
+		<include refid="jmsgSmsReportJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id=#{user.id}
+			</if>
+			<if test="stat != null and stat !=''">
+				AND a.stat=#{stat}
+			</if>
+			<if test="destTerminalId != null and destTerminalId !=''">
+				AND a.dest_terminal_id=#{destTerminalId}
+			</if>
+			<if test="bizid != null and bizid !=''">
+				AND a.bizid=#{bizid}
+			</if>
+			<if test="taskid != null and taskid !=''">
+				AND a.taskid=#{taskid}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReport">
+		SELECT 
+			<include refid="jmsgSmsReportColumns"/>
+		FROM sms_report a
+		<include refid="jmsgSmsReportJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sms_report(
+			user_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			srcid,
+			dest_terminal_id,
+			smsc_sequence,
+			bizid,
+			createtime,
+			result,
+			taskid,
+			gateway_id
+		) VALUES (
+			#{user.id},
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcid},
+			#{destTerminalId},
+			#{smscSequence},
+			#{bizid},
+			#{createtime},
+			#{result},
+			#{taskid},
+			#{gatewayId}
+		)
+	</insert>
+	
+	<insert id="batchInsert" parameterType="com.siloyou.jmsg.common.message.SmsRtMessage">
+		INSERT INTO sms_report(
+			user_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			srcid,
+			dest_terminal_id,
+			smsc_sequence,
+			bizid,
+			createtime,
+			result,
+			taskid,
+			gateway_id
+		) VALUES (
+			#{smsMt.userid},
+			#{msgid},
+			#{stat},
+			#{submitTime},
+			#{doneTime},
+			#{srcTermID},
+			#{destTermID},
+			#{smscSequence},
+			#{smsMt.id},
+			NOW(),
+			'0',
+			#{smsMt.taskid},
+			#{smsMt.gateWayID}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sms_report SET 	
+			user_id = #{user.id},
+			msgid = #{msgid},
+			stat = #{stat},
+			submit_time = #{submitTime},
+			done_time = #{doneTime},
+			srcid = #{srcid},
+			dest_terminal_id = #{destTerminalId},
+			smsc_sequence = #{smscSequence},
+			bizid = #{bizid},
+			createtime = #{createtime},
+			result = #{result},
+			taskid = #{taskid},
+			gateway_id = #{gatewayId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM sms_report
+		WHERE id = #{id}
+	</update>
+
+	<!-- 状态报告查询 bizid -->
+	<select id="findByBizid" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsReport">
+		select
+		<include refid="jmsgSmsReportFindByBizid"></include>
+		FROM jmsg_sms_report a
+		<where>
+			<if test="bizid != null and bizid != null">
+				AND `bizid`=#{bizid}
+			</if>
+		</where>
+		limit 0,1
+	</select>
+
+</mapper>

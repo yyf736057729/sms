@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsDeliverPushDao">
+    
+	<sql id="jmsgSmsDeliverPushColumns">
+		a.id AS "id",
+		a.uuid AS "uuid",
+		a.user_id AS "user.id",
+		a.msgid AS "msgid",
+		a.src_term_id AS "srcTermId",
+		a.dest_term_id AS "destTermId",
+		a.msg_content AS "msgContent",
+		a.gateway_id AS "gatewayId",
+		a.result AS "result",
+		a.createtime AS "createtime",
+		a.push_flag AS "pushFlag",
+		u3.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgSmsDeliverPushJoins">
+		LEFT JOIN sys_user u3 ON u3.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliverPush">
+		SELECT 
+			<include refid="jmsgSmsDeliverPushColumns"/>
+		FROM jmsg_sms_deliver_push a
+		<include refid="jmsgSmsDeliverPushJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliverPush">
+		SELECT 
+			<include refid="jmsgSmsDeliverPushColumns"/>
+		FROM jmsg_sms_deliver_push a
+		<include refid="jmsgSmsDeliverPushJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="srcTermId != null and srcTermId != ''">
+				AND a.src_term_id like CONCAT('%', #{srcTermId}, '%')
+			</if>
+			<if test="destTermId != null and destTermId != ''">
+				AND a.dest_term_id = #{destTermId}
+			</if>
+			<if test="pushFlag != null and pushFlag != ''">
+				AND a.push_flag = #{pushFlag}
+			</if>
+			<if test="msgContent != null and msgContent != ''">
+				AND a.msg_content like CONCAT('%', #{msgContent}, '%')
+			</if>
+			<if test="createtimeQ != null and createtimeQ != ''">
+				AND a.createtime >= #{createtimeQ}
+			</if>
+			<if test="createtimeZ != null and createtimeZ != ''">
+				AND a.createtime &lt;= #{createtimeZ}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    order by a.createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findListNew" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliverPush">
+		SELECT 
+			a.id AS "id",
+			a.uuid AS "uuid",
+			a.msgid AS "msgid",
+			a.src_term_id AS "srcTermId",
+			a.dest_term_id AS "destTermId",
+			a.msg_content AS "msgContent",
+			a.gateway_id AS "gatewayId",
+			a.createtime AS "createtime"
+		FROM jmsg_sms_deliver a
+		<where>
+			<if test="srcTermId != null and srcTermId != ''">
+				AND a.src_term_id like CONCAT('%', #{srcTermId}, '%')
+			</if>
+			<if test="destTermId != null and destTermId != ''">
+				AND a.dest_term_id = #{destTermId}
+			</if>
+			<if test="msgContent != null and msgContent != ''">
+				AND a.msg_content like CONCAT('%', #{msgContent}, '%')
+			</if>
+			<if test="createtimeQ != null and createtimeQ != ''">
+				AND a.createtime >= #{createtimeQ}
+			</if>
+			<if test="createtimeZ != null and createtimeZ != ''">
+				AND a.createtime &lt;= #{createtimeZ}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    order by a.createtime desc
+			</otherwise>
+		</choose>
+	</select>	
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliverPush">
+		SELECT 
+			<include refid="jmsgSmsDeliverPushColumns"/>
+		FROM jmsg_sms_deliver_push a
+		<include refid="jmsgSmsDeliverPushJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_sms_deliver_push(
+			id,
+			uuid,
+			user_id,
+			msgid,
+			src_term_id,
+			dest_term_id,
+			msg_content,
+			gateway_id,
+			result,
+			createtime,
+			push_flag
+		) VALUES (
+			#{id},
+			#{uuid},
+			#{user.id},
+			#{msgid},
+			#{srcTermId},
+			#{destTermId},
+			#{msgContent},
+			#{gatewayId},
+			#{result},
+			#{createtime},
+			#{pushFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_deliver_push SET 	
+			uuid = #{uuid},
+			user_id = #{user.id},
+			msgid = #{msgid},
+			src_term_id = #{srcTermId},
+			dest_term_id = #{destTermId},
+			msg_content = #{msgContent},
+			gateway_id = #{gatewayId},
+			result = #{result},
+			createtime = #{createtime},
+			push_flag = #{pushFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_deliver_push
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findExportList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsDeliverPush">
+		SELECT 
+			a.id AS "id",
+			a.uuid AS "uuid",
+			a.user_id AS "user.id",
+			a.msgid AS "msgid",
+			a.src_term_id AS "srcTermId",
+			a.dest_term_id AS "destTermId",
+			a.msg_content AS "msgContent",
+			a.gateway_id AS "gatewayId",
+			a.result AS "result",
+			a.createtime AS "createtime",
+			a.push_flag AS "pushFlag"
+		FROM jmsg_sms_deliver_push a
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="srcTermId != null and srcTermId != ''">
+				AND a.src_term_id like CONCAT('%', #{srcTermId}, '%')
+			</if>
+			<if test="destTermId != null and destTermId != ''">
+				AND a.dest_term_id = #{destTermId}
+			</if>
+			<if test="pushFlag != null and pushFlag != ''">
+				AND a.push_flag = #{pushFlag}
+			</if>
+			<if test="msgContent != null and msgContent != ''">
+				AND a.msg_content like CONCAT('%', #{msgContent}, '%')
+			</if>
+			<if test="createtimeQ != null and createtimeQ != ''">
+				AND a.createtime >= #{createtimeQ}
+			</if>
+			<if test="createtimeZ != null and createtimeZ != ''">
+				AND a.createtime &lt;= #{createtimeZ}
+			</if>
+		</where>
+		ORDER BY id
+		LIMIT ${rPageNo},${rPageSize}
+	</select>
+	
+</mapper>

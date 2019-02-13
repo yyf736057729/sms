@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsUserTmplDao">
+    <sql id="JmsgSmsUserTmplColumns">
+        a.id AS "id",
+		a.user_id AS "userId",
+		a.template_id AS "templateId",
+		a.create_time AS "createTime",
+		a.remarks AS "remarks",
+		a.join_number AS "joinNumber",
+		a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="JmsgSmsUserTmplColumns_2">
+       a.id AS "id",
+		a.user_id AS "userId",
+		a.template_id AS "templateId",
+		a.create_time AS "createTime",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.join_number AS "joinNumber",
+		b.template_name AS "templateName",
+		c.name AS "userName"
+    </sql>
+
+
+
+    <select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserTmpl">
+        SELECT
+        <include refid="JmsgSmsUserTmplColumns_2"/>
+        FROM jmsg_sms_user_tmpl a
+        LEFT JOIN jmsg_sms_gateway_tmpl b on a.template_id=b.id
+        LEFT JOIN sys_user c on a.user_id=c.id
+        WHERE a.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO jmsg_sms_user_tmpl(
+			id,
+			user_id,
+			template_id,
+			create_time,
+			remarks,
+			join_number,
+			del_flag
+		) VALUES (
+			#{id},
+			#{userId},
+			#{templateId},
+			NOW(),
+			#{remarks},
+			#{joinNumber},
+			0
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE jmsg_sms_user_tmpl SET
+
+        <if test="delFlag != null and delFlag != ''">
+            del_flag = #{delFlag},
+        </if>
+        <if test="userId != null and userId != ''">
+            user_id = #{userId},
+        </if>
+        <if test="templateId != null and templateId != ''">
+            template_id = #{templateId},
+        </if>
+        <if test="joinNumber != null and joinNumber != ''">
+            join_number = #{joinNumber},
+        </if>
+        <if test="remarks != null and remarks != ''">
+            remarks = #{remarks}
+        </if>
+
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		DELETE FROM jmsg_sms_user_tmpl
+		WHERE id = #{id}
+	</update>
+
+    <sql id="Base_Column_List" >
+    ID, TEMPLATE_ID, CREATE_TIME, USER_ID, DEL_FLAG, REMARKS,JOIN_NUMBER
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserTmpl">
+        select
+        <include refid="Base_Column_List" />
+        from jmsg_sms_user_tmpl
+        where ID = #{id,jdbcType=CHAR}
+    </select>
+
+    <select id="selectByUseridTemp" parameterType="java.lang.String" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserTmpl">
+        select
+        <include refid="Base_Column_List" />
+        from jmsg_sms_user_tmpl a
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+
+            <if test="templateId != null and templateId != ''">
+                AND a.template_id = #{templateId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByUseridTemps" parameterType="java.lang.String" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserTmpl">
+        select
+        <include refid="Base_Column_List" />
+        from jmsg_sms_user_tmpl a
+        <where>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+
+            <if test="templateId != null and templateId != ''">
+                AND a.template_id = #{templateId}
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from jmsg_sms_user_tmpl
+    where ID = #{id,jdbcType=CHAR}
+  </delete>
+
+    <!--假删除-->
+    <update id="updateDelFlagByPrimaryKey">
+        UPDATE jmsg_sms_user_tmpl SET
+			status = 1
+		WHERE id = #{id}
+    </update>
+
+
+    <select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserTmpl">
+        SELECT
+        <include refid="JmsgSmsUserTmplColumns_2"/>
+        FROM jmsg_sms_user_tmpl a
+        LEFT JOIN jmsg_sms_gateway_tmpl b on a.template_id=b.id
+        LEFT JOIN sys_user c on a.user_id=c.id
+        <where>
+
+            a.del_flag = 0
+
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="templateId != null and templateId != ''">
+                AND a.template_id = #{templateId}
+            </if>
+
+            <if test="dateTimeQ != null and dateTimeQ != ''">
+                AND a.create_time &gt;= #{dateTimeQ}
+            </if>
+
+            <if test="dateTimeZ != null and dateTimeZ != ''">
+                AND a.create_time &lt;= #{dateTimeZ}
+            </if>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--<select id="searchByGatewayName" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsUserTmpl">-->
+        <!--SELECT a.id AS "gatewayId" FROM jmsg_gateway_info a-->
+        <!--<where>-->
+            <!--a.gateway_name =#{gatewayName}-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <!--<select id="searchLikeByGateway" resultType="java.lang.Integer">-->
+        <!--SELECT count(*) FROM jmsg_sms_user_tmpl a-->
+        <!--<where>-->
+            <!--a.gateway_id = #{gatewayId} and-->
+            <!--a.business_type = #{businessType}-->
+        <!--</where>-->
+
+    <!--</select>-->
+
+</mapper>

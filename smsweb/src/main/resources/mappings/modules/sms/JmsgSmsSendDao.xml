@@ -1,0 +1,1060 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgSmsSendDao">
+    
+	<sql id="jmsgSmsSendColumns">
+		a.id AS "id",
+		a.task_id AS "taskId",
+		a.customer_order_id AS "customerOrderId",
+		a.phone AS "phone",
+		a.sms_content AS "smsContent",
+		a.sms_type AS "smsType",
+		a.pay_count AS "payCount",
+		a.user_id AS "user.id",
+		a.phone_type AS "phoneType",
+		a.area_code AS "areaCode",
+		a.pay_type AS "payType",
+		a.pay_status AS "payStatus",
+		a.pay_time AS "payTime",
+		a.push_flag AS "pushFlag",
+		a.send_status AS "sendStatus",
+		a.report_status AS "reportStatus",
+		a.channel_code AS "channelCode",
+		a.send_datetime AS "sendDatetime",
+		a.company_id AS "companyId",
+		a.submit_mode AS "submitMode",
+		a.topic AS "topic",
+		a.create_datetime AS "createDatetime",
+		a.update_datetime AS "updateDatetime",
+		a.sp_number AS "spNumber",
+		u8.name AS "user.name",
+		u8.login_name AS "user.loginName",
+		u1.name AS "user.company.name",
+		u8.group_id AS "user.groupId",
+		a.report_gateway_id AS "reportGatewayId",
+		a.msgid AS "msgid"
+	</sql>
+	
+	<sql id="jmsgSmsSendColumns_only">
+		a.id AS "id",
+		a.task_id AS "taskId",
+		a.customer_order_id AS "customerOrderId",
+		a.phone AS "phone",
+		a.sms_content AS "smsContent",
+		a.sms_type AS "smsType",
+		a.pay_count AS "payCount",
+		a.user_id AS "user.id",
+		a.phone_type AS "phoneType",
+		a.area_code AS "areaCode",
+		a.pay_type AS "payType",
+		a.pay_status AS "payStatus",
+		a.pay_time AS "payTime",
+		a.push_flag AS "pushFlag",
+		a.send_status AS "sendStatus",
+		a.channel_code AS "channelCode",
+		a.send_datetime AS "sendDatetime",
+		a.company_id AS "companyId",
+		a.submit_mode AS "submitMode",
+		a.topic AS "topic",
+		a.create_datetime AS "createDatetime",
+		a.update_datetime AS "updateDatetime",
+		a.sp_number AS "spNumber",
+		a.report_gateway_id AS "reportGatewayId",
+		a.msgid AS "msgid",
+		a.report_status AS "reportStatus"
+	</sql>
+
+
+	<sql id="jmsgSmsSendList">
+		a.id AS "id",
+		a.task_id AS "taskId",
+		a.customer_order_id AS "customerOrderId",
+		a.phone AS "phone",
+		a.sms_content AS "smsContent",
+		a.sms_type AS "smsType",
+		a.pay_count AS "payCount",
+		a.user_id AS "user.id",
+		a.phone_type AS "phoneType",
+		a.area_code AS "areaCode",
+		a.pay_type AS "payType",
+		a.pay_status AS "payStatus",
+		a.pay_time AS "payTime",
+		a.push_flag AS "pushFlag",
+		a.send_status AS "sendStatus",
+		a.report_status AS "reportStatus",
+		a.channel_code AS "channelCode",
+		a.send_datetime AS "sendDatetime",
+		a.company_id AS "companyId",
+		a.submit_mode AS "submitMode",
+		a.topic AS "topic",
+		a.create_datetime AS "createDatetime",
+		a.update_datetime AS "updateDatetime",
+		a.sp_number AS "spNumber",
+		a.report_gateway_id AS "reportGatewayId",
+		a.msgid AS "msgid",
+		a.submit_time AS "submitTime"
+	</sql>
+
+	<!-- jmsg_sms_send 与 sms_send_history_xxxxxx 字段不一致, 只好新建这个-->
+	<sql id="jmsgSmsSendColumns_history">
+		a.id AS "id",
+		a.taskid AS "taskId",
+		a.phone AS "phone",
+		a.sms_content AS "smsContent",
+		a.sms_type AS "smsType",
+		a.userid AS "user.id",
+		a.phone_type AS "phoneType",
+		a.phone_area AS "areaCode",
+		a.fee_type AS "payType",
+		a.send_status AS "sendStatus"
+	</sql>
+	
+	<sql id="jmsgSmsSendJoins">
+		LEFT JOIN sys_user u8 ON u8.id = a.user_id
+		LEFT JOIN sys_office u1 ON u1.id = u8.company_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			<include refid="jmsgSmsSendColumns"/>
+		FROM jmsg_sms_send a
+		<include refid="jmsgSmsSendJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			<include refid="jmsgSmsSendColumns"/>
+		FROM ${tableName} a
+		<include refid="jmsgSmsSendJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="queryJmsgSmsSend" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			<include refid="jmsgSmsSendColumns_only"/>
+		FROM jmsg_sms_send a
+		<where>
+		    <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="taskId != null and taskId !=''">
+				AND a.task_id=#{taskId}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND a.phone=#{phone}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+			<if test="channelCode != null and channelCode !=''">
+				AND a.channel_code=#{channelCode}
+			</if>
+			<if test="createDatetimeQ != null">	
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null">	
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id  = #{user.id}
+			</if>
+			<if test="sendStatus != null and sendStatus !=''">
+				AND a.send_status LIKE '${sendStatus}%'
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="reportStatus != null and reportStatus !=''">
+				AND a.report_status LIKE '${reportStatus}%'
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '1'.toString()">
+				AND (a.pay_type=0 OR (a.send_status like 'T%' AND a.report_status LIKE 'T%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '0'.toString()">
+				AND (a.pay_type=2 AND (a.send_status like 'F%' OR a.report_status LIKE 'F%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '-1'.toString()">
+				AND (a.pay_type=2 AND ((a.send_status like 'P%' OR a.send_status like 'T%') AND a.report_status LIKE 'P%'))
+			</if>			
+			
+		</where>
+		ORDER BY a.id DESC
+	</select>
+
+	<select id="queryJmsgSmsSendV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT
+		<include refid="jmsgSmsSendColumns_only"/>
+		FROM ${tableName} a
+		<where>
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="taskId != null and taskId !=''">
+				AND a.task_id=#{taskId}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND a.phone=#{phone}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+			<if test="channelCode != null and channelCode !=''">
+				AND a.channel_code=#{channelCode}
+			</if>
+
+			<if test="createDatetimeQ != null">
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null">
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id  = #{user.id}
+			</if>
+
+			<if test="sendStatus != null and sendStatus !=''">
+				AND a.send_status LIKE '${sendStatus}%'
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND a.company_id = #{companyId}
+			</if>
+
+			<if test="reportStatus != null and reportStatus !=''">
+				AND a.report_status LIKE '${reportStatus}%'
+			</if>
+
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '1'.toString()">
+				-- AND a.send_status LIKE 'T%' AND (a.report_status LIKE 'T%' OR (a.pay_type=0 AND a.report_status LIKE 'F%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '0'.toString()">
+				-- AND (a.send_status LIKE 'F%' OR (a.pay_type = 2 AND a.report_status LIKE 'F%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '-1'.toString()">
+				-- AND a.send_status LIKE 'T%' AND a.report_status LIKE 'P%'
+			</if>
+			<if test="hzdm != null and hzdm !=''">
+				-- AND a.report_status = #{hzdm}
+			</if>
+			<if test="pushFlag != null and pushFlag == '9'.toString()">
+				AND (a.push_flag = '9' OR a.push_flag = '2')
+				-- AND (a.report_status LIKE 'F%' or a.report_status LIKE 'T%')
+				AND a.user_id IN (SELECT userid from jmsg_user_gateway)
+			</if>
+
+		</where>
+		ORDER BY a.id DESC
+	</select>
+
+	<select id="queryJmsgSmsSendHistory" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			<include refid="jmsgSmsSendColumns_history"/>
+		FROM ${tableName} a
+		<where>
+		    <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="taskId != null and taskId !=''">
+				AND a.taskid=#{taskId}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND a.phone=#{phone}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+			<if test="channelCode != null and channelCode !=''">
+				AND a.channel_code=#{channelCode}
+			</if>
+
+			<if test="createDatetimeQ != null">
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null">
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id  = #{user.id}
+			</if>
+			<if test="sendStatus != null and sendStatus !=''">
+				AND a.send_status LIKE '${sendStatus}%'
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND a.company_id = #{companyId}
+			</if>
+
+			<if test="reportStatus != null and reportStatus !=''">
+				AND a.report_status LIKE '${reportStatus}%'
+			</if>
+
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '1'.toString()">
+				-- AND a.send_status LIKE 'T%' AND (a.report_status LIKE 'T%' OR (a.pay_type=0 AND a.report_status LIKE 'F%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '0'.toString()">
+				-- AND (a.send_status LIKE 'F%' OR (a.pay_type = 2 AND a.report_status LIKE 'F%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '-1'.toString()">
+				-- AND a.send_status LIKE 'T%' AND a.report_status LIKE 'P%'
+			</if>
+			<if test="hzdm != null and hzdm !=''">
+				-- AND a.report_status = #{hzdm}
+			</if>
+			<if test="pushFlag != null and pushFlag == '9'.toString()">
+				AND (a.push_flag = '9' OR a.push_flag = '2')
+				-- AND (a.report_status LIKE 'F%' or a.report_status LIKE 'T%')
+				AND a.user_id IN (SELECT userid from jmsg_user_gateway)
+			</if>	
+			
+		</where>
+		ORDER BY a.id DESC
+	</select>
+	
+	
+	<select id="queryJmsgSmsSendReportV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSendReport">
+		SELECT 
+			a.id,a.task_id AS taskId,a.user_id userId,a.phone,a.sp_number spNumber,
+			a.sms_content smsContent,a.send_datetime sendDatetime,a.pay_count payCount,a.report_status reportStatus
+		FROM ${tableName} a
+		<where>
+		    <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="taskId != null and taskId !=''">
+				AND a.task_id=#{taskId}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND a.phone=#{phone}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+			<if test="channelCode != null and channelCode !=''">
+				AND a.channel_code=#{channelCode}
+			</if>
+			<if test="createDatetimeQ != null">	
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null">	
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id  = #{user.id}
+			</if>
+			<if test="sendStatus != null and sendStatus !=''">
+				AND a.send_status LIKE '${sendStatus}%'
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="reportStatus != null and reportStatus !=''">
+				AND a.report_status LIKE '${reportStatus}%'
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '1'.toString()">
+				AND (a.pay_type=0 OR (a.send_status like 'T%' AND a.report_status LIKE 'T%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '0'.toString()">
+				AND (a.pay_type=2 AND (a.send_status like 'F%' OR a.report_status LIKE 'F%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '-1'.toString()">
+				AND (a.pay_type=2 AND ((a.send_status like 'P%' OR a.send_status like 'T%') AND a.report_status LIKE 'P%'))
+			</if>			
+			
+		</where>
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="queryJmsgSmsSendUserReportV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSendUserReport">
+		SELECT 
+			a.id,a.task_id AS taskId,a.user_id userId,a.phone,a.sp_number spNumber,a.create_datetime createDatetime,
+			a.sms_content smsContent,a.send_datetime sendDatetime,a.pay_count payCount,a.report_status reportStatus
+		FROM ${tableName} a
+		<where>
+		    <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="taskId != null and taskId !=''">
+				AND a.task_id=#{taskId}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND a.phone=#{phone}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+			<if test="channelCode != null and channelCode !=''">
+				AND a.channel_code=#{channelCode}
+			</if>
+			<if test="createDatetimeQ != null">	
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null">	
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id  = #{user.id}
+			</if>
+			<if test="sendStatus != null and sendStatus !=''">
+				AND a.send_status LIKE '${sendStatus}%'
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="reportStatus != null and reportStatus !=''">
+				AND a.report_status LIKE '${reportStatus}%'
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '1'.toString()">
+				AND (a.pay_type=0 OR (a.send_status like 'T%' AND a.report_status LIKE 'T%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '0'.toString()">
+				AND (a.pay_type=2 AND (a.send_status like 'F%' OR a.report_status LIKE 'F%'))
+			</if>
+			<if test="resultStatus != null and resultStatus !='' and resultStatus == '-1'.toString()">
+				AND (a.pay_type=2 AND ((a.send_status like 'P%' OR a.send_status like 'T%') AND a.report_status LIKE 'P%'))
+			</if>			
+			
+		</where>
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="queryJmsgSmsReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			<include refid="jmsgSmsSendColumns"/>,
+			(SELECT SUM(case when re.stat='DELIVRD' then 1 else 0 end) from jmsg_sms_report re where a.id=re.bizid) AS sendResult,
+			(select name from jmsg_group where id = u8.group_id) AS "groupName",
+			(select phone_city from jmsg_phone_info where phone_city_code = a.area_code limit 1) AS "cityName"
+		FROM jmsg_sms_send a
+		<include refid="jmsgSmsSendJoins"/>
+		<where>
+			<if test="taskId != null and taskId !=''">
+				AND a.task_id=#{taskId}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND a.phone=#{phone}
+			</if>
+			<if test="createDatetimeQ != null">	
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null">	
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="user != null and user.id != null and user.id !=''">
+				AND a.user_id = #{user.id}
+			</if>
+		</where>
+		ORDER BY a.id DESC
+	</select>	
+	
+	<select id="findListByTaskId" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend" parameterType="java.util.Map">
+		SELECT
+			a.id AS "id",
+			a.task_id AS "taskId",
+			a.customer_order_id AS "customerOrderId",
+			a.phone AS "phone",
+			a.sms_content AS "smsContent",
+			a.user_id AS "user.id",
+			a.pay_type AS "payType",
+			a.push_flag AS "pushFlag",
+			a.channel_code AS "channelCode",
+			a.topic AS "topic",
+			a.sp_number AS "spNumber",
+			a.report_gateway_id AS "reportGatewayId",
+			a.submit_mode AS "submitMode"
+		FROM ${tableName} a
+		<where>
+			a.send_status='T000'
+			<if test="taskId != null and taskId != ''">
+				AND a.task_id = #{taskId}
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id > #{id}
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT 1000
+	</select>
+	
+	<select id="findPushListByTaskId" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend" parameterType="java.util.Map">
+		SELECT 
+			a.user_id AS "user.id",id,send_datetime sendDatetime,phone,send_status sendStatus,task_id taskId,
+			a.report_gateway_id AS "reportGatewayId"
+		FROM ${tableName} a
+		<where>
+			a.send_status LIKE 'F%'
+			AND a.push_flag='9'
+			<if test="taskId != null and taskId != ''">
+				AND a.task_id = #{taskId}
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT ${pageNo},${pageSize}
+	</select>
+	
+	<select id="findPushListById" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			a.user_id AS "user.id",id,send_datetime sendDatetime,phone,send_status sendStatus,task_id taskId,
+			a.report_gateway_id AS "reportGatewayId"
+		FROM jmsg_sms_send a
+		WHERE a.id=#{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			<include refid="jmsgSmsSendColumns"/>
+		FROM jmsg_sms_send a
+		<include refid="jmsgSmsSendJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="smsContent != null and smsContent != ''">
+				AND a.sms_content = #{smsContent}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="sendDatetimeQ != null and sendDatetimeQ != ''">
+				AND a.send_datetime &gt;= #{sendDatetimeQ}
+			</if>
+			<if test="sendDatetimeZ != null and sendDatetimeZ != ''">
+				AND a.send_datetime &lt;= #{sendDatetimeZ}
+			</if>	
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT 
+			<include refid="jmsgSmsSendColumns"/>
+		FROM jmsg_sms_send a
+		<include refid="jmsgSmsSendJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<!-- -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO ${tableName} (
+			id, 
+			data_id,
+			task_id,
+			customer_order_id,
+			phone,
+			sms_content,
+			sms_type,
+			pay_count,
+			user_id,
+			phone_type,
+			area_code,
+			pay_type,
+			pay_status,
+			pay_time,
+			push_flag,
+			send_status,
+			channel_code,
+			sp_number,
+			send_datetime,
+			company_id,
+			submit_mode,
+			topic,
+			msgid,
+			create_datetime,
+			update_datetime,
+			sms_size,
+			channel_name,
+			send_datetime_q,
+			send_datetime_z,
+			create_datetime_q,
+			create_datetime_z,
+			report_status,
+  			group_name,
+  		  	city_name,
+  		  	result_status,
+  			table_name,
+  			send_result,
+			report_gateway_id
+		) VALUES (
+			#{id},
+			#{dataId},
+			#{taskId},
+			#{customerOrderId},
+			#{phone},
+			#{smsContent},
+			#{smsType},
+			#{payCount},
+			#{user.id},
+			#{phoneType},
+			#{areaCode},
+			#{payType},
+			#{payStatus},
+			#{payTime},
+			#{pushFlag},
+			#{sendStatus},
+			#{channelCode},
+			#{spNumber},
+			NOW(),
+			#{user.company.id},
+			#{submitMode},
+			#{topic},
+			#{msgid},
+			NOW(),
+			NOW(),
+			0,
+			#{channelCode},
+			#{sendDatetimeQ},
+			#{sendDatetimeZ},
+			#{createDatetimeQ},
+			#{createDatetimeZ},
+			'',
+			'',
+			'',
+			'',
+			'',
+			'',
+			#{reportGatewayId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_sms_send SET 	
+			task_id = #{taskId},
+			customer_order_id = #{customerOrderId},
+			phone = #{phone},
+			sms_content = #{smsContent},
+			sms_type = #{smsType},
+			pay_count = #{payCount},
+			user_id = #{user.id},
+			phone_type = #{phoneType},
+			area_code = #{areaCode},
+			pay_type = #{payType},
+			pay_status = #{payStatus},
+			pay_time = #{payTime},
+			push_flag = #{pushFlag},
+			send_status = #{sendStatus},
+			channel_code = #{channelCode},
+			send_datetime = #{sendDatetime},
+			company_id = #{companyId},
+			submit_mode = #{submitMode},
+			topic = #{topic},
+			create_datetime = #{createDatetime},
+			update_datetime = #{updateDatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="batchUpdate" parameterType="java.util.Map">
+		UPDATE ${tableName} SET
+			send_status = #{sendStatus},
+			send_datetime = NOW(),
+			msgid=#{msgid}
+		WHERE id = ${id}	
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_sms_send
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findPhoneByTaskId" resultType="java.lang.String">
+		SELECT CONCAT(phone,' ') phone FROM jmsg_sms_send
+		WHERE task_id=#{taskId}
+	</select>
+	
+	<select id="findPhoneByTaskIdV2" resultType="java.lang.String">
+		SELECT CONCAT(phone,' ') phone 
+		FROM ${tableName}
+		WHERE task_id=#{taskId}
+	</select>
+	
+	<select id="querySendDeatilResultBySend" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT a.phone,
+			   a.sms_content smsContent,
+			   (CASE WHEN a.send_status LIKE 'T%' THEN '成功' ELSE '失败' END) sendResult
+		FROM ${tableName} a
+		WHERE a.user_id=#{user.id} and a.send_datetime BETWEEN #{sendDatetimeQ} AND #{sendDatetimeZ}
+	</select>
+	
+	<select id="querySendDeatilResultByReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT a.phone,
+			   a.sms_content smsContent,
+			   a.send_status sendStatus,
+			   a.report_status reportStatus
+		FROM ${tableName} a
+		WHERE  a.user_id=#{user.id} and a.send_datetime BETWEEN #{sendDatetimeQ} AND #{sendDatetimeZ}
+	</select>
+	
+	<select id="querySendDeatilResultByReportV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT a.phone,
+				a.pay_type payType,
+			   a.sms_content smsContent,
+			   a.send_status sendStatus,
+			   a.report_status reportStatus
+		FROM ${tableName} a
+		WHERE  a.user_id=#{user.id}
+	</select>	
+	
+	<update id="batchUpdateStatus">
+		UPDATE jmsg_sms_send SET push_flag='1' WHERE id=#{id}
+	</update>
+	
+	<insert id="batchInsertPush" parameterType="java.util.HashMap">
+		INSERT INTO jmsg_sms_push(
+			bizid,
+			taskid,
+			result,
+			createtime
+		) VALUES (
+			#{bizid},
+			#{taskid},
+			#{result},
+			NOW()
+		)
+	</insert>
+	
+	<select id="findUser" resultType="com.siloyou.core.modules.sys.entity.User" parameterType="com.siloyou.jmsg.common.message.SmsMoMessage">
+		SELECT a.user_id id,u1.up_url upUrl, u1.rsp_content_type rspContentType from jmsg_sms_send a 
+		LEFT JOIN sys_user u1 ON a.user_id = u1.id
+		WHERE a.phone=#{destTermID} AND a.channel_code=#{gateWayID} 
+		ORDER BY a.id DESC LIMIT 1
+	</select>
+	
+	<select id="queryJmsgSmsPush" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsPush">
+		SELECT 
+			a.id,a.bizid,a.taskid,a.result,a.createtime
+		FROM jmsg_sms_push a
+		WHERE a.bizid=#{id}
+	</select>
+	
+	<select id="queryJmsgSmsPushV2" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsPush">
+		SELECT 
+			a.id,a.bizid,a.taskid,a.result,a.createtime
+		FROM ${tableName} a
+		WHERE a.bizid=#{id}
+	</select>
+	
+	<update id="batchUpdateReprotStatus" parameterType="java.util.Map">
+		UPDATE ${tableName} SET report_status=(CASE WHEN report_status='T100' THEN 'T100' ELSE #{reportStatus} END) WHERE id=#{id}
+	</update>
+	
+	<select id="findSmsMtMessage" resultType="com.siloyou.jmsg.common.message.SmsMtMessage">
+		SELECT a.id,a.task_id taskid,a.user_id userid ,a.channel_code gateWayID,
+			   a.pay_type payType,a.customer_order_id cstmOrderID,a.push_flag userReportNotify,a.report_gateway_id userReportGateWayID
+		FROM jmsg_sms_send a
+		WHERE a.id=#{id}
+	</select>
+	
+	<select id="findDetailByReprot" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT a.phone,a.sms_content smsContent
+		FROM jmsg_sms_send a
+		WHERE a.send_datetime BETWEEN #{sendDatetimeQ} AND #{sendDatetimeZ} AND a.user_id=#{user.id}
+		<if test="reportStatus  == '0'.toString()">
+			 AND (a.report_status LIKE 'F%' or a.send_status LIKE 'F%')
+		</if>
+		<if test="reportStatus  == '9'.toString()">
+			 AND (a.report_status='P100' AND a.send_status ='T000')
+		</if>	
+	</select>
+	
+	<select id="findSmsSendByTaskId" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsTask">
+		SELECT 
+			SUM(case when (a.pay_type=0 and a.send_status like 'T%') or (a.pay_type=2 and a.send_status like 'T%' and (a.report_status like 'T%' or a.report_status like 'P%' ))
+			THEN 1 else 0 end) successCount,
+			SUM(case when (a.pay_type=0 and a.send_status like 'F%') or (a.pay_type=2 and (a.send_status like 'F%' OR a.report_status LIKE 'F%'))  THEN 1 ELSE 0 END) failCount
+		FROM ${tableName} a
+		WHERE a.task_id=#{taskId}
+	</select>
+	
+	<select id="insertHistory">
+		INSERT INTO ${historyName} SELECT * FROM ${tableName}
+	</select>
+	
+	<delete id="clearSmsSend">
+		TRUNCATE TABLE ${tableName}
+	</delete>
+	
+	<delete id="clearMmsDown" parameterType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsMmsdown">
+		TRUNCATE TABLE ${tableName}
+	</delete>
+	
+	<select id="queryGatewayErrorCount" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT COUNT(1) count,user_id userId FROM ${tableName} 
+		WHERE send_status LIKE 'F007%' AND create_datetime BETWEEN DATE_SUB(NOW(),INTERVAL 10 MINUTE) AND NOW()
+		GROUP BY user_id
+	</select>
+	
+	
+	<select id="findPushList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend" parameterType="java.util.Map">
+		SELECT 
+			<include refid="jmsgSmsSendColumns_only"/>
+		FROM ${tableName} a
+		<where>
+		    <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="taskId != null and taskId !=''">
+				AND a.task_id=#{taskId}
+			</if>
+			<if test="phone != null and phone !=''">
+				AND a.phone=#{phone}
+			</if>
+			<if test="phoneType != null and phoneType !=''">
+				AND a.phone_type=#{phoneType}
+			</if>
+			<if test="channelCode != null and channelCode !=''">
+				AND a.channel_code=#{channelCode}
+			</if>
+			<if test="createDatetimeQ != null">	
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null">	
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+			<if test="userId != null and userId !=''">
+				AND a.user_id=#{userId}
+			</if>
+			<if test="sendStatus != null and sendStatus !=''">
+				AND a.send_status LIKE '${sendStatus}%'
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="reportStatus != null and reportStatus !=''">
+				AND a.report_status LIKE '${reportStatus}%'
+			</if>
+			<if test="pushFlag != null and pushFlag == '9'.toString()">
+				AND (a.push_flag = '9' OR a.push_flag = '2')
+				AND (a.report_status LIKE 'F%' or a.report_status LIKE 'T%')
+				AND a.user_id IN (SELECT userid FROM jmsg_user_gateway)
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT ${pageNo},${pageSize}
+	</select>
+	
+	<select id="findSucReportPushList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend" parameterType="java.util.Map">
+		SELECT 
+			<include refid="jmsgSmsSendColumns_only"/>,
+			(SELECT COUNT(1) FROM ${pushTable} WHERE bizid=a.id) pushCount
+		FROM ${tableName} a
+		<where>
+			a.pay_count > 1 AND a.report_status='T100' AND a.push_flag='1'
+			<if test="userId != null and userId !=''">
+				AND a.user_id=#{userId}
+			</if>
+		</where>
+		ORDER BY a.id
+		LIMIT ${pageNo},${pageSize}
+	</select>	
+	
+	<select id="findJmsgSmsSendListByProvinceReport" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend" parameterType="java.util.Map">
+		SELECT id,SUBSTR(a.area_code FROM 1 FOR 2) areaCode,pay_count payCount
+		FROM ${tableName} a 
+		<where>
+			a.report_status LIKE 'T%'
+			<if test="dayQ != null">	
+				AND a.create_datetime >= DATE_FORMAT(#{dayQ},'%Y-%m-%d 00:00:00')
+			</if>
+			<if test="dayZ != null">	
+				AND a.create_datetime &lt;= DATE_FORMAT(#{dayZ},'%Y-%m-%d 23:59:59')
+			</if>
+			<if test="gatewayId != null and gatewayId !=''">
+				AND a.channel_code = #{gatewayId}
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id > #{id}
+			</if>
+		</where> 
+		ORDER BY a.id
+		LIMIT ${pageSize}
+	</select>
+	
+	<select id="findReportStatusCountList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend" parameterType="com.siloyou.jmsg.modules.sms.entity.JmsgReportStatusTask">
+		SELECT 
+		<include refid="jmsgSmsSendColumns_only"/>
+		FROM ${tableName} a
+		WHERE a.send_datetime >= #{dayQ} 
+			  AND a.send_datetime &lt;= #{dayZ}
+			  AND a.channel_code = #{gatewayId} 
+			  AND a.user_id=#{userId}
+			  AND a.send_status='T000'
+			  AND a.id > #{id}
+			<if test="status == '0'.toString()">
+				AND (a.report_status = 'P100' OR a.report_status LIKE 'F%')
+			</if>
+			<if test="status == '1'.toString()">
+				AND a.report_status = 'P100'
+			</if>
+			<if test="status == '2'.toString()">
+				AND a.report_status LIKE 'F%'
+			</if>
+		ORDER BY a.id	
+		LIMIT ${pageSize}	
+	</select>
+	
+	<select id="findReportStatusCount" resultType="java.lang.Integer" parameterType="com.siloyou.jmsg.modules.sms.entity.JmsgReportStatusTask">
+		SELECT 
+		SUM(a.pay_count)
+		FROM ${tableName} a
+		WHERE a.send_datetime >= #{dayQ} 
+			  AND a.send_datetime &lt;= #{dayZ}
+			  AND a.channel_code = #{gatewayId} 
+			  AND a.user_id=#{userId}
+			  AND a.send_status='T000'
+			<if test="status == '0'.toString()">
+				AND (a.report_status = 'P100' OR a.report_status LIKE 'F%')
+			</if>
+			<if test="status == '1'.toString()">
+				AND a.report_status = 'P100'
+			</if>
+			<if test="status == '2'.toString()">
+				AND a.report_status LIKE 'F%'
+			</if>
+	</select>
+	
+	<update id="updateReportStatusSuccess">
+		UPDATE ${tableName} SET 
+			report_status = 'T100',
+			update_datetime = NOW()			
+		WHERE id=#{id}	
+	</update>
+
+	<!-- 短信下行明细查询 -->
+	<select id="getSmsList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT
+		<include refid="jmsgSmsSendList"/>
+		FROM jmsg_sms_send a
+		<where>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+			<if test="areaCode != null and areaCode != ''">
+				AND a.area_code   like CONCAT(#{areaCode},'%')
+			</if>
+			<if test="smsContent != null and smsContent != ''">
+				AND a.sms_content like CONCAT('%',#{smsContent},'%')
+			</if>
+			<if test="sendStatus != null and sendStatus != ''">
+				AND a.send_status = #{sendStatus}
+			</if>
+			<if test="taskId != null and taskId != ''">
+				AND a.task_id = #{taskId}
+			</if>
+			<if test="id != null and id != ''">
+				AND `id` = #{id}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND a.msg_d = #{msgid}
+			</if>
+			<if test="createDatetimeQ != null and createDatetimeQ != ''">
+				AND a.create_datetime &gt;= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null and createDatetimeZ != ''">
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+		</where>
+				ORDER BY "createDatetime" DESC
+	</select>
+
+
+	<!-- 短信下行记录查询（时间） -->
+	<select id="getSmsListByTime" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+		SELECT
+		<include refid="jmsgSmsSendList"/>
+		FROM ${tableName} a
+		<where>
+			<if test="userId != null and userId != ''">
+				AND a.user_id = #{userId}
+			</if>
+			<if test="user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+            <if test="batchNumber != null and batchNumber != ''">
+                AND a.id = #{batchNumber}
+            </if>
+			<if test="channelCode != null and channelCode != ''">
+				AND a.channel_code = #{channelCode}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="phoneType != null and phoneType != ''">
+				AND a.phone_type = #{phoneType}
+			</if>
+			<if test="areaCode != null and areaCode != ''">
+				AND a.area_code  like CONCAT(#{areaCode},'%')
+			</if>
+			<if test="smsContent != null and smsContent != ''">
+				AND a.sms_content like CONCAT('%',#{smsContent},'%')
+			</if>
+			<if test="sendStatus != null and sendStatus != ''">
+				AND a.send_status like CONCAT(#{sendStatus},'%')
+			</if>
+			<if test="taskId != null and taskId != ''">
+				AND a.task_id = #{taskId}
+			</if>
+			<if test="id != null and id != ''">
+				AND `id` = #{id}
+			</if>
+			<if test="msgid != null and msgid != ''">
+				AND a.msg_d = #{msgid}
+			</if>
+			<if test="createDatetimeQ != null and createDatetimeQ != ''">
+				AND a.create_datetime &gt;= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null and createDatetimeZ != ''">
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+		</where>
+		ORDER BY "createDatetime" DESC
+	</select>
+
+	<!-- 短信id查询记录 -->
+	<select id="getSmsById" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+	SELECT
+	<include refid="jmsgSmsSendList"/>
+	FROM jmsg_sms_send a
+		<where>
+			<if test="id != null and id != ''">
+				 `id` = #{id}
+			</if>
+			<if test="taskId != null and taskId != ''">
+				AND `task_id` = #{taskId}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND `phone` = #{phone}
+			</if>
+		</where>
+		limit 1
+	</select>
+	<!-- 出短信下行明细查询(数据导用) -->
+	<select id="getSmsListRecordByTime" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgSmsSend">
+	</select>
+</mapper>

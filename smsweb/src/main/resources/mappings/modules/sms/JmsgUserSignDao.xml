@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgUserSignDao">
+    
+	<sql id="jmsgUserSignColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.sign AS "sign",
+		a.create_user_id AS "createUserId",
+		a.createtime AS "createtime",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgUserSignJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserSign">
+		SELECT 
+			<include refid="jmsgUserSignColumns"/>
+		FROM jmsg_user_sign a
+		<include refid="jmsgUserSignJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserSign">
+		SELECT 
+			<include refid="jmsgUserSignColumns"/>
+		FROM jmsg_user_sign a
+		<include refid="jmsgUserSignJoins"/>
+		<where>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+			<if test="sign != null and sign != ''">
+				AND a.sign like concat('%',#{sign},'%')
+			</if>
+			<if test="createtimeQ != null and createtimeQ != ''">
+				AND a.createtime >= #{createtimeQ}
+			</if>
+			<if test="createtimeZ != null and createtimeZ != ''">
+				AND a.createtime &lt;= #{createtimeZ}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.createtime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgUserSign">
+		SELECT 
+			<include refid="jmsgUserSignColumns"/>
+		FROM jmsg_user_sign a
+		<include refid="jmsgUserSignJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_user_sign(
+			user_id,
+			sign,
+			create_user_id,
+			createtime
+		) VALUES (
+			#{user.id},
+			#{sign},
+			#{createUserId},
+			#{createtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_user_sign SET 	
+			user_id = #{user.id},
+			sign = #{sign},
+			create_user_id = #{createUserId},
+			createtime = #{createtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_user_sign
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据用户删除用户签名 -->
+	<update id="deleteByUserId">
+		delete from jmsg_user_sign
+		WHERE user_id = #{userId}
+	</update>
+	
+</mapper>

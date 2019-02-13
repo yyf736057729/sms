@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.mms.dao.JmsgMmsAlldayReportDao">
+    
+	<sql id="jmsgMmsAlldayReportColumns">
+		a.day AS "day",
+		a.send_count AS "sendCount",
+		a.submit_count AS "submitCount",
+		a.report_count AS "reportCount",
+		a.download_count AS "downloadCount",
+		a.create_datetime AS "createDatetime"
+	</sql>
+	
+	<sql id="jmsgMmsAlldayReportJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsAlldayReport">
+		SELECT 
+			<include refid="jmsgMmsAlldayReportColumns"/>
+		FROM jmsg_mms_allday_report a
+		<include refid="jmsgMmsAlldayReportJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsAlldayReport">
+		SELECT 
+			<include refid="jmsgMmsAlldayReportColumns"/>
+		FROM jmsg_mms_allday_report a
+		<include refid="jmsgMmsAlldayReportJoins"/>
+		<where>
+			<if test="dayQ != null and dayQ != ''">
+				AND a.day >= #{dayQ}
+			</if>
+			<if test="dayZ != null and dayZ != ''">
+				AND a.day &lt;= #{dayZ}
+			</if>	
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.day DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsAlldayReport">
+		SELECT 
+			<include refid="jmsgMmsAlldayReportColumns"/>
+		FROM jmsg_mms_allday_report a
+		<include refid="jmsgMmsAlldayReportJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="queryAllDaySendCount" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsAlldayReport">
+		SELECT sum((case when send_status='T0' then 1 else 0 end)) sendCount, 
+			   sum((case when receive_datetime is not null then 1 else 0 end )) downloadCount  
+		FROM jmsg_mms_task_detail  
+		WHERE DATE_FORMAT(create_datetime,'%Y-%m-%d') = CURDATE()
+	</select>
+	
+	<select id="queryAllDayReportCount" resultType="java.lang.Long">
+		select COUNT(*) from jmsg_mms_report WHERE stat='DELIVRD' and DATE_FORMAT(createtime,'%Y-%m-%d') = CURDATE()
+	</select>
+	
+	<select id="queryAllDaySubmitCount" resultType="java.lang.Long">
+		select COUNT(*) from jmsg_mms_submit WHERE result='0' and DATE_FORMAT(createtime,'%Y-%m-%d') = CURDATE()
+	</select>
+	
+	<select id="findTaskReportList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsAlldayReport">
+		SELECT a.task_id taskId,b.mms_id mmsId,b.mms_title mmsTitle,b.send_count count,a.sendCount,a.downloadCount,b.send_datetime createDatetime 
+		FROM (SELECT task_id, create_datetime,sum((case when send_status='T0' then 1 else 0 end)) sendCount, 
+			sum((case when receive_datetime is not null then 1 else 0 end )) downloadCount  
+			FROM jmsg_mms_task_detail		
+			<where>
+			<if test="taskId !=null and taskId !=''">AND task_id=#{taskId}</if>
+		    </where>  group by task_id ) a 
+		LEFT JOIN jmsg_mms_task b ON a.task_id = b.id 
+		<where>
+			<if test="dayQ != null and dayQ !=''">
+				AND b.send_datetime >= #{dayQ}
+			</if>
+			<if test="dayZ != null and dayZ !=''">
+				AND b.send_datetime &lt;=#{dayZ}
+			</if>
+		</where>
+		ORDER BY b.send_datetime DESC
+	</select>
+	
+	<select id="findTaskReportListDetail" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsAlldayReport">
+		SELECT stat,dest_terminal_id destTerminalId
+		FROM jmsg_mms_report 
+		WHERE taskid=#{taskId} 
+			 <if test="phone != null and phone !=''">AND dest_terminal_id=#{phone}</if>
+			 <if test="stat != null and stat !=''">AND stat LIKE CONCAT('%',#{stat},'%')</if>
+	</select>
+	
+	<select id="queryReportCountByTaskId" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT COUNT(*)
+		FROM jmsg_mms_report 
+		WHERE taskid=#{taskId}
+	</select>
+	
+	<select id="querySubmitCountByTaskId" resultType="java.lang.Long" parameterType="java.lang.String">
+		SELECT COUNT(*) FROM jmsg_mms_submit WHERE taskid=#{taskId}
+	</select>		
+	
+	<insert id="insert">
+		INSERT INTO jmsg_mms_allday_report(
+			day,
+			send_count,
+			submit_count,
+			report_count,
+			download_count,
+			create_datetime
+		) VALUES (
+			CURDATE(),
+			#{sendCount},
+			#{submitCount},
+			#{reportCount},
+			#{downloadCount},
+			NOW()
+		)ON DUPLICATE KEY UPDATE `day`= values(`day`),
+		`send_count`= values(`send_count`),
+		`submit_count`= values(`submit_count`),
+		`report_count`= values(`report_count`),
+		`download_count`= values(`download_count`),
+		`create_datetime`= values(`create_datetime`);
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_mms_allday_report SET 	
+			day = #{day},
+			send_count = #{sendCount},
+			submit_count = #{submitCount},
+			report_count = #{reportCount},
+			download_count = #{downloadCount},
+			create_datetime = #{createDatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_mms_allday_report
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

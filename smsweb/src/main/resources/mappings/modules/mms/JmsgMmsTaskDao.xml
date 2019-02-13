@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.mms.dao.JmsgMmsTaskDao">
+    
+	<sql id="jmsgMmsTaskColumns">
+		a.id AS "id",
+		a.mms_id AS "mmsId",
+		a.mms_title AS "mmsTitle",
+		a.mms_url AS "mmsUrl",
+		a.send_count AS "sendCount",
+		a.send_datetime AS "sendDatetime",
+		a.end_datetime AS "endDatetime",
+		a.status AS "status",
+		a.create_datetime AS "createDatetime",
+		a.create_by AS "createUserId",
+		a.update_datetime AS "updateDatetime",
+		a.update_by AS "updateUserId",
+		a.mms_size AS "mmsSize",
+		u10.name AS "user.name",
+		u10.login_name AS "user.loginName"
+	</sql>
+	
+	<sql id="jmsgMmsTaskJoins">
+		LEFT JOIN sys_user u10 ON u10.id = a.create_by
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT 
+			<include refid="jmsgMmsTaskColumns"/>
+		FROM jmsg_mms_task a
+		<include refid="jmsgMmsTaskJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT 
+			<include refid="jmsgMmsTaskColumns"/>,so.name AS "user.company.name"
+		FROM jmsg_mms_task a
+		<include refid="jmsgMmsTaskJoins"/>
+		LEFT JOIN sys_office so ON u10.company_id = so.id
+		<where>
+			
+			<if test="mmsTitle != null and mmsTitle != ''">
+				AND a.mms_title like '%${mmsTitle}%'
+			</if>
+			<if test="sendDatetimeQ != null and sendDatetimeQ != ''">
+				AND a.send_datetime >= #{sendDatetimeQ}
+			</if>
+			<if test="sendDatetimeZ != null and sendDatetimeZ != ''">
+				AND a.send_datetime &lt;= #{sendDatetimeZ}
+			</if>			
+			<if test="createUserId != null and createUserId != ''">
+				AND a.create_by = #{createUserId}
+			</if>
+			<if test="companyId != null and companyId !=''">
+				AND u10.company_id = #{companyId}
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id=#{id}
+			</if>
+			<if test="mmsId != null and mmsId !=''">
+				AND a.mms_id=#{mmsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.send_datetime DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT 
+			<include refid="jmsgMmsTaskColumns"/>
+		FROM jmsg_mms_task a
+		<include refid="jmsgMmsTaskJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findPendingSendMms" resultType="java.lang.String">
+		SELECT 
+			id
+		FROM jmsg_mms_task a
+		WHERE a.send_datetime &lt;= NOW() 
+		AND (a.status='1' or a.status ='8')
+		ORDER BY a.send_datetime 
+		LIMIT 20
+	</select>
+	
+	<select id="queryMmsBody" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT mms_body mmsBody
+		FROM jmsg_mms_task
+		WHERE id=#{id} 
+	</select>
+	
+	<select id="findMmsSendTongjiList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT 
+			<include refid="jmsgMmsTaskColumns"/>,so.name AS "user.company.name",a.success_count AS "successCount",a.tongji_datetime AS "tongjiDatetime"
+		FROM jmsg_mms_task a
+		<include refid="jmsgMmsTaskJoins"/>
+		LEFT JOIN sys_office so ON u10.company_id = so.id
+		<where>
+			<if test="mmsId != null and mmsId !=''">
+				AND a.mms_id =#{mmsId}
+			</if>
+			<if test="mmsTitle != null and mmsTitle != ''">
+				AND a.mms_title like '%${mmsTitle}%'
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id = #{id}
+			</if>
+			<if test="sendDatetimeQ != null and sendDatetimeQ != ''">
+				AND a.send_datetime >= #{sendDatetimeQ}
+			</if>
+			<if test="sendDatetimeZ != null and sendDatetimeZ != ''">
+				AND a.send_datetime &lt;= #{sendDatetimeZ}
+			</if>			
+			<if test="createUserId != null and createUserId != ''">
+				AND a.create_by = #{createUserId}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u10.company_id = #{company.id}
+			</if>
+		</where>
+		ORDER BY a.send_datetime DESC,a.id DESC
+	</select>
+	
+	<select id="findXFDetailList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT 
+			<include refid="jmsgMmsTaskColumns"/>,so.name AS "user.company.name",
+			a.success_count AS "successCount",a.back_status AS "backStatus",
+			a.back_count AS "backCount",a.back_datetime AS "backDatetime"
+		FROM jmsg_mms_task a
+		<include refid="jmsgMmsTaskJoins"/>
+		LEFT JOIN sys_office so ON u10.company_id = so.id
+		<where>
+			<if test="mmsId != null and mmsId !=''">
+				AND a.mms_id =#{mmsId}
+			</if>
+			<if test="mmsTitle != null and mmsTitle != ''">
+				AND a.mms_title like '%${mmsTitle}%'
+			</if>
+			<if test="id != null and id !=''">
+				AND a.id = #{id}
+			</if>
+			<if test="sendDatetimeQ != null and sendDatetimeQ != ''">
+				AND a.create_datetime >= #{sendDatetimeQ}
+			</if>
+			<if test="sendDatetimeZ != null and sendDatetimeZ != ''">
+				AND a.create_datetime &lt;= #{sendDatetimeZ}
+			</if>			
+			<if test="createUserId != null and createUserId != ''">
+				AND a.create_by = #{createUserId}
+			</if>
+			<if test="company != null and company.id != null and company.id !=''">
+				AND u10.company_id = #{company.id}
+			</if>
+			<if test="backStatus != null and backStatus !=''">
+				AND a.back_status = #{backStatus}
+			</if>
+		</where>
+		ORDER BY a.create_datetime DESC,a.id DESC
+	</select>
+	
+	<select id="findTaskPayModeList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT a.id,b.pay_mode payMode 
+		FROM jmsg_mms_task a 
+		LEFT JOIN jmsg_account b ON a.create_by = b.user_id AND b.app_type='mms'
+		WHERE a.back_status='0' AND a.send_count != a.success_count 
+		  	  AND DATE_FORMAT(a.send_datetime,'%Y-%m-%d') = DATE_FORMAT(#{sendDatetime},'%Y-%m-%d')
+	</select>
+	
+	<select id="findBackRechargeList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT create_by createUserId ,id,success_count successCount, send_count sendCount, create_datetime createDatetime
+		FROM jmsg_mms_task 
+		WHERE back_status='0' AND DATE_FORMAT(create_datetime,'%Y-%m-%d') = DATE_FORMAT(#{createDatetime},'%Y-%m-%d')  
+	</select>
+	
+	<select id="findBackStatusList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsTask">
+		SELECT create_by createUserId ,id,success_count successCount, send_count sendCount, create_datetime createDatetime
+		FROM jmsg_mms_task 
+		WHERE back_status='1'  
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO jmsg_mms_task(
+			mms_id,
+			mms_title,
+			mms_url,
+			send_count,
+			send_datetime,
+			end_datetime,
+			status,
+			create_datetime,
+			create_by,
+			update_datetime,
+			update_by,
+			count_detail
+		) VALUES (
+			#{mmsId},
+			#{mmsTitle},
+			#{mmsUrl},
+			#{sendCount},
+			#{sendDatetime},
+			#{endDatetime},
+			#{status},
+			NOW(),
+			#{createUserId},
+			#{updateDatetime},
+			#{updateUserId},
+			#{countDetail}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_mms_task SET 	
+			mms_id = #{mmsId},
+			mms_title = #{mmsTitle},
+			mms_url = #{mmsUrl},
+			send_count = #{sendCount},
+			send_datetime = #{sendDatetime},
+			end_datetime = #{endDatetime},
+			status = #{status},
+			create_datetime = #{createDatetime},
+			update_datetime = #{updateDatetime},
+			update_by = #{updateUserId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateTaskInfo">
+		UPDATE jmsg_mms_task SET
+			mms_url=#{mmsUrl},
+			mms_size=#{mmsSize},
+			status=#{status},
+			send_count=#{sendCount},
+			count_detail=#{countDetail},
+			mms_body=#{mmsBody}
+		WHERE id=#{id}	
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_mms_task
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="java.util.Map">
+		UPDATE jmsg_mms_task SET 
+			status=#{status},
+			<if test="status =='3'.toString()">
+				end_datetime = NOW(),
+			</if>
+			update_datetime=NOW(),
+			update_by=#{updateBy}
+		WHERE id=#{taskId}
+	</update>
+	
+	<update id="batchUpdateSuccessCount">
+		UPDATE jmsg_mms_task SET 
+			success_count=#{successCount},
+			tongji_datetime=NOW()
+		WHERE id=#{id}	
+	</update>
+	
+	<update id="updateTaskBackStatus">
+		UPDATE jmsg_mms_task SET 
+			back_count=#{backCount},
+			back_datetime = NOW(),
+			back_status='1'
+		WHERE id=#{id}	
+	</update>
+	
+</mapper>

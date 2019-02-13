@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.mms.dao.JmsgMmsDownloadDao">
+    
+	<sql id="jmsgMmsDownloadColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.taskid AS "taskid",
+		a.bizid AS "bizid",
+		a.receive_datetime AS "receiveDatetime",
+		a.device_type AS "deviceType",
+		a.create_datetime AS "createDatetime",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="jmsgMmsDownloadJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsDownload">
+		SELECT 
+			<include refid="jmsgMmsDownloadColumns"/>
+		FROM jmsg_mms_download a
+		<include refid="jmsgMmsDownloadJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsDownload">
+		SELECT 
+			<include refid="jmsgMmsDownloadColumns"/>
+		FROM jmsg_mms_download a
+		<include refid="jmsgMmsDownloadJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.mms.entity.JmsgMmsDownload">
+		SELECT 
+			<include refid="jmsgMmsDownloadColumns"/>
+		FROM jmsg_mms_download a
+		<include refid="jmsgMmsDownloadJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_mms_download(
+			id,
+			user_id,
+			taskid,
+			bizid,
+			receive_datetime,
+			device_type,
+			create_datetime
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{taskid},
+			#{bizid},
+			#{receiveDatetime},
+			#{deviceType},
+			#{createDatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_mms_download SET 	
+			user_id = #{user.id},
+			taskid = #{taskid},
+			bizid = #{bizid},
+			receive_datetime = #{receiveDatetime},
+			device_type = #{deviceType},
+			create_datetime = #{createDatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_mms_download
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

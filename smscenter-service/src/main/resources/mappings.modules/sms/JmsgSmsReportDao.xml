@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.jmsg.dao.JmsgSmsReportDao">
+	
+	<insert id="batchInsert" parameterType="java.util.Map">
+		INSERT INTO ${tableName}(
+			user_id,
+			msgid,
+			stat,
+			submit_time,
+			done_time,
+			srcid,
+			dest_terminal_id,
+			smsc_sequence,
+			bizid,
+			createtime,
+			result,
+			taskid,
+			gateway_id
+		) VALUES (
+			#{data.smsMt.userid},
+			#{data.msgid},
+			#{data.stat},
+			#{data.submitTime},
+			#{data.doneTime},
+			#{data.srcTermID},
+			#{data.destTermID},
+			#{data.smscSequence},
+			#{data.smsMt.id},
+			NOW(),
+			'0',
+			#{data.smsMt.taskid},
+			#{data.smsMt.gateWayID}
+		)
+	</insert>
+	
+</mapper>

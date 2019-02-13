@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanerzone.common.modules.phone.dao.JmsgPhoneDao">
+    
+	<sql id="jmsgPhoneColumns">
+		a.id AS "id",
+		a.phone AS "phone",
+		a.scope AS "scope",
+		a.type AS "type",
+		a.create_by AS "createBy.id",
+		a.create_datetime AS "createDatetime"
+	</sql>
+	
+	<sql id="jmsgPhoneJoins">
+	</sql>
+    
+	<select id="get" resultType="com.sanerzone.common.modules.phone.entity.JmsgPhone">
+		SELECT 
+			<include refid="jmsgPhoneColumns"/>
+		FROM jmsg_phone a
+		<include refid="jmsgPhoneJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.sanerzone.common.modules.phone.entity.JmsgPhone">
+		SELECT 
+			<include refid="jmsgPhoneColumns"/>
+		FROM jmsg_phone a
+		<include refid="jmsgPhoneJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="scope != null and scope != ''">
+				AND a.scope = #{scope}
+			</if>
+			<if test="createDatetimeQ != null and createDatetimeQ != ''">
+				AND a.create_datetime >= #{createDatetimeQ}
+			</if>
+			<if test="createDatetimeZ != null and createDatetimeZ != ''">
+				AND a.create_datetime &lt;= #{createDatetimeZ}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    order by a.create_datetime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.sanerzone.common.modules.phone.entity.JmsgPhone">
+		SELECT 
+			<include refid="jmsgPhoneColumns"/>
+		FROM jmsg_phone a
+		<include refid="jmsgPhoneJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			    order by a.create_datetime desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_phone(
+			phone,
+			scope,
+			type,
+			create_by,
+			create_datetime
+		) VALUES (
+			#{phone},
+			#{scope},
+			#{type},
+			#{createBy.id},
+			now()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_phone SET 	
+			phone = #{phone},
+			scope = #{scope},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_phone
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteByPhone">
+		DELETE FROM jmsg_phone
+		WHERE phone = #{phone}
+	</delete>
+	
+</mapper>

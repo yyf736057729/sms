@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siloyou.jmsg.modules.sms.dao.JmsgPhoneMarketDao">
+    
+	<sql id="jmsgPhoneMarketColumns">
+		a.id AS "id",
+		a.userid AS "userid",
+		a.phone AS "phone",
+		a.type AS "type",
+		a.create_by AS "createBy.id",
+		a.createtime AS "createtime",
+		a.remarks AS "remarks"
+	</sql>
+	
+	<sql id="jmsgPhoneMarketJoins">
+	</sql>
+    
+	<select id="get" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneMarket">
+		SELECT 
+			<include refid="jmsgPhoneMarketColumns"/>
+		FROM jmsg_phone_market a
+		<include refid="jmsgPhoneMarketJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneMarket">
+		SELECT 
+			<include refid="jmsgPhoneMarketColumns"/>
+		FROM jmsg_phone_market a
+		<include refid="jmsgPhoneMarketJoins"/>
+		<where>
+			
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="createtimeQ != null and createtimeQ != ''">
+				AND a.createtime >= #{createtimeQ}
+			</if>
+			<if test="createtimeZ != null and createtimeZ != ''">
+				AND a.createtime &lt;= #{createtimeZ}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.siloyou.jmsg.modules.sms.entity.JmsgPhoneMarket">
+		SELECT 
+			<include refid="jmsgPhoneMarketColumns"/>
+		FROM jmsg_phone_market a
+		<include refid="jmsgPhoneMarketJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO jmsg_phone_market(
+			phone,
+			create_by,
+			createtime,
+			remarks
+		) VALUES (
+			#{phone},
+			#{createBy.id},
+			NOW(),
+			#{remarks}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE jmsg_phone_market SET 	
+			userid = #{userid},
+			phone = #{phone},
+			type = #{type},
+			createtime = #{createtime},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM jmsg_phone_market
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteByPhone">
+		DELETE FROM jmsg_phone_market 
+		WHERE phone = #{phone}
+	</delete>
+	
+</mapper>

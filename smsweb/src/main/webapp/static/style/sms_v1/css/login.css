@@ -1,0 +1,44 @@
+body{ background:url(../images/bg.jpg) center top no-repeat; color:#FFF;margin: 0;font-family:"open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;}
+.over {overflow: hidden;zoom:1;}
+.loginbox {margin: 90px auto 0;width: 960px;}
+.loginbox .loginpp {width: 535px;float: left;font-weight: bold;clear: both;margin: 55px 0 0 15px;}
+.loginbox .loginpp h2 {font-size: 12px;text-indent: -99999px;background: url(../images/logo.png) no-repeat;background-size: 500px 60px;width: 500px;height: 60px;margin-left: 20px;}
+.loginbox .loginpp p {background:url(../images/pp.png) no-repeat;background-size: 535px 205px;width:535px;height:205px;margin-top: 30px;text-indent: -99999px;}
+.loginbox .loginform {float: right;}
+.loginbox .loginform img {width: 300px;margin: 0 0 30px 20px;}
+.loginbox .loginform .form-inline {padding: 40px 0 35px 45px;width: 345px;background: url(../images/bg_box.png) repeat;border-radius: 8px;}
+.loginbox .loginform .form-inline h2 {font-size: 20px;margin:5px 0 20px 15px;font-family:SimHei;}
+.loginbox .loginform .form-inline .form-group {background: #fff;margin-bottom: 15px;border-radius: 5px;}
+.loginbox .loginform .form-inline input {border: none;box-shadow: none;padding: 0 12px; width: 210px;height: 36px;font-size: 14px;font-weight: bold;margin-top: -10px;}
+.loginbox .loginform .form-inline label {background-color:#999;color: #fff;padding: 14px 12px;margin: 0;font-size: 18px;border-top-left-radius: 5px;border-bottom-left-radius: 5px;}
+.loginbox .loginform .form-inline label.glyphicon {top: 0;}
+
+.loginbox .loginform .form-inline input.form-yzm {width: 75px;}
+.loginbox .loginform .form-inline img {width: 75px;height: 30px;margin: -9px 0 0 0;}
+.loginbox .loginform .form-inline p {font-size: 14px;display: inline-block;margin:0 10px 0 0;font-family:SimHei;}
+.loginbox .loginform .form-inline .form_bottom {background: transparent;}
+
+.loginbox .loginform .form-inline .form_bottom input {width: 14px;height: 14px;}
+.loginbox .loginform .form-inline .form_bottom p.forgetpwd {text-align: right;margin-left: 100px;}
+.loginbox .loginform .form-inline .form_bottom p.forgetpwd a {color: #fff;}
+.loginbox .loginform .form-inline .form_bottom p.forgetpwd a:hover {color: #ccc;}
+.loginbox .loginform .form-inline button {margin: 0 15px;display: block;width: 255px;cursor: pointer;margin-top: 15px;font-family:SimHei;}
+.btn-primary,.btn-primary:focus{background-color:#045ce0;border-color:#1058c4;border-radius: 5px;
+background-color: #3daae9;
+    background-image: -moz-linear-gradient(top,#46aeea,#2fa4e7);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#46aeea),to(#2fa4e7));
+    background-image: -webkit-linear-gradient(top,#46aeea,#2fa4e7);
+    background-image: -o-linear-gradient(top,#46aeea,#2fa4e7);
+    background-image: linear-gradient(to bottom,#46aeea,#2fa4e7);
+    background-repeat: repeat-x;
+    border-color: #2fa4e7 #2fa4e7 #157ab5;
+    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+}
+.btn-primary:hover,.btn-primary:active {background-color:#46aeea;border-color:#46aeea;}
+button {border: none;}
+
+.copybox {clear: both; position: absolute;bottom: -2px;width: 100%; text-align: center;background:#fff;border-top:1px solid #070920;line-height: 25px;height: 25px;font-size: 12px;}
+.copybox p {margin-bottom: 0;color: #333;font-family:Arial;}
+.copybox p b {font-weight: 200;}
+.copybox p a {color: #666;text-decoration: none;}
+.copybox p a:hover {color: #999;}
